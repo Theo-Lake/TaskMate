@@ -30,3 +30,11 @@ For the safety of the users, there will also be an AI algorithm that will be use
 * Any tasks that may be deemed dangerous or unsafe
 * Any tasks that constitute a job with hourly pay or recruitment
 It will also ensure that tasks are clear and the description isn't deceptive
+
+
+Running project:
+	frontend only: 
+		cd frontend
+		npx expo start
+	backend only:
+		npm start dev
