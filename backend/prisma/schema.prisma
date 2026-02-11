@@ -28,7 +28,7 @@ model User {
 model Job {
   jobID       Int  @id @default(autoincrement())
   // A User(publisher) can publish many jobs, though a job can only have ONE publisher m-1
-  publisher   User @relation(fields: [publisherID], references: [userID])
+  publisher   User @relation(fields: [publisherID], references: [userID], onDelete: Cascade)
   publisherID Int
 
   // A User(assignee) can be assigned many jobs, and a job can have many assignees m-m
@@ -38,7 +38,7 @@ model Job {
   status        Status    @default(not_Complete)
   payment       Decimal
   completedDate DateTime?
-  DueDate       DateTime
+  dueDate       DateTime
 
   created_at DateTime @default(now()) // auto-set when row is created
   updated_at DateTime @updatedAt // auto-update when row is changed
@@ -49,7 +49,7 @@ model Job {
 // Holds the record of assigned jobs: | AssingmentID | job | Assignee |
 model JobAssignment {
   assignmentID Int  @id @default(autoincrement())
-  job          Job  @relation(fields: [jobID], references: [jobID])
+  job          Job  @relation(fields: [jobID], references: [jobID], onDelete: Cascade)
   jobID        Int
   assignee     User @relation(fields: [userId], references: [userID])
   userId       Int

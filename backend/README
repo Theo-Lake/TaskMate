@@ -1,0 +1,14 @@
+Important Commands
+
+npx prisma migrate dev --name [chosen name]
+
+Updates schema in a dev environment.
+
+npx prisma generate
+
+creates prisma client (must be done after schema updates)
+
+npx prisma migrate reset
+
+Resets migrations (DO NOT use this when not in development EVER)
+This is just used for dev.
