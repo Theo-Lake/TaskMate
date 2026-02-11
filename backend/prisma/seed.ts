@@ -65,6 +65,7 @@ async function seed(){
              {
             taskID: 1,
             name: "Delivery",
+            description: "Delivering groceries",
             payment: 20.0,
             dueDate: new Date(2026, 1, 11), // month is indexed, 0 = jan ...
             type: 'delivery',
@@ -78,7 +79,7 @@ async function seed(){
         data: [
              {
                 taskID: 1,
-                userId: 2
+                assigneeID: 2
         }
         ],
         

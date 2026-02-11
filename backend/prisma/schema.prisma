@@ -11,18 +11,19 @@ datasource db {
 
 //TODO finish schemas
 model User {
-  userID        Int              @id @default(autoincrement())
-  username      String           @unique
-  firstName     String
-  lastName      String
-  universityID  Int              @unique
-  created_at    DateTime         @default(now()) // auto-set when row is created
-  updated_at    DateTime         @updatedAt // auto-update when row is changed
-  email         String           @unique
-  password_hash String
-  publishedJobs Task[]
-  assignedJobs  TaskAssignment[]
-  occupation    String
+  userID         Int              @id @default(autoincrement())
+  username       String           @unique
+  firstName      String
+  lastName       String
+  universityID   Int              @unique
+  created_at     DateTime         @default(now()) // auto-set when row is created
+  updated_at     DateTime         @updatedAt // auto-update when row is changed
+  email          String           @unique
+  password_hash  String
+  publishedJobs  Task[]
+  assignedJobs   TaskAssignment[]
+  occupation     String
+  profilePicture String           @default("null")
 }
 
 model Task {
@@ -40,11 +41,15 @@ model Task {
   payment       Decimal
   completedDate DateTime?
   dueDate       DateTime
+  description   String
+  images        String?
 
   created_at DateTime @default(now()) // auto-set when row is created
   updated_at DateTime @updatedAt // auto-update when row is changed
 
   hashtags Hashtags[]
+
+  @@unique([taskID, publisherID])
 }
 
 // Holds the record of assigned jobs: | AssingmentID | job | Assignee |
@@ -52,8 +57,10 @@ model TaskAssignment {
   assignmentID Int  @id @default(autoincrement())
   task         Task @relation(fields: [taskID], references: [taskID], onDelete: Cascade)
   taskID       Int
-  assignee     User @relation(fields: [userId], references: [userID])
-  userId       Int
+  assignee     User @relation(fields: [assigneeID], references: [userID])
+  assigneeID   Int
+
+  @@unique([assignmentID, assigneeID])
 }
 
 model Hashtags {
@@ -82,3 +89,5 @@ enum TaskTypes {
   general
   other
 }
+
+//TODO Need to create (session tokens) maybe, and verification tokens.
