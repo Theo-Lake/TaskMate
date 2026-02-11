@@ -22,10 +22,10 @@ const testPassword = await bcrypt.hash("testynesty123",10);
 
 async function seed(){
     // Clear existing data (order matters due to foreign keys)
-    await prisma.jobAssignment.deleteMany();
-    await prisma.hashtags.deleteMany();
-    await prisma.job.deleteMany();
     await prisma.user.deleteMany();
+    await prisma.taskAssignment.deleteMany();
+    await prisma.hashtags.deleteMany();
+    await prisma.task.deleteMany();
 
     await prisma.user.createMany({
         data: [
@@ -60,10 +60,11 @@ async function seed(){
         ],
         
     });
-    await prisma.job.create({ //create only creates a single object at a time, but handles connections (hashtag), createMany does not handle connections, but allows for a list of objects.
+    await prisma.task.create({ //create only creates a single object at a time, but handles connections (hashtag), createMany does not handle connections, but allows for a list of objects.
         data:
              {
-            jobID: 1,
+            taskID: 1,
+            name: "Delivery",
             payment: 20.0,
             dueDate: new Date(2026, 1, 11), // month is indexed, 0 = jan ...
             type: 'delivery',
@@ -73,10 +74,10 @@ async function seed(){
             }
         },
     });
-    await prisma.jobAssignment.createMany({
+    await prisma.taskAssignment.createMany({
         data: [
              {
-                jobID: 1,
+                taskID: 1,
                 userId: 2
         }
         ],

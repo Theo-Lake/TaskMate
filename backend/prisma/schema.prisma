@@ -11,30 +11,31 @@ datasource db {
 
 //TODO finish schemas
 model User {
-  userID        Int             @id @default(autoincrement())
-  username      String          @unique
+  userID        Int              @id @default(autoincrement())
+  username      String           @unique
   firstName     String
   lastName      String
-  universityID  Int             @unique
-  created_at    DateTime        @default(now()) // auto-set when row is created
-  updated_at    DateTime        @updatedAt // auto-update when row is changed
-  email         String          @unique
+  universityID  Int              @unique
+  created_at    DateTime         @default(now()) // auto-set when row is created
+  updated_at    DateTime         @updatedAt // auto-update when row is changed
+  email         String           @unique
   password_hash String
-  publishedJobs Job[]
-  assignedJobs  JobAssignment[]
+  publishedJobs Task[]
+  assignedJobs  TaskAssignment[]
   occupation    String
 }
 
-model Job {
-  jobID       Int  @id @default(autoincrement())
+model Task {
+  taskID      Int  @id @default(autoincrement())
   // A User(publisher) can publish many jobs, though a job can only have ONE publisher m-1
   publisher   User @relation(fields: [publisherID], references: [userID], onDelete: Cascade)
   publisherID Int
 
   // A User(assignee) can be assigned many jobs, and a job can have many assignees m-m
-  assignments JobAssignment[]
+  assignments TaskAssignment[]
 
-  type          JobTypes
+  name          String
+  type          TaskTypes
   status        Status    @default(not_Complete)
   payment       Decimal
   completedDate DateTime?
@@ -47,10 +48,10 @@ model Job {
 }
 
 // Holds the record of assigned jobs: | AssingmentID | job | Assignee |
-model JobAssignment {
+model TaskAssignment {
   assignmentID Int  @id @default(autoincrement())
-  job          Job  @relation(fields: [jobID], references: [jobID], onDelete: Cascade)
-  jobID        Int
+  task         Task @relation(fields: [taskID], references: [taskID], onDelete: Cascade)
+  taskID       Int
   assignee     User @relation(fields: [userId], references: [userID])
   userId       Int
 }
@@ -58,7 +59,7 @@ model JobAssignment {
 model Hashtags {
   hashtagID  Int      @id @default(autoincrement())
   name       String   @unique
-  jobs       Job[]
+  tasks      Task[]
   created_at DateTime @default(now()) // auto-set when row is created
 }
 
@@ -72,7 +73,7 @@ enum Status {
   cancelled
 }
 
-enum JobTypes {
+enum TaskTypes {
   tutoring
   delivery
   freelance
