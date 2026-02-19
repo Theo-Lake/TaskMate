@@ -5,7 +5,7 @@
 /*
 Middleware manages:
 validation
-Authentication
+Authentication   JWT TOKENS!!!!!!!!!!!
 Error Handling
 
 DB TRIGGERS !!!!

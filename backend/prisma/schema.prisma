@@ -11,19 +11,26 @@ datasource db {
 
 //TODO finish schemas
 model User {
-  userID         Int              @id @default(autoincrement())
-  username       String           @unique
-  firstName      String
-  lastName       String
-  universityID   Int              @unique
-  created_at     DateTime         @default(now()) // auto-set when row is created
-  updated_at     DateTime         @updatedAt // auto-update when row is changed
-  email          String           @unique
-  password_hash  String
-  publishedJobs  Task[]
-  assignedJobs   TaskAssignment[]
-  occupation     String
-  profilePicture String           @default("null")
+  userID                  Int                      @id @default(autoincrement())
+  username                String                   @unique
+  firstName               String
+  lastName                String
+  universityID            Int                      @unique
+  created_at              DateTime                 @default(now()) // auto-set when row is created
+  updated_at              DateTime                 @updatedAt // auto-update when row is changed
+  email                   String                   @unique
+  password_hash           String
+  publishedJobs           Task[]
+  assignedJobs            TaskAssignment[]
+  occupation              String
+  profilePicture          String                   @default("null")
+  myPublishedReviews      Reviews[]                @relation("PublishedReviews")
+  myRecievedReviews       Reviews[]                @relation("ReceivedReviews")
+  emailVerified           Boolean                  @default(false)
+  emailVerificationTokens EmailVerificationToken[]
+  conversationsAsUser1    Conversation[]           @relation("User1")
+  conversationsAsUser2    Conversation[]           @relation("User2")
+  sentMessages            Message[]
 }
 
 model Task {
@@ -47,7 +54,8 @@ model Task {
   created_at DateTime @default(now()) // auto-set when row is created
   updated_at DateTime @updatedAt // auto-update when row is changed
 
-  hashtags Hashtags[]
+  hashtags      Hashtags[]
+  conversations Conversation[]
 
   @@unique([taskID, publisherID])
 }
@@ -70,6 +78,52 @@ model Hashtags {
   created_at DateTime @default(now()) // auto-set when row is created
 }
 
+model Reviews {
+  reviewID          Int     @id @default(autoincrement())
+  name              String
+  comment           String?
+  reviewPublisher   User    @relation("PublishedReviews", fields: [reviewPublisherID], references: [userID])
+  reviewPublisherID Int
+  reviewAssignee    User    @relation("ReceivedReviews", fields: [reviewAssigneeID], references: [userID])
+  reviewAssigneeID  Int
+
+  created_at DateTime @default(now())
+  rating     Rating
+}
+
+model EmailVerificationToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique @default(uuid())
+  user       User     @relation(fields: [userID], references: [userID], onDelete: Cascade)
+  userID     Int
+  expiresAt  DateTime
+  used       Boolean  @default(false)
+  created_at DateTime @default(now())
+}
+
+model Conversation {
+  conversationID Int       @id @default(autoincrement())
+  task           Task      @relation(fields: [taskCID], references: [taskID])
+  taskCID        Int
+  user1          User      @relation("User1", fields: [user1ID], references: [userID])
+  user1ID        Int
+  user2          User      @relation("User2", fields: [user2ID], references: [userID])
+  user2ID        Int
+  messages       Message[]
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+}
+
+model Message {
+  messageID      Int          @id @default(autoincrement())
+  conversation   Conversation @relation(fields: [conversationID], references: [conversationID])
+  conversationID Int
+  sender         User         @relation(fields: [senderID], references: [userID])
+  senderID       Int
+  content        String
+  created_at     DateTime     @default(now())
+}
+
 // ENUM TYPES: 
 
 enum Status {
@@ -90,4 +144,12 @@ enum TaskTypes {
   other
 }
 
-//TODO Need to create (session tokens) maybe, and verification tokens.
+enum Rating {
+  ONE
+  TWO
+  THREE
+  FOUR
+  FIVE
+}
+
+//TODO Session
