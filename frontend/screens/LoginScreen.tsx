@@ -5,7 +5,7 @@ import { Text, useTheme, TextInput, Button } from "react-native-paper";
 import Logo from '../assets/img/logoNoText.png'
 import { useNavigation } from "expo-router";
 
-export default function OpeningScreen({ navigation }: any) {
+export default function LoginScreen({ navigation }: any) {
 
     const [emailText, setEmailText] = React.useState("");
     const [passText, setPassText] = React.useState("");
