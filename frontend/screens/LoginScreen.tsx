@@ -4,7 +4,7 @@ import { TextInput, Button } from "react-native-paper";
 
 import Logo from '../assets/img/logoNoText.png';
 
-export default function OpeningScreen({ navigation }: any) {
+export default function LoginScreen({ navigation }: any) {
 
     const [emailText, setEmailText] = React.useState("");
     const [passText, setPassText] = React.useState("");

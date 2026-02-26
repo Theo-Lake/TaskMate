@@ -11,10 +11,11 @@ export default function DevMenuScreen({ navigation }: any) {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Auth </Text>
-        <Button mode="contained" style={styles.btn} onPress={() => navigation.navigate('Opening')}>Opening Screen</Button>
-        <Button mode="outlined" style={styles.btn} onPress={() => navigation.navigate('Login')}> Login</Button>
-        <Button mode="outlined" style={styles.btn} onPress={() => navigation.navigate('SignUp')}> SignUp</Button>
+        <Button mode="contained" style={styles.btn} onPress={() => navigation.navigate('OpeningTabs')}>Opening Screen</Button>
+        <Button mode="outlined" style={styles.btn} onPress={() => navigation.navigate('OpeningTabs', {screen:'Login'})}> Login</Button>
+        <Button mode="outlined" style={styles.btn} onPress={() => navigation.navigate('OpeningTabs', {screen:'SignUp'})}> SignUp</Button>
       </View>
+
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Main </Text>
         <Button mode="contained-tonal" style={styles.btn} onPress={() => navigation.navigate('Home')}>Home</Button>

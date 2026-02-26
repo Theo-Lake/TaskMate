@@ -5,7 +5,7 @@ import routes from "./routes/index.js";
                     //imports need to be js because ts compiles into js
 
 const app = express();
-app.use(cors());
+app.use(cors());    // This has to be removed later on because it will cause issues with SQL injections and safety.
 app.use(express.json());
 
 app.get("/health", (req: Request, res: Response) => {
