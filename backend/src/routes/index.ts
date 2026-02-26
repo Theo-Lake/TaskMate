@@ -40,6 +40,12 @@ router.post("/users", async (req,res) => {
   }
 });
 
+// USER DATA PUT ENDPOINT
+
+router.put("/users", async (req,res) => {
+  //TODO finish put
+});
+
 // CONVERSATION GET ENDPOINT
 router.get("/conversations", async (req,res) => {
   try{
@@ -61,14 +67,46 @@ router.get("/conversations", async (req,res) => {
 
 // MESSAGES GET ENDPOINT
 
-router.get("/conversation/messages", (req,res) => {
+router.get("/conversation/messages", async (req,res) => {
   try{
-    
+    const { cID } = req.body; //destructuring conversation id
+
+    const messages = await prisma.message.findMany({
+      where: {
+        conversationID: cID
+      }
+    });
+
+    console.log("Messages request accepted.");
+    res.status(200).json(messages);
+
   } catch(error){
     console.log(`An error occured while trying to get messages: ${error}`)
     res.status(500).json({error: error});
   }
 });
+
+
+// MESSAGES POST
+router.post("/conversation/messages", async (req,res) => {
+  //messages post
+});
+
+// TASK POST (no need for conversation post since if a task is created so is a convo)
+router.post("/tasks", (req,res) => {
+  //TODO tasks post
+});
+
+// TASK PUT
+router.put("/tasks", (req,res) => {
+  //TODO tasks put
+});
+
+// TASK GET
+router.get("/tasks", (req,res) => {
+  //TODO tasks get
+});
+
 
 // Import route modules here
 // import userRoutes from "./userRoutes.js";
