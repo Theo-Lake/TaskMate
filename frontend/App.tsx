@@ -22,7 +22,8 @@ export default function App() {
   return (
     <PaperProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="DevMenu">
+        <StatusBar style="light" />
+        <Stack.Navigator initialRouteName="DevMenu" screenOptions={{headerStyle: {backgroundColor:'#3D824E'}, headerTintColor: 'white'}}>
           <Stack.Screen 
             name="DevMenu" 
             component={DevMenuScreen} 
@@ -42,7 +43,6 @@ export default function App() {
 
         </Stack.Navigator>
       </NavigationContainer>
-      <StatusBar style="auto" />
     </PaperProvider>
   );
 }
