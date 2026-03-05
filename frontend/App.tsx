@@ -6,17 +6,17 @@ import { PaperProvider, MD3LightTheme } from 'react-native-paper';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import React from "react";
 
-import DevMenuScreen from "./screens/DevMenuScreen";
-import OpeningScreen from './screens/OpeningScreen';
-import LoginScreen from './screens/LoginScreen';
-import SignUpScreen from './screens/SignUpScreen';
-import HomeScreen from './screens/HomeScreen';
-import UserProfileScreen from './screens/UserProfileScreen';
-import ChatsScreen from './screens/ChatsScreen';
-import EventsScreen from './screens/EventsScreen';
-import MyTasksScreen from './screens/MyTasksScreen';
-import CreateTaskScreen from './screens/CreateTaskScreen';
-import ViewTaskScreen from './screens/ViewTaskScreen';
+import DevMenuScreen from "./screens/DevMenuScreen/DevMenuScreen";
+import OpeningScreen from './screens/OpeningScreen/OpeningScreen';
+import LoginScreen from './screens/LoginScreen/LoginScreen';
+import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
+import HomeScreen from './screens/HomeScreen/HomeScreen';
+import UserProfileScreen from './screens/UserProfileScreen/UserProfileScreen';
+import ChatsScreen from './screens/ChatsScreen/ChatsScreen';
+import EventsScreen from './screens/EventsScreen/EventsScreen';
+import MyTasksScreen from './screens/MyTasksScreen/MyTasksScreen';
+import CreateTaskScreen from './screens/CreateTaskScreen/CreateTaskScreen';
+import ViewTaskScreen from './screens/ViewTaskScreen/ViewTaskScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialTopTabNavigator();
