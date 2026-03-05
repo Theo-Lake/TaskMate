@@ -1,8 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Image } from 'react-native';
 import { Appbar, TextInput, Button } from "react-native-paper";
+import {styles} from "./styles"
 
-import Logo from '../assets/img/logoNoText.png';
+import Logo from '../../assets/img/logoNoText.png';
 
 
 export default function LoginScreen({ navigation }: any) {
@@ -36,27 +37,3 @@ export default function LoginScreen({ navigation }: any) {
     );
 }
 
-const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor: '#ffffff'
-    },
-    content:{
-        flex:1,
-        justifyContent:'center',
-        paddingBottom:50,
-    },
-    title:{
-        marginBottom:20,
-        textAlign: "center",
-        fontSize:30,
-    },
-
-    img: {
-        alignItems:'center'
-    },
-
-    textBox: {
-        marginBottom:10
-    }
-});

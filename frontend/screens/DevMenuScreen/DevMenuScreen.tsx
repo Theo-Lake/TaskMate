@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import {styles} from "./styles"
 
 export default function DevMenuScreen({ navigation }: any) {
   return (
@@ -34,26 +35,3 @@ export default function DevMenuScreen({ navigation }: any) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    paddingBottom: 50,
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: 20,
-    fontWeight: 'bold',
-  },
-  section: {
-    marginBottom: 25,
-  },
-  sectionTitle: {
-    color: 'gray',
-    marginBottom: 10,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-  },
-  btn: {
-    marginBottom: 10,
-  }
-});
