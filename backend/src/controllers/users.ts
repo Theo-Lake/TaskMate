@@ -3,7 +3,7 @@ import { userServices } from "../services/users"; // Abstraction so that db and 
 //TODO Use req to check for validation (called from middleware)
 
 // Get users function
-export async function getUsers(req: Request, res: Response) {
+export async function getAllUsers(req: Request, res: Response) {
     try {
         const users = await userServices.getAllUsers(); // calling user service to get all users
         console.log("Users get accepted.");
@@ -48,7 +48,7 @@ export async function deleteUser(req: Request, res: Response) {
 }
 
 export const userController = {
-    getUsers,
+    getAllUsers,
     postUser,
     putUser,
     deleteUser,
