@@ -23,7 +23,7 @@ model User {
   publishedJobs           Task[]
   assignedJobs            TaskAssignment[]
   occupation              String
-  profilePicture          String                   @default("null")
+  profilePicture          String                   @default("null") //TODO default should be a default picture
   myPublishedReviews      Reviews[]                @relation("PublishedReviews")
   myRecievedReviews       Reviews[]                @relation("ReceivedReviews")
   emailVerified           Boolean                  @default(false)

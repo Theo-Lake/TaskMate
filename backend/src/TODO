@@ -1,7 +1,0 @@
-[ ] - Organize the routes, controllers and services to make it so the functions are like:
-    getAll__
-    get__ById
-    
-[ ]- middleware implementation in controllers
-
-[ ]- More logic such as checkUser, checkTask (using AI thing we said), ... etc
