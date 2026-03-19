@@ -5,10 +5,25 @@ import { conversationController } from "../controllers/conversations";
 // CONVERSATION GET all conversations ENDPOINT
 router.get("/", conversationController.getAllConversations);
 
-// GET all messages ENDPOINT
-router.get("/messages", conversationController.getAllMessages);
+// CONVERSATION GET conversation by ID ENDPOINT
+router.get("/:convoId", conversationController.getConversationById);
 
-// MESSAGES POST
-router.post("/messages", conversationController.createMessage);
+// MESSAGES GET all messages ENDPOINT
+router.get("/:convoId/messages", conversationController.getAllMessages);
+
+// MESSAGES GET messages by ID ENDPOINT
+router.get(
+    "/:convoId/messages/:messageId",
+    conversationController.getMessageById
+);
+
+// MESSAGES POST ENDPOINT
+router.post("/:convoId/messages", conversationController.createMessage);
+
+// MESSAGES delete (by ID) ENDPOINT
+router.delete(
+    "/:convoId/messages/:messageId",
+    conversationController.deleteMessage
+);
 
 export default router;
