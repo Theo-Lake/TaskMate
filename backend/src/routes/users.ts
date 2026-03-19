@@ -9,9 +9,9 @@ router.get("/", userController.getAllUsers);
 router.post("/", userController.postUser);
 
 // USER DATA PUT ENDPOINT
-router.put("/", userController.putUser);
+router.put("/:id", userController.putUser);
 
 // USER DATA PUT ENDPOINT
-router.put("/", userController.deleteUser);
+router.put("/:id", userController.deleteUser);
 
 export default router;

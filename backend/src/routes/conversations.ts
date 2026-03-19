@@ -5,7 +5,7 @@ import { conversationController } from "../controllers/conversations";
 // CONVERSATION GET all conversations ENDPOINT
 router.get("/", conversationController.getAllConversations);
 
-// MESSAGES GET ENDPOINT
+// GET all messages ENDPOINT
 router.get("/messages", conversationController.getAllMessages);
 
 // MESSAGES POST

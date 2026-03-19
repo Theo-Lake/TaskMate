@@ -13,7 +13,7 @@ export async function getAllUsers(req: Request, res: Response) {
         res.status(500).json({ error: { error } });
     }
 }
-
+//TODO include ID in all id needed requests by fetching it from backend URL and make all services take id as input too.
 export async function postUser(req: Request, res: Response) {
     try {
         await userServices.createUser(req.body); // Calling user service to create user with req.body
