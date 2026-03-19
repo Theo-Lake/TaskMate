@@ -2,7 +2,7 @@ import { db } from "../db";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
 
 export async function getAllTasks() {
-    return db.task.findMany();
+    return await db.task.findMany();
 }
 
 //TODO get taskByID

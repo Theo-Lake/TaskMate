@@ -2,7 +2,7 @@ import { db } from "../db";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
 
 export async function getAllUsers() {
-    return db.user.findMany();
+    return await db.user.findMany();
 }
 
 //TODO get UserById
