@@ -29,6 +29,8 @@ PRIORITY:
             [ ] - tasks.ts — implement createTask, updateTask, deleteTask, getTaskById
             [ ] - conversations.ts — implement getAllMessages, createMessage, getConversationById
             [ ] - More logic such as checkUser, checkTask (using AI thing we said), ... etc
+
+        [ ] - CREATE HASHTAGS AND REVIEWS 
     ]
 
     AFTER : [

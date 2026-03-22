@@ -12,6 +12,8 @@ router.post("/", userController.postUser);
 router.put("/:id", userController.putUser);
 
 // USER DATA PUT ENDPOINT
-router.put("/:id", userController.deleteUser);
+router.delete("/:id", userController.deleteUser);
 
 export default router;
+
+
