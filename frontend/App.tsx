@@ -10,11 +10,11 @@ import DevMenuScreen from "./screens/DevMenuScreen/DevMenuScreen";
 import OpeningScreen from './screens/OpeningScreen/OpeningScreen';
 import LoginScreen from './screens/LoginScreen/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
-import HomeScreen from './screens/HomeScreen/HomeScreen';
+import HomeScreen from './screens/TasksScreen/Tasks';
 import UserProfileScreen from './screens/UserProfileScreen/UserProfileScreen';
 import ChatsScreen from './screens/ChatsScreen/ChatsScreen';
 import EventsScreen from './screens/EventsScreen/EventsScreen';
-import MyTasksScreen from './screens/MyTasksScreen/MyTasksScreen';
+import MyTasksScreen from './screens/SettingsScreen/SettingsScreen';
 import CreateTaskScreen from './screens/CreateTaskScreen/CreateTaskScreen';
 import ViewTaskScreen from './screens/ViewTaskScreen/ViewTaskScreen';
 
