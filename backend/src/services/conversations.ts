@@ -14,9 +14,7 @@ export async function getConversationByID(conversationID: number) {
 }
 
 export async function createMessage(conversationID: Number, body: JsonObject) {
-    //TODO {senderID, content} = body  DESTRUCTURE BODY, then use that to create message.
-    let senderID;
-    let content;
+    let { senderID, content } = body;
     let message = await db.message.create({
         data: {
             conversationID: Number(conversationID),
@@ -56,12 +54,13 @@ export async function getMessageByID(
 //TODO why does everything need to be Number() if their type is already declared as Number?
 
 export async function deleteMessage(conversationID: Number, messageID: Number) {
-    db.message.delete({
+    await db.message.delete({
         where: {
             messageID: Number(messageID),
             AND: { conversationID: Number(conversationID) },
         },
     });
+    return;
 }
 
 // I dont think conversations should be putted? like it should not update with manual input.
