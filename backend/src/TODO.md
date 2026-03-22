@@ -31,6 +31,9 @@ PRIORITY:
             [ ] - More logic such as checkUser, checkTask (using AI thing we said), ... etc
 
         [ ] - CREATE HASHTAGS AND REVIEWS 
+
+
+        [ ] - Testing of ALL endpoints ***BEFORE*** moving on!!!!!!!!!!!!!!!!!!!!!!!! (call me for us to do this tg)
     ]
 
     AFTER : [
