@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Image } from 'react-native';
 import {  Text, useTheme } from "react-native-paper";
-import {styles} from "../MyTasksScreen/styles"
+import {styles} from "../ViewEventScreen/styles"
 
 export default function OpeningScreen() {
     return (

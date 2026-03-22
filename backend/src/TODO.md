@@ -55,6 +55,7 @@ PRIORITY:
         [ ] - Add rate limiting on login and registration routes
 
     TESTING & DATA
+        [ ] - creating a command that runs both npm & npx to run both backend and frontend at the same time
         [ ] - Write integration tests
         [ ] - Expand seed data in prisma/seed.ts
         [ ] - Add database trigger constraints to prevent past due dates
