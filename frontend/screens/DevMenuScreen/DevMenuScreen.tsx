@@ -18,19 +18,11 @@ export default function DevMenuScreen({ navigation }: any) {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Main </Text>
-        <Button mode="contained-tonal" style={styles.btn} onPress={() => navigation.navigate('Home')}>Home</Button>
-        <Button mode="contained-tonal" style={styles.btn} onPress={() => navigation.navigate('UserProfile')}>User Profile</Button>
-        <Button mode="contained-tonal" style={styles.btn} onPress={() => navigation.navigate('Chats')}>Chats</Button>
+        <Text style={styles.sectionTitle}>Main. Acces to other pages through bottom menu</Text>
+        <Button mode="contained-tonal" style={styles.btn} onPress={() => navigation.navigate('MainApp', {screen: 'TasksTab'})}>Tasks</Button>
+
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Tasks & Events </Text>
-        <Button mode="elevated" style={styles.btn} onPress={() => navigation.navigate('MyTasks')}>My Tasks</Button>
-        <Button mode="elevated" style={styles.btn} onPress={() => navigation.navigate('CreateTask')}>Create Task</Button>
-        <Button mode="elevated" style={styles.btn} onPress={() => navigation.navigate('ViewTask')}>View Task</Button>
-        <Button mode="elevated" style={styles.btn} onPress={() => navigation.navigate('Events')}>Events</Button>
-      </View>
     </ScrollView>
   );
 }

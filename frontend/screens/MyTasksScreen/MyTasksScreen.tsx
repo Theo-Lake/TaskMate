@@ -1,7 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Image } from 'react-native';
-import {  Text, useTheme } from "react-native-paper";
+import {  Text, useTheme,Appbar, Avatar } from "react-native-paper";
 import {styles} from "../MyTasksScreen/styles"
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 
 export default function OpeningScreen() {
     return (
