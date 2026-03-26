@@ -5,22 +5,25 @@ export async function getAllUsers() {
     return await db.user.findMany();
 }
 
-//TODO get UserById
+export async function getUserById(userID: Number) {
+    //TODO
+}
 
 export async function createUser(body: JsonObject) {
     //TODO create
 }
 
-export async function updateUser(body: JsonObject) {
+export async function updateUser(userID: Number) {
     //TODO create
 }
 
-export async function deleteUser(body: JsonObject) {
+export async function deleteUser(userID: Number) {
     //TODO create
 }
 
 export const userServices = {
     getAllUsers,
+    getUserById,
     createUser,
     updateUser,
     deleteUser,
