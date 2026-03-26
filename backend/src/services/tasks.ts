@@ -23,7 +23,15 @@ export async function getAllTasksByUserID(userID: Number) {
 }
 
 export async function createTask(publisherID: Number, body: JsonObject) {
-    let { name, type, payment, dueDate, description, images, hashtags } = body;
+    let { 
+        name, 
+        type, 
+        payment, 
+        dueDate, 
+        description, 
+        images, 
+        hashtags 
+    } = body;
 
     return await db.task.create({
         data: {

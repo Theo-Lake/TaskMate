@@ -9,7 +9,6 @@ router.post("/:publisherId", taskController.postTask);
 router.get("/", taskController.getAllTasks);
 
 // TASK GET all tasks BY USERID
-
 router.get("/byUserId/:userId", taskController.getAllTasksByUserID);
 
 // TASK GET by ID

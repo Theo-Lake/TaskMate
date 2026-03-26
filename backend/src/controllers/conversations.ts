@@ -5,7 +5,7 @@ import { conversationServices } from "../services/conversations";
 async function getAllConversations(req: Request, res: Response) {
     try {
         const conversations = await conversationServices.getAllConversations();
-        console.log("Conversation get all request accepted.");
+        console.log("Conversation GET all request accepted.");
         res.status(200).json(conversations);
     } catch (error) {
         console.log(
@@ -24,7 +24,7 @@ async function getConversationById(req: Request, res: Response) {
             res.status(404).json({ error: "Conversation not found" });
             return;
         }
-        console.log("Conversation by ID get request accepted.");
+        console.log("Conversation by ID GET request accepted.");
         res.status(200).json(conversation);
     } catch (error) {
         console.log(
@@ -40,10 +40,12 @@ async function getAllMessages(req: Request, res: Response) {
         const messages =
             await conversationServices.getAllMessages(conversationID);
 
-        console.log("Messages get all request accepted.");
+        console.log("Messages GET all request accepted.");
         res.status(200).json(messages);
     } catch (error) {
-        console.log(`An error occured while trying to get messages: ${error}`);
+        console.log(
+            `An error occured while trying to get messages: ${error}`
+        );
         res.status(500).json({ error: String(error) });
     }
 }
@@ -61,7 +63,7 @@ async function getMessageById(req: Request, res: Response) {
             res.status(404).json({ error: "Message not found" });
             return;
         }
-        console.log("Message get request accepted.");
+        console.log("Message GET request accepted.");
         res.status(200).json(message);
     } catch (error) {
         console.log(
@@ -76,13 +78,15 @@ async function createMessage(req: Request, res: Response) {
         const conversationID = Number(req.params.convoId);
         const message = await conversationServices.createMessage(conversationID, req.body);
 
-        console.log("Message creation accepted.");
+        console.log("Message CREATE accepted.");
         res.status(201).json(message);
     } catch (error) {
         if (error instanceof Error && error.message === "senderID or content is missing") {
             res.status(400).json({ error: error.message });
         } else {
-            console.log(`An error occured while trying to create message: ${error}`);
+            console.log(
+                `An error occured while trying to create message: ${error}`
+            );
             res.status(500).json({ error: String(error) });
         }
     }
@@ -101,7 +105,7 @@ async function deleteMessage(req: Request, res: Response) {
 
         await conversationServices.deleteMessage(conversationID, messageID);
 
-        console.log("Message delete request accepted.");
+        console.log("Message DELETE request accepted.");
         res.status(200).json("Succesful deletion");
     } catch (error) {
         console.log(

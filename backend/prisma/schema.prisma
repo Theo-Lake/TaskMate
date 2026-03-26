@@ -9,7 +9,7 @@ datasource db {
   provider = "postgresql"
 }
 
-//TODO finish schemas
+//TODO finish schemas and change "job" to "task", and change "recieved" to "received"
 model User {
   userID                  Int                      @id @default(autoincrement())
   username                String                   @unique
@@ -27,7 +27,7 @@ model User {
   myPublishedReviews      Reviews[]                @relation("PublishedReviews")
   myRecievedReviews       Reviews[]                @relation("ReceivedReviews")
   emailVerified           Boolean                  @default(false)
-  emailVerificationTokens EmailVerificationToken[]
+  emailVerificationTokens EmailVerificationToken[] // TODO Maybe Remove
   conversationsAsUser1    Conversation[]           @relation("User1")
   conversationsAsUser2    Conversation[]           @relation("User2")
   sentMessages            Message[]
