@@ -4,7 +4,7 @@ import { Appbar, TextInput, Button } from "react-native-paper";
 import {styles} from "./styles"
 
 import Logo from '../../assets/img/logoNoText.png';
-
+import CustomHeader from "../../components/navBar/CustomHeader";
 
 export default function LoginScreen({ navigation }: any) {
 
@@ -13,10 +13,7 @@ export default function LoginScreen({ navigation }: any) {
 
     return (
         <View style={styles.container}>
-            <Appbar.Header elevated={true}  style={{backgroundColor:'#3D8252'}}>
-                
-                <Appbar.Content title="Log In" color="white"/>
-            </Appbar.Header>
+            <CustomHeader title="Log In" navigation={navigation}/>
             
             <View style={styles.content}>
                 <View style={styles.img}>

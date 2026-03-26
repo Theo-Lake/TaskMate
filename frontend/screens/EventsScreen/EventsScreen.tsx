@@ -1,13 +1,15 @@
 import React from "react";
 import { View, StyleSheet, Image } from 'react-native';
-import {  Text, useTheme } from "react-native-paper";
-import { styles } from "./styles"
+import {  Text, useTheme,Appbar, Avatar } from "react-native-paper";
+import {styles} from "../EventsScreen/styles"
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import CustomHeader from "../../components/navBar/CustomHeader";
 
-export default function OpeningScreen() {
+export default function EventsScreen({navigation}:any) {
     return (
-        <Text variant="displaySmall" style={styles.title}> {/* This is how u put custom colors. U can put MD3 colors in Styleshet*/}
-        Placeholder...
-        </Text>
+        <View style={{flex:1}}>
+            <CustomHeader title="Events" navigation={navigation} showProfilePicture={true}/>
+        </View>
+
     );
   }
-
