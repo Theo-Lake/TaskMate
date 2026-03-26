@@ -14,7 +14,7 @@ export default function LoginScreen({ navigation }: any) {
     return (
         <View style={styles.container}>
             <Appbar.Header elevated={true}  style={{backgroundColor:'#3D8252'}}>
-                <Appbar.BackAction color="white" onPress={()=>navigation.navigate('Opening')}/>
+                
                 <Appbar.Content title="Log In" color="white"/>
             </Appbar.Header>
             
