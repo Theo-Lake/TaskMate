@@ -64,6 +64,7 @@ function ChatsStackNavigator(){
         </ChatsStack.Navigator>
     );
 }
+//Save it for later
 function ProfileStackNavigator(){
     return (
         <ProfileStack.Navigator screenOptions={{headerShown: false}}>
@@ -93,7 +94,9 @@ export default function MainNavigationTabs(){
                     navigationState={state}
                     safeAreaInsets={insets}  
                     style={{backgroundColor: '#FFFFFF'}}
-                    activeIndicatorStyle={{backgroundColor:"#2C5E3B"}}
+                    activeIndicatorStyle={{backgroundColor:"transparent"}}
+                    activeColor="#2C5E3C"
+                    inactiveColor="#49454F"
                     onTabPress={({route, preventDefault}) =>{
                         const event = navigation.emit({
                             type: 'tabPress',
@@ -151,7 +154,7 @@ export default function MainNavigationTabs(){
             />
             <Tab.Screen
                 name="MyTasksTab"
-                component={MyTasksScreen}
+                component={MyTasksStackNavigator}
                 options={{
                     tabBarLabel: 'My Tasks',
                     tabBarIcon: ({color}) =><MaterialIcons name="favorite" color={color} size={26}/>

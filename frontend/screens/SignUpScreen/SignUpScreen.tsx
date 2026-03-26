@@ -16,7 +16,7 @@ export default function OpeningScreen({ navigation }: any) {
 
         <View style={styles.container}>
             <Appbar.Header elevated={true}  style={{backgroundColor:'#3D8252'}}>
-                <Appbar.BackAction color="white" onPress={()=>navigation.navigate('Opening')}/>
+                
                 <Appbar.Content title="Sign Up" color="white"/>
             </Appbar.Header>
 
