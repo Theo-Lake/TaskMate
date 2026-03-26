@@ -20,6 +20,10 @@ async function getConversationById(req: Request, res: Response) {
         const conversationID = Number(req.params.convoId);
         const conversation =
             await conversationServices.getConversationByID(conversationID);
+        if (!conversation) {
+            res.status(404).json({ error: "Conversation not found" });
+            return;
+        }
         console.log("Conversation by ID get request accepted.");
         res.status(200).json(conversation);
     } catch (error) {
@@ -53,7 +57,10 @@ async function getMessageById(req: Request, res: Response) {
             conversationID,
             messageID
         );
-
+        if (!message) {
+            res.status(404).json({ error: "Message not found" });
+            return;
+        }
         console.log("Message get request accepted.");
         res.status(200).json(message);
     } catch (error) {
@@ -67,15 +74,17 @@ async function getMessageById(req: Request, res: Response) {
 async function createMessage(req: Request, res: Response) {
     try {
         const conversationID = Number(req.params.convoId);
-        await conversationServices.createMessage(conversationID, req.body);
+        const message = await conversationServices.createMessage(conversationID, req.body);
 
         console.log("Message creation accepted.");
-        res.status(201).json({ message: "Message created" });
+        res.status(201).json(message);
     } catch (error) {
-        console.log(
-            `An error occured while trying to create message: ${error}`
-        );
-        res.status(500).json({ error: String(error) });
+        if (error instanceof Error && error.message === "senderID or content is missing") {
+            res.status(400).json({ error: error.message });
+        } else {
+            console.log(`An error occured while trying to create message: ${error}`);
+            res.status(500).json({ error: String(error) });
+        }
     }
 }
 
@@ -83,6 +92,12 @@ async function deleteMessage(req: Request, res: Response) {
     try {
         const conversationID = Number(req.params.convoId);
         const messageID = Number(req.params.messageId);
+
+        const message = await conversationServices.getMessageByID(conversationID, messageID);
+        if (!message) {
+            res.status(404).json({ error: "Message not found" });
+            return;
+        }
 
         await conversationServices.deleteMessage(conversationID, messageID);
 

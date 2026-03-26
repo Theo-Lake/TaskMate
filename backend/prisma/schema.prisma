@@ -103,7 +103,7 @@ model EmailVerificationToken {
 
 model Conversation {
   conversationID Int       @id @default(autoincrement())
-  task           Task      @relation(fields: [taskCID], references: [taskID])
+  task           Task      @relation(fields: [taskCID], references: [taskID], onDelete: Cascade)
   taskCID        Int
   user1          User      @relation("User1", fields: [user1ID], references: [userID])
   user1ID        Int
@@ -116,7 +116,7 @@ model Conversation {
 
 model Message {
   messageID      Int          @id @default(autoincrement())
-  conversation   Conversation @relation(fields: [conversationID], references: [conversationID])
+  conversation   Conversation @relation(fields: [conversationID], references: [conversationID], onDelete: Cascade)
   conversationID Int
   sender         User         @relation(fields: [senderID], references: [userID])
   senderID       Int

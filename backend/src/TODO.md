@@ -4,7 +4,7 @@
 PRIORITY: 
     BUG : [
         CRITICAL BUGS
-            [ ] - Fix duplicate route in routes/users.ts — deleteUser registered on PUT / instead of DELETE /
+            [/] - Fix duplicate route in routes/users.ts — deleteUser registered on PUT / instead of DELETE /
     ]
     
     FIRST : [
@@ -12,6 +12,7 @@ PRIORITY:
         [ ] - Organize the routes, controllers and services to make it so the functions are like:
             getAll__
             get__ById
+            [/] - (DONE FOR CONV AND TASKS)
 
         ROUTES
             [ ] - Complete routes/tasks.ts — all stubs, no handlers attached
@@ -67,5 +68,10 @@ PRIORITY:
     ]
 
 
-
+LIST OF COMPLETION: {
+    FIRST : [
+        - Conversation Routes and Controller
+        - Task Routes
+    ]
+}
 

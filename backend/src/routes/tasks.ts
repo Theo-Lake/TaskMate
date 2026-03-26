@@ -6,10 +6,18 @@ const router = express.Router(); // Creating a different router for every route,
 router.post("/:publisherId", taskController.postTask);
 
 // TASK GET all tasks
-router.get("/:taskId", taskController.getAllTasks);
+router.get("/", taskController.getAllTasks);
+
+// TASK GET all tasks BY USERID
+
+router.get("/byUserId/:userId", taskController.getAllTasksByUserID);
 
 // TASK GET by ID
-router.get("/:taskId", taskController.getTaskByID);
+router.get("/byTaskId/:taskId", taskController.getTaskByID);
+
+router.put("/:taskId/assign/:userId", taskController.assignTask);
+
+router.delete("/:taskId/assign/:userId", taskController.unAssignTask);
 
 // TASK PUT
 router.put("/:taskId", taskController.putTask);
