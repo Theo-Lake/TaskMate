@@ -2,10 +2,10 @@ import React from "react";
 import { View, StyleSheet, Image } from 'react-native';
 import { Appbar, TextInput, Button } from "react-native-paper";
 import {styles} from "./styles"
-
+import CustomHeader from "../../components/navBar/CustomHeader";
 import Logo from '../../assets/img/logoNoText.png';
 
-export default function OpeningScreen({ navigation }: any) {
+export default function SignUpScreen({ navigation }: any) {
 
     const [firstNameText, setFirstNameText] = React.useState("");
     const [lastNameText, setLastNameText] = React.useState("");
@@ -15,10 +15,7 @@ export default function OpeningScreen({ navigation }: any) {
     return (
 
         <View style={styles.container}>
-            <Appbar.Header elevated={true}  style={{backgroundColor:'#3D8252'}}>
-                
-                <Appbar.Content title="Sign Up" color="white"/>
-            </Appbar.Header>
+            <CustomHeader title="Sign Up" navigation={navigation}/>
 
             <View style={styles.content}>
                 <View style={styles.img}>

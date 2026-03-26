@@ -2,12 +2,14 @@ import React from "react";
 import { View, StyleSheet, Image } from 'react-native';
 import {  Text, useTheme } from "react-native-paper";
 import {styles} from "./styles"
+import CustomHeader from "../../components/navBar/CustomHeader";
 
-export default function OpeningScreen() {
+export default function CreateTaskScreen({navigation}:any) {
     return (
-        <Text variant="displaySmall" style={styles.title}> {/* This is how u put custom colors. U can put MD3 colors in Styleshet*/}
-        Placeholder...
-        </Text>
+        <View style={{flex:1}}>
+            <CustomHeader title="Create Task" navigation={navigation} showBackArrow={true} showProfilePicture={true}/>
+        </View>
+
     );
   }
 
