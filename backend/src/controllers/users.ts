@@ -6,7 +6,7 @@ import { userServices } from "../services/users"; // Abstraction so that db and 
 export async function getAllUsers(req: Request, res: Response) {
     try {
         const users = await userServices.getAllUsers(); // calling user service to get all users
-        console.log("Users get accepted.");
+        console.log("Users get all accepted.");
         res.status(200).json({ users: users });
     } catch (error) {
         console.log(`An error occured while trying to get User data: ${error}`);
