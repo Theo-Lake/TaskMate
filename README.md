@@ -1,6 +1,6 @@
 # Software-Engineering-Project-2026
 Software Engineering Project for Lancaster University made by: 
-- Theo Scarton Lago : Group Leader + Fullstack
+- Theo Scarton Lago : Group Leader + Backend Lead + Fullstack
 - Alex Onyshchuk: Frontend Leader
 - Aaron Skelhorn : Frontend
 - Joephill Thomas : Frontend
