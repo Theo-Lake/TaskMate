@@ -45,7 +45,7 @@ export async function getReviewsGivenToUser(userID: Number) {
 
 export async function getReviewById(reviewID: Number) {
     return await db.reviews.findUnique({
-        where: {reviewID: Number(reviewID },
+        where: {reviewID: Number(reviewID) },
     });
 }
 

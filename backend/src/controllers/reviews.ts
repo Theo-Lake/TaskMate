@@ -75,7 +75,7 @@ async function createReview(req: Request, res: Response) {
             res.status(400).json({ error: "You cannot review yourself" });
         }
 
-        const review = await reviewServices.createReview(userID, assigneeID);
+        const review = await reviewServices.createReview(userID, assigneeID, req.body);
 
         if (!review) {
             res.status(404).json({ error: "User not found" });
@@ -96,7 +96,7 @@ async function createReview(req: Request, res: Response) {
 async function updateReview(req: Request, res: Response) {
     try {
         const reviewID = Number(req.params.reviewID);
-        const review = await reviewServices.updateReview(reviewID);
+        const review = await reviewServices.updateReview(reviewID, req.body);
 
         if (!review) {
             res.status(404).json({ error: "Review not found" });
