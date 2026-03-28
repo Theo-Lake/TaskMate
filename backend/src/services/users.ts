@@ -45,7 +45,6 @@ export async function updateUser(userID: Number, body: JsonObject) {
         username, 
         firstName, 
         lastName, 
-        updated_at, 
         password_hash, 
         publishedJobs, 
         assignedJobs, 
@@ -66,7 +65,6 @@ export async function updateUser(userID: Number, body: JsonObject) {
             username: username as string | undefined,
             firstName: firstName as string | undefined,
             lastName: lastName as string | undefined,
-            updated_at: updated_at ? new Date(updated_at as string) : undefined,
             password_hash: password_hash as string | undefined,
             publishedJobs: publishedJobs 
                 ? { connect: (publishedJobs as { taskID: number }[]).map((task) => ({ taskID: task.taskID })) }

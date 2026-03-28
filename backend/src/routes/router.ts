@@ -16,8 +16,8 @@ router.use("/users", userRoutes);
 import reviewRoutes from "./reviews";
 router.use("/reviews", reviewRoutes);
 
-// import hashtagRoutes from "./hashtags";
-// router.use("/hashtags", hashtagRoutes);
+import hashtagRoutes from "./hashtags";
+router.use("/hashtags", hashtagRoutes);
 
 export default router
 
