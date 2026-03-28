@@ -1,7 +1,3 @@
-//finish that!!!
-/*
-*/ 
-
 
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -42,7 +38,6 @@ function TasksStackNavigator(){
     return (
         <TasksStack.Navigator screenOptions={{headerShown: false}}>
             <TasksStack.Screen name="Tasks" component={TasksScreen}/>
-            <TasksStack.Screen name="CreateTask" component={CreateTaskScreen}/>
             <TasksStack.Screen name="ViewTaskScreen" component={ViewTaskScreen}/>
         </TasksStack.Navigator>
     );
@@ -53,6 +48,9 @@ function MyTasksStackNavigator(){
             <MyTasksStack.Screen name="MyTasks" component={MyTasksScreen}/>
             <MyTasksStack.Screen name="CreateTask" component={CreateTaskScreen}/>
             <MyTasksStack.Screen name="ViewOwnTask" component={ViewOwnTaskScreen}/>
+            <MyTasksStack.Screen name="UserProfileScreen" component={UserProfileScreen}/>
+            <MyTasksStack.Screen name="SettingsScreen" component={SettingsScreen}/>
+
         </MyTasksStack.Navigator>
     );
 }
@@ -65,15 +63,8 @@ function ChatsStackNavigator(){
     );
 }
 //Save it for later
-function ProfileStackNavigator(){
-    return (
-        <ProfileStack.Navigator screenOptions={{headerShown: false}}>
-            <ProfileStack.Screen name="UserProfileScreen" component={UserProfileScreen}/>
-            <ProfileStack.Screen name="SettingsScreen" component={SettingsScreen}/>
 
-        </ProfileStack.Navigator>
-    );
-}
+
 function EventsStackNavigator(){
     return (
         <EventsStack.Navigator screenOptions={{headerShown: false}}>
@@ -103,13 +94,14 @@ export default function MainNavigationTabs(){
                             target: route.key,
                             canPreventDefault: true
                         });
-                        if (event.defaultPrevented) {
-                            preventDefault();
-                        }else{
-                            navigation.dispatch({
-                                ...CommonActions.navigate(route.name, route.params),
-                                target:state.key,
-                            });
+                        if (!event.defaultPrevented) {
+                            const startScreens = {
+                                TasksTab: 'Tasks', 
+                                EventsTab: 'EventsScreen',
+                                MessagesTab: 'ChatsScreen',
+                                MyTasksTab: 'MyTasks'
+                            };
+                            navigation.navigate(route.name, { screen: startScreens[route.name] });
                         }
                     }}
                     renderIcon={({route, focused, color}) => {
@@ -160,6 +152,8 @@ export default function MainNavigationTabs(){
                     tabBarIcon: ({color}) =><MaterialIcons name="favorite" color={color} size={26}/>
                 }}
             />
+
+            
 
 
         </Tab.Navigator>
