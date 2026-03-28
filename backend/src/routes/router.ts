@@ -4,14 +4,20 @@ const router = express.Router();
 
 // Importing route modules so that they can be exported as a whole
 
-import conversationRoutes from "./conversations"
-router.use("/conversations", conversationRoutes)
+import conversationRoutes from "./conversations";
+router.use("/conversations", conversationRoutes);
 
-import taskRoutes from "./tasks"
-router.use("/tasks", taskRoutes)
+import taskRoutes from "./tasks";
+router.use("/tasks", taskRoutes);
 
-import userRoutes from "./users"
-router.use("/users", userRoutes)
+import userRoutes from "./users";
+router.use("/users", userRoutes);
+
+import reviewRoutes from "./reviews";
+router.use("/reviews", reviewRoutes);
+
+// import hashtagRoutes from "./hashtags";
+// router.use("/hashtags", hashtagRoutes);
 
 export default router
 
