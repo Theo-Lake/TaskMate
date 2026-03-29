@@ -88,6 +88,7 @@ model Reviews {
   reviewAssigneeID  Int
 
   created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   rating     Rating
 }
 
