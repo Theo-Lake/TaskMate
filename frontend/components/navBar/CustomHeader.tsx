@@ -1,4 +1,4 @@
-import React from "react";
+import React, {memo} from "react";
 import {Appbar, Avatar} from 'react-native-paper';
 
 interface CustomHeaderProps{
@@ -8,10 +8,12 @@ interface CustomHeaderProps{
     showProfilePicture?: boolean;
     onBackPress?: () => void;
 }
-
-export default function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showProfilePicture=false}:CustomHeaderProps){
+const renderIcon = () => (
+    <Avatar.Icon size={30} icon="account" style={{ backgroundColor: '#ffffff20' }} color="white" />
+);
+function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showProfilePicture=false}:CustomHeaderProps){
     return(
-
+        
         <Appbar.Header elevated={true}  style={{backgroundColor:'#3D8252'}}>
             {showBackArrow && (
                 <Appbar.BackAction
@@ -30,14 +32,10 @@ export default function CustomHeader({title,navigation,showBackArrow=false, onBa
         <Appbar.Content title={title} color="white"/>
 
         {showProfilePicture && (
-            <Appbar.Action icon={() => (
-                <Avatar.Icon size={30} icon="account" style={{backgroundColor:'#ffffff20'}} color="white"/>
-                )}
-                color="white"
-                onPress={() => navigation.navigate('ProfileTab')}
-            />
+            <Appbar.Action icon={renderIcon} onPress={() => navigation.navigate('MyTasksTab', { screen: 'UserProfileScreen' })}/>
         )}
 
         </Appbar.Header>
     )
 }
+export default memo(CustomHeader);
