@@ -12,5 +12,19 @@ export const styles = StyleSheet.create({
         marginBottom:20,
         textAlign: "center",
         fontSize:30,
-    }
+    },
+    fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+    backgroundColor:'#3D8252',
+    },
+    chip: {
+        flexDirection:'row',
+        marginRight: 10,
+        marginTop: 10,
+        marginBottom: 10,
+        overflow: 'hidden',
+    },
 });
