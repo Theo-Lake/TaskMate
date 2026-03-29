@@ -1,0 +1,25 @@
+Backend:
+- TypeScript
+- Prisma (ORM)
+- nodemon
+- stripe
+- postman
+- nodemailer
+- zod
+- JWT authentication
+- Express.js
+- bcrypt (password hashing)
+- cors
+- dotenv
+- tsx / ts-node
+- PostgreSQL (via @prisma/adapter-pg)
+
+Frontend:
+- React Native
+- Expo
+- expo-router
+- React Navigation (native-stack, bottom-tabs, material-top-tabs)
+- react-native-paper (UI component library)
+- react-native-pager-view
+- @expo/vector-icons
+- TypeScript
