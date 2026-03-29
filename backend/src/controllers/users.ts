@@ -26,6 +26,7 @@ export async function getUserById(req: Request, res: Response) {
             res.status(404).json({ error: "User not found" });
             return;
         }
+
         console.log("User by id GET accepted.");
         res.status(200).json({ users: { user } });
     } catch (error) {
@@ -40,8 +41,7 @@ export async function getUserById(req: Request, res: Response) {
 //TODO include ID in all id needed requests by fetching it from backend URL and make all services take id as input too.
 export async function postUser(req: Request, res: Response) {
     try {
-        const userID = Number(req.params.userId);
-        await userServices.createUser(userID, req.body); // Calling user service to create user with req.body
+        const user = await userServices.createUser(req.body); // Calling user service to create user with req.body
         console.log("User data POST accepted.");
         res.status(200).json({ Message: "User data successfully posted" });
     } catch (error) {
@@ -55,7 +55,13 @@ export async function postUser(req: Request, res: Response) {
 export async function putUser(req: Request, res: Response) {
     try {
         const userID = Number(req.params.userId);
-        await userServices.updateUser(userID, req.body); // Calling user service to create update with req.body
+        const user = await userServices.updateUser(userID, req.body); // Calling user service to create update with req.body
+
+        if (!user) {
+            res.status(404).json({ error: "User not found" });
+            return;
+        }
+        
         console.log("User data PUT accepted.");
         res.status(200).json({ Message: "User data successfully updated" });
     } catch (error) {
