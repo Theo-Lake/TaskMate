@@ -41,7 +41,7 @@ export async function getUserById(req: Request, res: Response) {
 //TODO include ID in all id needed requests by fetching it from backend URL and make all services take id as input too.
 export async function postUser(req: Request, res: Response) {
     try {
-        const user = await userServices.createUser(req.body); // Calling user service to create user with req.body
+        await userServices.createUser(req.body); // Calling user service to create user with req.body
         console.log("User data POST accepted.");
         res.status(200).json({ Message: "User data successfully posted" });
     } catch (error) {
