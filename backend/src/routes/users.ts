@@ -18,5 +18,3 @@ router.put("/:userId", userController.putUser);
 router.delete("/:userId", userController.deleteUser);
 
 export default router;
-
-
