@@ -8,8 +8,8 @@ router.get("/", userController.getAllUsers);
 // USER DATA GET user BY USERID
 router.get("/:userId", userController.getUserById);
 
-// USER DATA POST 
-router.post("/:userId", userController.postUser);
+// USER DATA POST
+router.post("/", userController.postUser);
 
 // USER DATA PUT
 router.put("/:userId", userController.putUser);
@@ -18,5 +18,3 @@ router.put("/:userId", userController.putUser);
 router.delete("/:userId", userController.deleteUser);
 
 export default router;
-
-
