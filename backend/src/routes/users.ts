@@ -9,7 +9,7 @@ router.get("/", userController.getAllUsers);
 router.get("/:userId", userController.getUserById);
 
 // USER DATA POST 
-router.post("/:userId", userController.postUser);
+router.post("/", userController.postUser);
 
 // USER DATA PUT
 router.put("/:userId", userController.putUser);

@@ -13,7 +13,7 @@ export async function getUserById(userID: Number) {
     });
 }
 
-export async function createUser(userID: Number, body: JsonObject) {
+export async function createUser(body: JsonObject) {
     //TODO create
     let { 
         username, 
@@ -27,7 +27,6 @@ export async function createUser(userID: Number, body: JsonObject) {
 
     return await db.user.create({
         data: {
-            userID: Number(userID),
             username: username as string,
             firstName: firstName as string,
             lastName: lastName as string,
