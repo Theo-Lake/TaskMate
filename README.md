@@ -37,4 +37,4 @@ Running project:
 		cd frontend
 		npx expo start
 	backend only:
-		npm start dev
+		npm run dev
