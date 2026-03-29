@@ -8,7 +8,7 @@ import CustomHeader from "../../components/navBar/CustomHeader";
 export default function TasksScreen({navigation}:any) {
     return (
         <View style={{flex:1}}>
-            <CustomHeader title="Messages" navigation={navigation} showProfilePicture={true} />
+            <CustomHeader title="Tasks" navigation={navigation} showProfilePicture={true} />
         </View>
 
     );

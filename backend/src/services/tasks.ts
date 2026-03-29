@@ -2,11 +2,13 @@ import { db } from "../db";
 import { TaskTypes } from "../generated/prisma/enums";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
 
-export async function getAllTasks() {
+
+async function getAllTasks() {
     return await db.task.findMany();
 }
 
-export async function getTaskByID(taskID: Number) {
+
+async function getTaskByID(taskID: Number) {
     return await db.task.findUnique({
         where: {
             taskID: Number(taskID),
@@ -14,7 +16,8 @@ export async function getTaskByID(taskID: Number) {
     });
 }
 
-export async function getAllTasksByUserID(userID: Number) {
+
+async function getAllTasksByUserID(userID: Number) {
     return await db.task.findMany({
         where: {
             publisherID: Number(userID),
@@ -22,7 +25,8 @@ export async function getAllTasksByUserID(userID: Number) {
     });
 }
 
-export async function createTask(publisherID: Number, body: JsonObject) {
+
+async function createTask(publisherID: Number, body: JsonObject) {
     let { 
         name, 
         type, 
@@ -54,7 +58,8 @@ export async function createTask(publisherID: Number, body: JsonObject) {
     });
 }
 
-export async function assignTask(taskID: Number, userID: Number) {
+
+async function assignTask(taskID: Number, userID: Number) {
     const task = await db.task.findUnique({
         where: { taskID: Number(taskID) },
         select: { publisherID: true },
@@ -79,7 +84,8 @@ export async function assignTask(taskID: Number, userID: Number) {
     ]);
 }
 
-export async function unAssignTask(taskID: Number, userID: Number) {
+
+async function unAssignTask(taskID: Number, userID: Number) {
     const conversation = await db.conversation.findFirst({
         //This finds the first Conversation row where both taskCID and userID match. findUnique couldn't be used here because the filter is on a combination of non-unique fields — findUnique requires a single unique/primary key field.
         where: {
@@ -106,7 +112,8 @@ export async function unAssignTask(taskID: Number, userID: Number) {
     ]);
 }
 
-export async function updateTask(taskID: Number, body: JsonObject) {
+
+async function updateTask(taskID: Number, body: JsonObject) {
     let {
         name,
         type,
@@ -145,7 +152,8 @@ export async function updateTask(taskID: Number, body: JsonObject) {
     });
 }
 
-export async function deleteTask(taskID: Number) {
+
+async function deleteTask(taskID: Number) {
     await db.task.delete({
         where: {
             taskID: Number(taskID),
@@ -154,6 +162,7 @@ export async function deleteTask(taskID: Number) {
 
     return;
 }
+
 
 export const taskServices = {
     getAllTasks,
