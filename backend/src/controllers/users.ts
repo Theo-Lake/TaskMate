@@ -11,7 +11,7 @@ export async function getAllUsers(req: Request, res: Response) {
             res.status(404).json({ error: "Users not found" });
             return;
         }
-        
+
         console.log("Users GET all accepted.");
         res.status(200).json({ users: users });
     } catch (error) {
@@ -30,7 +30,7 @@ export async function getUserById(req: Request, res: Response) {
             res.status(404).json({ error: "User not found" });
             return;
         }
-        
+
         console.log("User by id GET accepted.");
         res.status(200).json({ users: { user } });
     } catch (error) {
@@ -39,7 +39,6 @@ export async function getUserById(req: Request, res: Response) {
     }
 }
 
-//TODO include ID in all id needed requests by fetching it from backend URL and make all services take id as input too.
 export async function createUser(req: Request, res: Response) {
     try {
         await userServices.createUser(req.body); // Calling user service to create user with req.body
