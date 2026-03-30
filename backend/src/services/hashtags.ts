@@ -15,18 +15,22 @@ async function getAllHashtags() {
 
 
 async function getHashtagsFromTask(taskID: Number) {
-    return await db.task.findMany({
+    const task = await db.task.findUnique({
         where: { taskID: Number(taskID) },
         include: { hashtags: true },
     });
+
+    return task?.hashtags ?? [];
 }
 
 
 async function getTasksFromHashtag(hashtagID: Number) {
-    return await db.hashtags.findMany({
+    const hashtag = await db.hashtags.findUnique({
         where: { hashtagID: Number(hashtagID) },
         include: { tasks: true },
     });
+
+    return hashtag?.tasks ?? [];
 }
 
 
