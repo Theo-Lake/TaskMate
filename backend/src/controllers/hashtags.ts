@@ -4,7 +4,7 @@ import { hashtagServices } from "../services/hashtags";
 
 async function getHashtagByID(req: Request, res: Response) {
     try {
-        const hashtagID = Number(req.params.hashtagID)
+        const hashtagID = Number(req.params.hashtagId)
         const hashtag = await hashtagServices.getHashtagByID(hashtagID);
 
         if (!hashtag) {
@@ -44,7 +44,7 @@ async function getAllHashtags(req: Request, res: Response) {
 
 async function getHashtagsFromTask(req: Request, res: Response) {
     try {
-        const taskID = Number(req.params.taskID);
+        const taskID = Number(req.params.taskId);
         const hashtags = await hashtagServices.getHashtagsFromTask(taskID);
 
         if (!hashtags) {
@@ -65,7 +65,7 @@ async function getHashtagsFromTask(req: Request, res: Response) {
 
 async function getTasksFromHashtag(req: Request, res: Response) {
     try {
-        const hashtagID = Number(req.params.hashtagID);
+        const hashtagID = Number(req.params.hashtagId);
         const tasks = await hashtagServices.getTasksFromHashtag(hashtagID);
 
         if (!tasks) {
@@ -106,7 +106,7 @@ async function createHashtag(req: Request, res: Response) {
 
 async function deleteHashtag(req: Request, res: Response) {
     try {
-        const hashtagID = Number(req.params.hashtagID);
+        const hashtagID = Number(req.params.hashtagId);
         const hashtag = await hashtagServices.deleteHashtag(hashtagID);
 
         if (!hashtag) {
@@ -127,8 +127,8 @@ async function deleteHashtag(req: Request, res: Response) {
 
 async function addHashtagToTask(req: Request, res: Response) {
     try {
-        const taskID = Number(req.params.taskID);
-        const hashtagID = Number(req.params.hashtagID);
+        const taskID = Number(req.params.taskId);
+        const hashtagID = Number(req.params.hashtagId);
         const hashtag = await hashtagServices.addHashtagToTask(taskID, hashtagID);
 
         if (!hashtag) {
@@ -149,8 +149,8 @@ async function addHashtagToTask(req: Request, res: Response) {
 
 async function removeHashtagFromTask(req: Request, res: Response) {
     try {
-        const taskID = Number(req.params.taskID);
-        const hashtagID = Number(req.params.hashtagID);
+        const taskID = Number(req.params.taskId);
+        const hashtagID = Number(req.params.hashtagId);
         const hashtag = await hashtagServices.removeHashtagFromTask(taskID, hashtagID);
 
         if (!hashtag) {
