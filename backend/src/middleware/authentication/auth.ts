@@ -28,6 +28,8 @@ async function comparePassword(
 
 //TODO create POST for auth in login and refresh
 
+// Need to wrap every endpoint with withAuth and verify token
+
 export const auth = {
     generateAccessToken,
     hashPassword,

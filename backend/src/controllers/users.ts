@@ -41,6 +41,8 @@ export async function getUserById(req: Request, res: Response) {
 
 export async function createUser(req: Request, res: Response) {
     try {
+        //TODO encrypt password and generate token
+        //TODO got to check if user already exists for email or name
         await userServices.createUser(req.body); // Calling user service to create user with req.body
         console.log("User data POST accepted.");
         res.status(200).json({ Message: "User data successfully created" });
