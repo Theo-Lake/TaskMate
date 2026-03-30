@@ -1,0 +1,4 @@
+Theo:
+    Check all Endpoints that i did, finish my schemas, implement schemas in requests, then move to auth
+
+Toby:

@@ -14,6 +14,21 @@ router.get("/byUserId/:userId", taskController.getAllTasksByUserID);
 // TASK GET by ID
 router.get("/byTaskId/:taskId", taskController.getTaskByID);
 
+// TASK ASSIGNMENT GET ALL
+router.get("/assignments", taskController.getTaskAllTaskAssignments);
+
+// TASK ASSIGNMENT GET by taskID
+router.get(
+    "/assignments/byTaskId/:taskId",
+    taskController.getTaskAssignmentByTaskID
+);
+
+// TASK ASSIGNMENT GET by userIDs
+router.get(
+    "/assignments/byUserId/:userId",
+    taskController.getTaskAssignmentByUserID
+);
+
 router.put("/:taskId/assign/:userId", taskController.assignTask);
 
 router.delete("/:taskId/assign/:userId", taskController.unAssignTask);
