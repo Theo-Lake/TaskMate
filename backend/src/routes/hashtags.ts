@@ -2,29 +2,29 @@ import express from "express";
 import { hashtagController } from "../controllers/hashtags";
 const router = express.Router();
 
-//GET hashtag by ID
-router.get("/:hashtagID", hashtagController.getHashtagByID);
-
 // GET all hashtags
 router.get("/", hashtagController.getAllHashtags);
 
+//GET hashtag by ID
+router.get("/id/:hashtagId", hashtagController.getHashtagByID);
+
 // GET all hashtags from single task
-router.get("/task/:taskID", hashtagController.getHashtagsFromTask);
+router.get("/viaTask/:taskId", hashtagController.getHashtagsFromTask);
 
 // GET all tasks with single hashtag
-router.get("/:hashtagID", hashtagController.getTasksFromHashtag);
+router.get("/viaHashtag/:hashtagId", hashtagController.getTasksFromHashtag);
 
 // CREATE hashtag
-router.post("/", hashtagController.createHashtag);
+router.post("/create/", hashtagController.createHashtag);
 
 // DELETE hashtag
-router.delete("/:hashtagID", hashtagController.deleteHashtag);
+router.delete("/delete/:hashtagId", hashtagController.deleteHashtag);
 
 // ADD hashtag
-router.post("/task/:taskID/:hashtagID", hashtagController.addHashtagToTask);
+router.put("/add/:taskId/:hashtagId", hashtagController.addHashtagToTask);
 
 // REMOVE hashtag
-router.delete("/task/:taskID/:hashtagID", hashtagController.removeHashtagFromTask);
+router.put("/remove/:taskId/:hashtagId", hashtagController.removeHashtagFromTask);
 
 
 export default router;

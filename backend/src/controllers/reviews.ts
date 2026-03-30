@@ -4,7 +4,7 @@ import { reviewServices } from "../services/reviews";
 
 async function getReviewsMadeByUser(req: Request, res: Response) {
     try {
-        const userID = Number(req.params.userID);
+        const userID = Number(req.params.userId);
         const reviews = await reviewServices.getReviewsMadeByUser(userID);
 
         if (!reviews) {
@@ -25,7 +25,7 @@ async function getReviewsMadeByUser(req: Request, res: Response) {
 
 async function getReviewsGivenToUser(req: Request, res: Response) {
     try {
-        const userID = Number(req.params.userID);
+        const userID = Number(req.params.userId);
         const reviews = await reviewServices.getReviewsGivenToUser(userID);
         
         if (!reviews) {
@@ -47,7 +47,7 @@ async function getReviewsGivenToUser(req: Request, res: Response) {
 
 async function getReviewById(req: Request, res: Response) {
     try {
-        const reviewID = Number(req.params.reviewID);
+        const reviewID = Number(req.params.reviewId);
         const review = await reviewServices.getReviewById(reviewID);
 
         if (!review) {
@@ -68,8 +68,8 @@ async function getReviewById(req: Request, res: Response) {
 
 async function createReview(req: Request, res: Response) {
     try {
-        const userID = Number(req.params.userID);
-        const assigneeID =  Number(req.params.assigneeID);
+        const userID = Number(req.params.userId);
+        const assigneeID =  Number(req.params.assigneeId);
 
         if (userID === assigneeID) {
             res.status(400).json({ error: "You cannot review yourself" });
@@ -95,7 +95,7 @@ async function createReview(req: Request, res: Response) {
 
 async function updateReview(req: Request, res: Response) {
     try {
-        const reviewID = Number(req.params.reviewID);
+        const reviewID = Number(req.params.reviewId);
         const review = await reviewServices.updateReview(reviewID, req.body);
 
         if (!review) {
@@ -116,7 +116,7 @@ async function updateReview(req: Request, res: Response) {
 
 async function deleteReview(req: Request, res: Response) {
     try {
-        const reviewID = Number(req.params.reviewID);
+        const reviewID = Number(req.params.reviewId);
         const review = await reviewServices.deleteReview(reviewID);
 
         if (!review) {
