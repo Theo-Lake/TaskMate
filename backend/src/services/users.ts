@@ -14,6 +14,7 @@ export async function getUserById(userID: Number) {
 }
 
 export async function createUser(body: JsonObject) {
+    //TODO got to check if user already exists for email or name
     let {
         username,
         firstName,
