@@ -18,7 +18,10 @@ router.get(
 );
 
 // MESSAGES POST ENDPOINT
-router.post("/:convoId/messages", conversationController.createMessage);
+router.post(
+    "/:convoId/messages/:senderId",
+    conversationController.createMessage
+);
 
 // MESSAGES delete (by ID) ENDPOINT
 router.delete(

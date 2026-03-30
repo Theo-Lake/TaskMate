@@ -4,7 +4,7 @@
 PRIORITY: 
     BUG : [
         CRITICAL BUGS
-            [/] - Fix duplicate route in routes/users.ts — deleteUser registered on PUT / instead of DELETE /
+            [ ] - ALL UPDATES NEED TO CHECK IF __ exist first or else it'll just post.
     ]
     
     FIRST : [
