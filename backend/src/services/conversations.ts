@@ -13,10 +13,30 @@ export async function getConversationByID(conversationID: Number) {
     });
 }
 
-export async function createMessage(conversationID: Number, body: JsonObject) {
-    const { senderID, content } = body;
+export async function createMessage(
+    conversationID: Number,
+    senderID: Number,
+    body: JsonObject
+) {
+    const { content } = body;
     if (!senderID || !content)
         throw new Error("senderID or content is missing");
+
+    const conversation = await getConversationByID(conversationID);
+
+    if (!conversation)
+        throw new Error(
+            `Conversation ${conversationID} doesn't exist or could not be found.`
+        );
+
+    if (
+        senderID !== Number(conversation.user1ID) &&
+        senderID !== Number(conversation.user2ID)
+    )
+        throw new Error(
+            `Sender ${senderID} is not in conversation ${conversationID}`
+        );
+
     return await db.message.create({
         data: {
             conversationID: Number(conversationID),

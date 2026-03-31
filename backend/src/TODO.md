@@ -4,37 +4,39 @@
 PRIORITY: 
     BUG : [
         CRITICAL BUGS
-            [/] - Fix duplicate route in routes/users.ts — deleteUser registered on PUT / instead of DELETE /
+            [ ] - ALL UPDATES NEED TO CHECK IF __ exist first or else it'll just post.
+            [ ] - POST /tasks/:publisherId - Create a task ✅ ❌ (for empty)  + requires validation
     ]
     
     FIRST : [
 
-        [ ] - Organize the routes, controllers and services to make it so the functions are like:
+        [/] - Organize the routes, controllers and services to make it so the functions are like:
             getAll__
             get__ById
             [/] - (DONE FOR CONV AND TASKS)
 
         ROUTES
-            [ ] - Complete routes/tasks.ts — all stubs, no handlers attached
-            [ ] - Add DELETE route for users
-            [ ] - Add routes for Reviews
-            [ ] - Add routes for Hashtags
-            [ ] - Add routes for Messages
+            [/] - Complete routes/tasks.ts — all stubs, no handlers attached
+            [/] - Add DELETE route for users
+            [/] - Add routes for Reviews
+            [] - Add routes for Hashtags
+            [/] - Add routes for Messages
 
         CONTROLLERS
-            [ ] - Implement all task handlers in controllers/tasks.ts (currently empty) 
+            [/] - Implement all task handlers in controllers/tasks.ts (currently empty) 
             [ ] - Wire validation middleware calls into all controllers
 
         SERVICES
-            [ ] - users.ts — implement createUser (bcrypt), updateUser, deleteUser, getUserById
-            [ ] - tasks.ts — implement createTask, updateTask, deleteTask, getTaskById
-            [ ] - conversations.ts — implement getAllMessages, createMessage, getConversationById
+            [/] - users.ts — implement createUser (bcrypt), updateUser, deleteUser, getUserById
+            [ ] - Bycrypt
+            [/] - tasks.ts — implement createTask, updateTask, deleteTask, getTaskById
+            [/] - conversations.ts — implement getAllMessages, createMessage, getConversationById
             [ ] - More logic such as checkUser, checkTask (using AI thing we said), ... etc
 
-        [ ] - CREATE HASHTAGS AND REVIEWS 
+        [/] - CREATE HASHTAGS AND REVIEWS 
 
 
-        [ ] - Testing of ALL endpoints ***BEFORE*** moving on!!!!!!!!!!!!!!!!!!!!!!!! (call me for us to do this tg)
+        [/] - Testing of ALL endpoints ***BEFORE*** moving on!!!!!!!!!!!!!!!!!!!!!!!! (call me for us to do this tg)
     ]
 
     AFTER : [

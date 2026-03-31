@@ -43,9 +43,7 @@ async function getAllMessages(req: Request, res: Response) {
         console.log("Messages GET all request accepted.");
         res.status(200).json(messages);
     } catch (error) {
-        console.log(
-            `An error occured while trying to get messages: ${error}`
-        );
+        console.log(`An error occured while trying to get messages: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -76,12 +74,20 @@ async function getMessageById(req: Request, res: Response) {
 async function createMessage(req: Request, res: Response) {
     try {
         const conversationID = Number(req.params.convoId);
-        const message = await conversationServices.createMessage(conversationID, req.body);
+        const senderID = Number(req.params.senderId);
+        const message = await conversationServices.createMessage(
+            conversationID,
+            senderID,
+            req.body
+        );
 
         console.log("Message CREATE accepted.");
         res.status(201).json(message);
     } catch (error) {
-        if (error instanceof Error && error.message === "senderID or content is missing") {
+        if (
+            error instanceof Error &&
+            error.message === "senderID or content is missing"
+        ) {
             res.status(400).json({ error: error.message });
         } else {
             console.log(
@@ -97,7 +103,10 @@ async function deleteMessage(req: Request, res: Response) {
         const conversationID = Number(req.params.convoId);
         const messageID = Number(req.params.messageId);
 
-        const message = await conversationServices.getMessageByID(conversationID, messageID);
+        const message = await conversationServices.getMessageByID(
+            conversationID,
+            messageID
+        );
         if (!message) {
             res.status(404).json({ error: "Message not found" });
             return;

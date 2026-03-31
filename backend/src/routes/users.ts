@@ -9,14 +9,12 @@ router.get("/", userController.getAllUsers);
 router.get("/:userId", userController.getUserById);
 
 // USER DATA POST 
-router.post("/:userId", userController.postUser);
+router.post("/", userController.createUser);
 
 // USER DATA PUT
-router.put("/:userId", userController.putUser);
+router.put("/:userId", userController.updateUser);
 
 // USER DATA PUT
 router.delete("/:userId", userController.deleteUser);
 
 export default router;
-
-
