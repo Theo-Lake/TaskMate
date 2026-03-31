@@ -1,16 +1,62 @@
 import { StyleSheet } from "react-native";
 
-export const styles = StyleSheet.create({
+export  const styles = StyleSheet.create({
     container:{
         flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-        padding: 20,
         backgroundColor: '#ffffff'
     },
+    content:{
+        justifyContent:'center',
+        padding: 20,
+    },
     title:{
-        marginBottom:20,
+
         textAlign: "center",
-        fontSize:30,
+        
+    },
+
+    img: {
+        width: '100%',
+        height: 200,
+        borderRadius: 5, 
+        alignItems:'center',
+        marginTop: 12,
+
+    },
+
+    textBox: {
+        marginBottom:10
+    },
+    textBoxTall: {
+        marginBottom:10,
+        minHeight:200
+    },
+
+    nameBox: {
+        flexGrow:1,
+        flexShrink:1
+    },
+    imagePicker:{
+        height: 100, 
+        borderWidth: 1, 
+        borderColor: '#ccc', 
+        borderStyle: 'dashed', 
+        borderRadius: 10, 
+        justifyContent: 'center', 
+        alignItems: 'center'
+    },
+    namesView: {
+        paddingHorizontal:20,
+        flexDirection:'row',
+        flexWrap:'wrap',
+        justifyContent:'space-between',
+        gap:20
+    },
+    btn:{
+        borderRadius:40, 
+        backgroundColor:'#3D8252',
+        width:'100%',
+        justifyContent: 'center', 
+        alignItems: 'center'
     }
 });

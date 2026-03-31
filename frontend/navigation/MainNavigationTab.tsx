@@ -39,6 +39,7 @@ function TasksStackNavigator(){
         <TasksStack.Navigator screenOptions={{headerShown: false}}>
             <TasksStack.Screen name="Tasks" component={TasksScreen}/>
             <TasksStack.Screen name="ViewTaskScreen" component={ViewTaskScreen}/>
+            <TasksStack.Screen name="CreateTaskScreen" component={CreateTaskScreen}/>
         </TasksStack.Navigator>
     );
 }
@@ -46,7 +47,6 @@ function MyTasksStackNavigator(){
     return (
         <MyTasksStack.Navigator screenOptions={{headerShown: false}}>
             <MyTasksStack.Screen name="MyTasks" component={MyTasksScreen}/>
-            <MyTasksStack.Screen name="CreateTask" component={CreateTaskScreen}/>
             <MyTasksStack.Screen name="ViewOwnTask" component={ViewOwnTaskScreen}/>
             <MyTasksStack.Screen name="UserProfileScreen" component={UserProfileScreen}/>
             <MyTasksStack.Screen name="SettingsScreen" component={SettingsScreen}/>
