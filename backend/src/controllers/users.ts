@@ -47,6 +47,11 @@ export async function createUser(req: Request, res: Response) {
         console.log("User data POST accepted.");
         res.status(200).json({ Message: "User data successfully created" });
     } catch (error) {
+        if (error instanceof Error && (error.message === "Username already taken" || error.message === "Email alreday in use")) {
+            res.status(409).json({ error: error.message });
+            return;
+        }
+
         console.log(`An error occured while posting the user data: ${error}`);
         res.status(500).json({ error: error });
     }

@@ -13,7 +13,7 @@ router.get("/received/:userId", reviewController.getReviewsGivenToUser);
 router.get("/id/:reviewId", reviewController.getReviewById);
 
 // REVIEW POST create review ENDPOINT
-router.post("/create/:userId/:assigneeId", reviewController.createReview);
+router.post("/:userId/create/:assigneeId", reviewController.createReview);
 
 // REVIEW PUT edit review ENDPOINT
 router.put("/update/:reviewId", reviewController.updateReview)

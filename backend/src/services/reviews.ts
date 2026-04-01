@@ -6,15 +6,8 @@ import { Rating } from "../generated/prisma/enums";
 export async function getReviewsMadeByUser(userID: Number) {
     return await db.reviews.findMany({ 
         where: { reviewPublisherID: Number(userID) },
-        include: {
-            // Select only necessary details (don't want to pass password)
-            reviewAssignee: {
-                select: {
-                    userID: true,
-                    username: true,
-                    profilePicture: true,
-                },
-            },
+        select: {
+            reviewID: true,
         },
         orderBy: {
             created_at: "desc",
@@ -26,15 +19,8 @@ export async function getReviewsMadeByUser(userID: Number) {
 export async function getReviewsGivenToUser(userID: Number) {
     return await db.reviews.findMany({ 
         where: { reviewAssigneeID: Number(userID) },
-        include: {
-            // Select only necessary details (don't want to pass password)
-            reviewPublisher: {
-                select: {
-                    userID: true,
-                    username: true,
-                    profilePicture: true,
-                },
-            },
+        select: {
+            reviewID: true,
         },
         orderBy: {
             created_at: "desc",

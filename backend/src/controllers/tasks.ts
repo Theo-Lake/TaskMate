@@ -11,9 +11,7 @@ async function getAllTasks(req: Request, res: Response) {
         console.log("Tasks GET accepted.");
         res.status(200).json({ tasks: tasks });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get Tasks data: ${error}`
-        );
+        console.log(`An error occured while trying to get Tasks data: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }
@@ -25,9 +23,7 @@ async function getTaskByID(req: Request, res: Response) {
         console.log("Tasks GET accepted.");
         res.status(200).json({ tasks: task });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get Tasks data: ${error}`
-        );
+        console.log(`An error occured while trying to get Tasks data: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }
@@ -39,9 +35,7 @@ async function getAllTasksByUserID(req: Request, res: Response) {
         console.log("Tasks by user GET accepted.");
         res.status(200).json({ tasks: tasks });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get Tasks data by user: ${error}`
-        );
+        console.log(`An error occured while trying to get Tasks data by user: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }
@@ -52,9 +46,7 @@ async function getTaskAllTaskAssignments(req: Request, res: Response) {
         console.log("Tasks Assignment GET ALL accepted.");
         res.status(200).json({ taskAssignments: taskAssignments });
     } catch (error) {
-        console.log(
-            `An error occured while trying to GET ALL Task Assignments: ${error}`
-        );
+        console.log(`An error occured while trying to GET ALL Task Assignments: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }
@@ -67,9 +59,7 @@ async function getTaskAssignmentByTaskID(req: Request, res: Response) {
         console.log("Task assignment GET by taskID accepted.");
         res.status(200).json({ taskAssignment: taskAssignment });
     } catch (error) {
-        console.log(
-            `An error occured while trying to GET Task Assignments by taskID: ${error}`
-        );
+        console.log(`An error occured while trying to GET Task Assignments by taskID: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }
@@ -82,9 +72,7 @@ async function getTaskAssignmentByUserID(req: Request, res: Response) {
         console.log("Task Assignments by userID GET accepted.");
         res.status(200).json({ taskAssignment: taskAssignment });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get Task Assignments by userID: ${error}`
-        );
+        console.log(`An error occured while trying to get Task Assignments by userID: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }

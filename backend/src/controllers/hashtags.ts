@@ -15,9 +15,7 @@ async function getHashtagByID(req: Request, res: Response) {
         console.log("Hashtag GET by ID request accepted");
         res.status(200).json({ hashtag: hashtag });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get hashtag by ID: ${error}`
-        );
+        console.log(`An error occured while trying to get hashtag by ID: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -34,18 +32,16 @@ async function getAllHashtags(req: Request, res: Response) {
         console.log("Hashtags GET request accepted.");
         res.status(200).json({ hashtags: hashtags });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get all hashtags: ${error}`
-        );
+        console.log(`An error occured while trying to get all hashtags: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
 
 
-async function getHashtagsFromTask(req: Request, res: Response) {
+async function getAllHashtagsFromTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
-        const hashtags = await hashtagServices.getHashtagsFromTask(taskID);
+        const hashtags = await hashtagServices.getAllHashtagsFromTask(taskID);
 
         if (!hashtags) {
             res.status(404).json({ error: "Hashtags not found "  });
@@ -55,18 +51,16 @@ async function getHashtagsFromTask(req: Request, res: Response) {
         console.log("Hashtags GET hashtags from task request accepted.");
         res.status(200).json({ hashtags: hashtags });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get all hashtags from single task: ${error}`
-        );
+        console.log(`An error occured while trying to get all hashtags from single task: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
 
 
-async function getTasksFromHashtag(req: Request, res: Response) {
+async function getAllTasksFromHashtag(req: Request, res: Response) {
     try {
         const hashtagID = Number(req.params.hashtagId);
-        const tasks = await hashtagServices.getTasksFromHashtag(hashtagID);
+        const tasks = await hashtagServices.getAllTasksFromHashtag(hashtagID);
 
         if (!tasks) {
             res.status(404).json({ error: "Tasks not found "  });
@@ -76,9 +70,7 @@ async function getTasksFromHashtag(req: Request, res: Response) {
         console.log("Hashtags GET tasks from hashtag request accepted.");
         res.status(200).json({ tasks: tasks });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get all hashtags: ${error}`
-        );
+        console.log(`An error occured while trying to get all hashtags: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -96,9 +88,7 @@ async function createHashtag(req: Request, res: Response) {
         console.log("Hashtags CREATE request accepted.");
         res.status(201).json({ hashtag: hashtag });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get all hashtags: ${error}`
-        );
+        console.log(`An error occured while trying to get all hashtags: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -117,9 +107,7 @@ async function deleteHashtag(req: Request, res: Response) {
         console.log("Hashtags DELETE request accepted.");
         res.status(200).json({ hashtahs: hashtag });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get all hashtags: ${error}`
-        );
+        console.log(`An error occured while trying to get all hashtags: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -139,9 +127,7 @@ async function addHashtagToTask(req: Request, res: Response) {
         console.log("Hashtags ADD to task request accepted.");
         res.status(200).json({ hashtags: hashtag });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get all hashtags: ${error}`
-        );
+        console.log(`An error occured while trying to get all hashtags: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -161,9 +147,7 @@ async function removeHashtagFromTask(req: Request, res: Response) {
         console.log("Hashtags REMOVE from task request accepted.");
         res.status(200).json({ hashtags: hashtag });
     } catch (error) {
-        console.log(
-            `An error occured while trying to get all hashtags: ${error}`
-        );
+        console.log(`An error occured while trying to get all hashtags: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -172,8 +156,8 @@ async function removeHashtagFromTask(req: Request, res: Response) {
 export const hashtagController = {
     getHashtagByID,
     getAllHashtags,
-    getHashtagsFromTask,
-    getTasksFromHashtag,
+    getAllHashtagsFromTask,
+    getAllTasksFromHashtag,
     createHashtag,
     deleteHashtag,
     addHashtagToTask,

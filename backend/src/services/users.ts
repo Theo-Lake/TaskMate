@@ -14,7 +14,6 @@ export async function getUserById(userID: Number) {
 }
 
 export async function createUser(body: JsonObject) {
-    //TODO got to check if user already exists for email or name
     let {
         username,
         firstName,
@@ -24,6 +23,21 @@ export async function createUser(body: JsonObject) {
         password_hash,
         occupation,
     } = body;
+
+    const existingUser = await db.user.findFirst({
+        where: {
+            OR: [
+                { username: username as string },
+                { email: email as string },
+            ],
+        },
+    });
+
+    if (existingUser) {
+        throw new Error(
+            existingUser.username === username ? "Username already taken" : "Email already in use"
+        );
+    }
 
     return await db.user.create({
         data: {
