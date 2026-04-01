@@ -14,20 +14,32 @@ async function getAllHashtags() {
 }
 
 
-async function getHashtagsFromTask(taskID: Number) {
+async function getAllHashtagsFromTask(taskID: Number) {
     const task = await db.task.findUnique({
         where: { taskID: Number(taskID) },
-        include: { hashtags: true },
+        include: { 
+            hashtags: {
+                select: {
+                    hashtagID: true,
+                },
+            }, 
+        },
     });
 
     return task?.hashtags ?? [];
 }
 
 
-async function getTasksFromHashtag(hashtagID: Number) {
+async function getAllTasksFromHashtag(hashtagID: Number) {
     const hashtag = await db.hashtags.findUnique({
         where: { hashtagID: Number(hashtagID) },
-        include: { tasks: true },
+        include: { 
+            tasks: {
+                select: {
+                    taskID: true,
+                },
+            }, 
+        },
     });
 
     return hashtag?.tasks ?? [];
@@ -60,7 +72,13 @@ async function addHashtagToTask(taskID: Number, hashtagID: Number) {
                 connect: { hashtagID: Number(hashtagID) },
             },
         },
-        include: { hashtags: true },
+        include: { 
+            hashtags: {
+                select: {
+                    hashtagID: true,
+                },
+            }, 
+        },
     });
 }
 
@@ -73,7 +91,13 @@ async function removeHashtagFromTask(taskID: Number, hashtagID: Number) {
                 disconnect: { hashtagID: Number(hashtagID) },
             },
         },
-        include: { hashtags: true },
+        include: { 
+            hashtags: {
+                select: {
+                    hashtagID: true,
+                },
+            }, 
+        },
     });
 }
 
@@ -81,8 +105,8 @@ async function removeHashtagFromTask(taskID: Number, hashtagID: Number) {
 export const hashtagServices = {
     getHashtagByID,
     getAllHashtags,
-    getHashtagsFromTask,
-    getTasksFromHashtag,
+    getAllHashtagsFromTask,
+    getAllTasksFromHashtag,
     createHashtag,
     deleteHashtag,
     addHashtagToTask,

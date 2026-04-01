@@ -15,9 +15,7 @@ async function getReviewsMadeByUser(req: Request, res: Response) {
         console.log("Review GET made by user request accepted.");
         res.status(200).json(reviews);
     } catch (error) {
-        console.log(
-            `An error occured while trying to get reviews made by user: ${error}`
-        );
+        console.log(`An error occured while trying to get reviews made by user: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -36,9 +34,7 @@ async function getReviewsGivenToUser(req: Request, res: Response) {
         console.log("Review GET given to user request accepted.");
         res.status(200).json(reviews);
     } catch (error) {
-        console.log(
-            `An error occured while trying to get reviews given to user: ${error}`
-        );
+        console.log(`An error occured while trying to get reviews given to user: ${error}`);
         // TODO Conversations sends as a string, but tasks doesn't, which is correct?
         res.status(500).json({ error: String(error) });
     }
@@ -58,9 +54,7 @@ async function getReviewById(req: Request, res: Response) {
         console.log("Review GET by ID request accepted.");
         res.status(200).json(review);
     } catch (error) {
-        console.log(
-            `An error occured while trying to get review by ID: ${error}`
-        );
+        console.log(`An error occured while trying to get review by ID: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -85,9 +79,7 @@ async function createReview(req: Request, res: Response) {
         console.log("Review CREATE request accepted.");
         res.status(201).json(review);
     } catch (error) {
-        console.log(
-            `An error occured while trying to create review: ${error}`
-        );
+        console.log(`An error occured while trying to create review: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -106,9 +98,7 @@ async function updateReview(req: Request, res: Response) {
         console.log("Review UPDATE request accepted.");
         res.status(200).json(review);
     } catch (error) {
-        console.log(
-            `An error occured while trying to update review: ${error}`
-        );
+        console.log(`An error occured while trying to update review: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }
@@ -127,9 +117,7 @@ async function deleteReview(req: Request, res: Response) {
         console.log("Review DELETE request accepted.");
         res.status(200).json(review);
     } catch (error) {
-        console.log(
-            `An error occured while trying to delete review: ${error}`
-        );
+        console.log(`An error occured while trying to delete review: ${error}`);
         res.status(500).json({ error: String(error) });
     }
 }

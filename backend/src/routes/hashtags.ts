@@ -9,10 +9,10 @@ router.get("/", hashtagController.getAllHashtags);
 router.get("/id/:hashtagId", hashtagController.getHashtagByID);
 
 // GET all hashtags from single task
-router.get("/viaTask/:taskId", hashtagController.getHashtagsFromTask);
+router.get("/allByTaskId/:taskId", hashtagController.getAllHashtagsFromTask);
 
 // GET all tasks with single hashtag
-router.get("/viaHashtag/:hashtagId", hashtagController.getTasksFromHashtag);
+router.get("/allByHashtagId/:hashtagId", hashtagController.getAllTasksFromHashtag);
 
 // CREATE hashtag
 router.post("/create/", hashtagController.createHashtag);
