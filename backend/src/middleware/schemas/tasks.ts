@@ -1,8 +1,34 @@
 import { z } from "zod";
-
-// Use AI for description update, check if empty and bad words
+import { Status, TaskTypes } from "../../generated/prisma/enums";
+//TODO Use AI for description suggestion in form of a function call, check if empty and bad words (use of )
 // allow for same title if not from same author (but always different author)
 
 //Validate all endpoints
 
-//TODO
+export const TaskSchema = z.object({
+    taskID: z.never(),
+    publisherID: z.never(),
+    name: z
+        .string()
+        .min(3, "Task name is too small!")
+        .max(20, "Task name is too Large!"),
+    type: z.enum(TaskTypes),
+    status: z.enum(Status).optional(),
+    payment: z
+        .number()
+        .positive("Payment must be greater than 0")
+        .max(1000, "Payment limit Exceeded"),
+    completedDate: z.coerce.date().optional(),
+    dueDate: z.coerce.date().refine((d) => d > new Date(), {
+        message: "Due date must be in the future",
+    }),
+    description: z
+        .string()
+        .min(15, "Description is too short!")
+        .max(200, "Description is too large!"),
+    images: z.array(z.url({ message: "Invalid image URL" })).optional(),
+    created_at: z.never(),
+    updated_at: z.never(),
+});
+
+export type Task = z.infer<typeof TaskSchema>;
