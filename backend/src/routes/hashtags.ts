@@ -12,7 +12,10 @@ router.get("/id/:hashtagId", hashtagController.getHashtagByID);
 router.get("/allByTaskId/:taskId", hashtagController.getAllHashtagsFromTask);
 
 // GET all tasks with single hashtag
-router.get("/allByHashtagId/:hashtagId", hashtagController.getAllTasksFromHashtag);
+router.get(
+    "/allByHashtagId/:hashtagId",
+    hashtagController.getAllTasksFromHashtag
+);
 
 // CREATE hashtag
 router.post("/create/", hashtagController.createHashtag);
@@ -21,10 +24,12 @@ router.post("/create/", hashtagController.createHashtag);
 router.delete("/delete/:hashtagId", hashtagController.deleteHashtag);
 
 // ADD hashtag
-router.put("/add/:taskId/:hashtagId", hashtagController.addHashtagToTask);
+router.put("/:taskId/add/:hashtagId", hashtagController.addHashtagToTask);
 
 // REMOVE hashtag
-router.put("/remove/:taskId/:hashtagId", hashtagController.removeHashtagFromTask);
-
+router.put(
+    "/:taskId/remove/:hashtagId",
+    hashtagController.removeHashtagFromTask
+);
 
 export default router;
