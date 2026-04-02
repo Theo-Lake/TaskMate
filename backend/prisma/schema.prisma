@@ -27,7 +27,7 @@ model User {
   myPublishedReviews      Reviews[]                @relation("PublishedReviews")
   myRecievedReviews       Reviews[]                @relation("ReceivedReviews")
   emailVerified           Boolean                  @default(false)
-  emailVerificationTokens EmailVerificationToken[] // TODO Maybe Remove
+  emailVerificationTokens EmailVerificationToken[]
   conversationsAsUser1    Conversation[]           @relation("User1")
   conversationsAsUser2    Conversation[]           @relation("User2")
   sentMessages            Message[]
@@ -153,4 +153,4 @@ enum Rating {
   FIVE
 }
 
-//TODO Session
+//TODO Session Tokens

@@ -46,8 +46,6 @@ async function getTaskAssignmentsByTaskID(taskID: Number) {
 async function createTask(publisherID: Number, body: JsonObject) {
     let { name, type, payment, dueDate, description, images, hashtags } = body;
 
-    //TODO chedk if task is unique
-
     return await db.task.create({
         data: {
             publisherID: Number(publisherID),

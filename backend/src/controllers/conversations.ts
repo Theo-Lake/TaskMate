@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { conversationServices } from "../services/conversations";
-// TODO Import validation on all endpoints.
 
 async function getAllConversations(req: Request, res: Response) {
     try {
@@ -8,7 +7,9 @@ async function getAllConversations(req: Request, res: Response) {
         console.log("Conversation GET all request accepted.");
         res.status(200).json(conversations);
     } catch (error) {
-        console.log(`An error occured while trying to get conversation: ${error}`);
+        console.log(
+            `An error occured while trying to get conversation: ${error}`
+        );
         res.status(500).json({ error: String(error) });
     }
 }
@@ -25,7 +26,9 @@ async function getConversationById(req: Request, res: Response) {
         console.log("Conversation by ID GET request accepted.");
         res.status(200).json(conversation);
     } catch (error) {
-        console.log(`An error occured while trying to get conversation by ID: ${error}`);
+        console.log(
+            `An error occured while trying to get conversation by ID: ${error}`
+        );
         res.status(500).json({ error: String(error) });
     }
 }
@@ -60,7 +63,9 @@ async function getMessageById(req: Request, res: Response) {
         console.log("Message GET request accepted.");
         res.status(200).json(message);
     } catch (error) {
-        console.log(`An error occured while trying to get the message: ${error}`);
+        console.log(
+            `An error occured while trying to get the message: ${error}`
+        );
         res.status(500).json({ error: String(error) });
     }
 }
@@ -84,7 +89,9 @@ async function createMessage(req: Request, res: Response) {
         ) {
             res.status(400).json({ error: error.message });
         } else {
-            console.log(`An error occured while trying to create message: ${error}`);
+            console.log(
+                `An error occured while trying to create message: ${error}`
+            );
             res.status(500).json({ error: String(error) });
         }
     }
@@ -109,7 +116,9 @@ async function deleteMessage(req: Request, res: Response) {
         console.log("Message DELETE request accepted.");
         res.status(200).json("Succesful deletion");
     } catch (error) {
-        console.log( `An error occured while trying to delete the message: ${error}`);
+        console.log(
+            `An error occured while trying to delete the message: ${error}`
+        );
         res.status(500).json({ error: String(error) });
     }
 }
