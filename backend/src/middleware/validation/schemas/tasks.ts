@@ -1,16 +1,16 @@
 import { z } from "zod";
-import { Status, TaskTypes } from "../../generated/prisma/enums";
+import { Status, TaskTypes } from "../../../generated/prisma/enums";
 //TODO Use AI for description suggestion in form of a function call, check if empty and bad words (use of )
 // allow for same title if not from same author (but always different author)
 
-//Validate all endpoints
+//TODO validate everythig written by user so it isnt a bad word or something not permitted
 
 export const TaskSchema = z.object({
     taskID: z.never(),
     publisherID: z.never(),
     name: z
         .string()
-        .min(3, "Task name is too small!")
+        .min(5, "Task name is too small!")
         .max(20, "Task name is too Large!"),
     type: z.enum(TaskTypes),
     status: z.enum(Status).optional(),

@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router(); // Creating a different router for every route, so circular dependency does not occur
 import { conversationController } from "../controllers/conversations";
+import { validate } from "../middleware/validation/validate";
+import { MessageSchema } from "../middleware/validation/schemas/messages";
 
 // CONVERSATION GET all conversations ENDPOINT
 router.get("/", conversationController.getAllConversations);
@@ -20,6 +22,7 @@ router.get(
 // MESSAGES POST ENDPOINT
 router.post(
     "/:convoId/messages/:senderId",
+    validate(MessageSchema),
     conversationController.createMessage
 );
 

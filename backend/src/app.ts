@@ -4,7 +4,7 @@ import cors from "cors";
 
 const app = express();
 
-app.use(cors());    // This has to be removed later on because it will cause issues with SQL injections and safety.
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(express.json());
 
 // Getting health check

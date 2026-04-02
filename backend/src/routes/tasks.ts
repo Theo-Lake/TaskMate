@@ -1,9 +1,11 @@
 import express from "express";
 import { taskController } from "../controllers/tasks";
+import { validate } from "../middleware/validation/validate";
+import { TaskSchema } from "../middleware/validation/schemas/tasks";
 const router = express.Router(); // Creating a different router for every route, so circular dependency does not occur
 
 // TASK POST (no need for conversation post since if a task is created so is a convo)
-router.post("/:publisherId", taskController.postTask);
+router.post("/:publisherId", validate(TaskSchema), taskController.postTask);
 
 // TASK GET all tasks
 router.get("/", taskController.getAllTasks);
@@ -34,7 +36,7 @@ router.put("/:taskId/assign/:userId", taskController.assignTask);
 router.delete("/:taskId/assign/:userId", taskController.unAssignTask);
 
 // TASK PUT
-router.put("/:taskId", taskController.putTask);
+router.put("/:taskId", validate(TaskSchema), taskController.putTask);
 
 // TASK DELETE
 router.delete("/:taskId", taskController.deleteTask);

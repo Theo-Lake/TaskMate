@@ -5,6 +5,9 @@ import { z } from "zod";
 
 //Validate all endpoints
 
+//TODO validate everythig written by user so it isnt a bad word or something not permitted
+// TODO also maybe use AI to create description and hashtag suggestions, or title suggestions if description written first, or description if title written first.
+
 export const MessageSchema = z.object({
     messageID: z.never(),
     conversationID: z.never(),

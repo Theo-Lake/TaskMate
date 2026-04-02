@@ -1,7 +1,5 @@
 import express from "express";
 const router = express.Router();
-//TODO ALL REQUESTS NEED TO BE VALIDATED SO INJECTIONS CAN'T OCCUR. DO NOT USE CORS.
-
 // Importing route modules so that they can be exported as a whole
 
 import conversationRoutes from "./conversations";
@@ -19,7 +17,7 @@ router.use("/reviews", reviewRoutes);
 import hashtagRoutes from "./hashtags";
 router.use("/hashtags", hashtagRoutes);
 
-export default router
+export default router;
 
 // Import route modules here
 // import userRoutes from "./userRoutes.js";
@@ -44,7 +42,7 @@ CRUD hashtag
 //         //     ]
 //         //    AND: [{occupation: {not: "tester"} },{}]
 //         //   occupation: {in: ["tester","student"]} (to search for types of occupation without having to check for different individual occupations )
-//         // } 
+//         // }
 //     });
 //     res.json(users)
 // })
