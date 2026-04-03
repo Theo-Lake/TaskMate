@@ -1,5 +1,7 @@
 import express from "express";
 import { hashtagController } from "../controllers/hashtags";
+import { validate } from "../middleware/validation/validate";
+import { HashtagSchema } from "../middleware/validation/schemas/hashtags";
 const router = express.Router();
 
 // GET all hashtags
@@ -18,7 +20,7 @@ router.get(
 );
 
 // CREATE hashtag
-router.post("/create/", hashtagController.createHashtag);
+router.post("/create/", validate(HashtagSchema), hashtagController.createHashtag);
 
 // DELETE hashtag
 router.delete("/delete/:hashtagId", hashtagController.deleteHashtag);

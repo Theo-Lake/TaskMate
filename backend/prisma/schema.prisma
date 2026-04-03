@@ -9,7 +9,6 @@ datasource db {
   provider = "postgresql"
 }
 
-//TODO finish schemas and change "job" to "task", and change "recieved" to "received"
 model User {
   userID                  Int                      @id @default(autoincrement())
   username                String                   @unique
@@ -20,14 +19,15 @@ model User {
   updated_at              DateTime                 @updatedAt // auto-update when row is changed
   email                   String                   @unique
   password_hash           String
-  publishedJobs           Task[]
-  assignedJobs            TaskAssignment[]
+  publishedTasks          Task[]
+  assignedTasks           TaskAssignment[]
   occupation              String
   profilePicture          String                   @default("null") //TODO default should be a default picture
   myPublishedReviews      Reviews[]                @relation("PublishedReviews")
-  myRecievedReviews       Reviews[]                @relation("ReceivedReviews")
+  myReceivedReviews       Reviews[]                @relation("ReceivedReviews")
   emailVerified           Boolean                  @default(false)
   emailVerificationTokens EmailVerificationToken[]
+  refreshTokens           RefreshToken[]
   conversationsAsUser1    Conversation[]           @relation("User1")
   conversationsAsUser2    Conversation[]           @relation("User2")
   sentMessages            Message[]
@@ -93,13 +93,23 @@ model Reviews {
 }
 
 model EmailVerificationToken {
-  id         Int      @id @default(autoincrement())
-  token      String   @unique @default(uuid())
-  user       User     @relation(fields: [userID], references: [userID], onDelete: Cascade)
-  userID     Int
-  expiresAt  DateTime
-  used       Boolean  @default(false)
-  created_at DateTime @default(now())
+  emailTokenID Int      @id @default(autoincrement())
+  token        String   @unique @default(uuid())
+  user         User     @relation(fields: [userID], references: [userID], onDelete: Cascade)
+  userID       Int
+  expiresAt    DateTime
+  used         Boolean  @default(false)
+  created_at   DateTime @default(now())
+}
+
+model RefreshToken {
+  refreshTokenID Int      @id @default(autoincrement())
+  token          String   @unique
+  user           User     @relation(fields: [userID], references: [userID], onDelete: Cascade)
+  userID         Int
+  expiresAt      DateTime
+  used           Boolean  @default(false)
+  created_at     DateTime @default(now())
 }
 
 model Conversation {
@@ -152,5 +162,3 @@ enum Rating {
   FOUR
   FIVE
 }
-
-//TODO Session Tokens

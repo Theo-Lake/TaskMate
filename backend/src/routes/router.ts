@@ -17,6 +17,9 @@ router.use("/reviews", reviewRoutes);
 import hashtagRoutes from "./hashtags";
 router.use("/hashtags", hashtagRoutes);
 
+import authRoutes from "./auth";
+router.use("/auth", authRoutes);
+
 export default router;
 
 // Import route modules here

@@ -1,5 +1,6 @@
 import { db } from "../db";
-import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
+import { JsonObject, Or } from "../generated/prisma/internal/prismaNamespace";
+import { auth } from "../middleware/authentication/auth";
 
 export async function getAllUsers() {
     return await db.user.findMany();
@@ -13,6 +14,17 @@ export async function getUserById(userID: Number) {
     });
 }
 
+export async function getUserByEmailOrUsername(
+    email: String,
+    username: String
+) {
+    return db.user.findFirst({
+        where: {
+            OR: [{ email: String(email) }, { username: String(username) }],
+        },
+    });
+}
+
 export async function createUser(body: JsonObject) {
     let {
         username,
@@ -20,22 +32,23 @@ export async function createUser(body: JsonObject) {
         lastName,
         universityID,
         email,
-        password_hash,
+        password,
         occupation,
     } = body;
 
+    const password_hash = await auth.hashPassword(password as string);
+
     const existingUser = await db.user.findFirst({
         where: {
-            OR: [
-                { username: username as string },
-                { email: email as string },
-            ],
+            OR: [{ username: username as string }, { email: email as string }],
         },
     });
 
     if (existingUser) {
         throw new Error(
-            existingUser.username === username ? "Username already taken" : "Email already in use"
+            existingUser.username === username
+                ? "Username already taken"
+                : "Email already in use"
         );
     }
 
@@ -53,23 +66,20 @@ export async function createUser(body: JsonObject) {
 }
 
 export async function updateUser(userID: Number, body: JsonObject) {
+    //TODO email not allwoed to change, if so, needs to be verified again.
     let {
         username,
         firstName,
         lastName,
-        password_hash,
-        publishedJobs,
-        assignedJobs,
+        password,
         occupation,
         profilePicture,
-        myPublishedReviews,
-        myRecievedReviews,
-        emailVerfied,
-        emailVerificationTokens,
-        conversationsAsUser1,
-        conversationsAsUser2,
-        sentMessages,
     } = body;
+
+    const password_hash =
+        password !== undefined
+            ? await auth.hashPassword(password as string)
+            : undefined;
 
     return await db.user.update({
         where: { userID: Number(userID) },
@@ -77,70 +87,9 @@ export async function updateUser(userID: Number, body: JsonObject) {
             username: username as string | undefined,
             firstName: firstName as string | undefined,
             lastName: lastName as string | undefined,
-            password_hash: password_hash as string | undefined,
-            publishedJobs: publishedJobs
-                ? {
-                      connect: (publishedJobs as { taskID: number }[]).map(
-                          (task) => ({ taskID: task.taskID })
-                      ),
-                  }
-                : undefined,
-            assignedJobs: assignedJobs
-                ? {
-                      connect: (assignedJobs as { assignmentID: number }[]).map(
-                          (task) => ({ assignmentID: task.assignmentID })
-                      ),
-                  }
-                : undefined,
+            password_hash: password_hash,
             occupation: occupation as string | undefined,
             profilePicture: profilePicture as string | undefined,
-            myPublishedReviews: myPublishedReviews
-                ? {
-                      connect: (
-                          myPublishedReviews as { reviewID: number }[]
-                      ).map((review) => ({ reviewID: review.reviewID })),
-                  }
-                : undefined,
-            myRecievedReviews: myRecievedReviews
-                ? {
-                      connect: (
-                          myRecievedReviews as { reviewID: number }[]
-                      ).map((review) => ({ reviewID: review.reviewID })),
-                  }
-                : undefined,
-            emailVerified: emailVerfied as boolean | undefined,
-            emailVerificationTokens: emailVerificationTokens
-                ? {
-                      connect: (
-                          emailVerificationTokens as { id: number }[]
-                      ).map((token) => ({ id: token.id })),
-                  }
-                : undefined,
-            conversationsAsUser1: conversationsAsUser1
-                ? {
-                      connect: (
-                          conversationsAsUser1 as { conversationID: number }[]
-                      ).map((convo) => ({
-                          conversationID: convo.conversationID,
-                      })),
-                  }
-                : undefined,
-            conversationsAsUser2: conversationsAsUser2
-                ? {
-                      connect: (
-                          conversationsAsUser2 as { conversationID: number }[]
-                      ).map((convo) => ({
-                          conversationID: convo.conversationID,
-                      })),
-                  }
-                : undefined,
-            sentMessages: sentMessages
-                ? {
-                      connect: (sentMessages as { messageID: number }[]).map(
-                          (convo) => ({ messageID: convo.messageID })
-                      ),
-                  }
-                : undefined,
         },
     });
 }
@@ -158,6 +107,7 @@ export async function deleteUser(userID: Number) {
 export const userServices = {
     getAllUsers,
     getUserById,
+    getUserByEmailOrUsername,
     createUser,
     updateUser,
     deleteUser,
