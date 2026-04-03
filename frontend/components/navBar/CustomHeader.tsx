@@ -1,5 +1,7 @@
 import React, {memo} from "react";
 import {Appbar, Avatar} from 'react-native-paper';
+import CustomerAvatar from "../avatars/CustomerAvatars";
+import { TouchableOpacity } from "react-native";
 
 interface CustomHeaderProps{
     title: string;
@@ -32,7 +34,11 @@ function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showPr
         <Appbar.Content title={title} color="white"/>
 
         {showProfilePicture && (
-            <Appbar.Action icon={renderIcon} onPress={() => navigation.navigate('MyTasksTab', { screen: 'UserProfileScreen' })}/>
+            <TouchableOpacity onPress={() => navigation.navigate('MyTasksTab', { screen: 'UserProfileScreen' })}>
+                <CustomerAvatar size={40} user={null}/>
+            </TouchableOpacity>
+            
+            
         )}
 
         </Appbar.Header>
