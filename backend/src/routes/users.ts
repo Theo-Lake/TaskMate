@@ -8,7 +8,7 @@ router.get("/", userController.getAllUsers);
 // USER DATA GET user BY USERID
 router.get("/:userId", userController.getUserById);
 
-// USER DATA POST 
+// USER DATA POST
 router.post("/", userController.createUser);
 
 // USER DATA PUT

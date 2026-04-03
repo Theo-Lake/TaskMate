@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { userServices } from "../services/users"; // Abstraction so that db and business logic is managed by services.
-//TODO Use req to check for validation (called from middleware)
+import { auth } from "../middleware/authentication/auth";
 
 // Get users function
 export async function getAllUsers(req: Request, res: Response) {
@@ -41,7 +41,7 @@ export async function getUserById(req: Request, res: Response) {
 
 export async function createUser(req: Request, res: Response) {
     try {
-        //TODO encrypt password and generate token
+        //TODO generate token
         await userServices.createUser(req.body); // Calling user service to create user with req.body
         console.log("User data POST accepted.");
         res.status(200).json({ Message: "User data successfully created" });
@@ -55,7 +55,7 @@ export async function updateUser(req: Request, res: Response) {
     try {
         const userID = Number(req.params.userId);
 
-        if (!userID) {
+        if (isNaN(userID)) {
             res.status(404).json({ error: "User not found" });
             return;
         }
