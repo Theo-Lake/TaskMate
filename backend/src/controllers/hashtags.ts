@@ -78,6 +78,12 @@ async function getAllTasksFromHashtag(req: Request, res: Response) {
 
 async function createHashtag(req: Request, res: Response) {
     try {
+        const existing = await hashtagServices.getHashtagByName(req.body.name);
+        if (existing) {
+            res.status(409).json({ error: "Hashtag already exists" });
+            return;
+        }
+
         const hashtag = await hashtagServices.createHashtag(req.body);
 
         if (!hashtag) {
