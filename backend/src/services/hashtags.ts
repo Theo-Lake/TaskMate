@@ -9,6 +9,12 @@ async function getHashtagByID(hashtagID: Number) {
     });
 }
 
+async function getHashtagByName(name: string) {
+    return await db.hashtags.findUnique({
+        where: { name: name },
+    });
+}
+
 async function getAllHashtags() {
     return await db.hashtags.findMany();
 }
@@ -104,6 +110,7 @@ async function removeHashtagFromTask(taskID: Number, hashtagID: Number) {
 
 export const hashtagServices = {
     getHashtagByID,
+    getHashtagByName,
     getAllHashtags,
     getAllHashtagsFromTask,
     getAllTasksFromHashtag,
