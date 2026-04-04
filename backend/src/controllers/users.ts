@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { userServices } from "../services/users"; // Abstraction so that db and business logic is managed by services.
-import { auth } from "../middleware/authentication/auth";
 
 // Get users function
 export async function getAllUsers(req: Request, res: Response) {
