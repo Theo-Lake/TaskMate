@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import { userServices } from "../services/users";
 import { auth } from "../middleware/authentication/auth";
+import { authServices } from "../services/auth";
 
 export async function login(req: Request, res: Response) {
     try {
         const { email, username, password } = req.body;
-
-        //TODO generate token
 
         const user = await userServices.getUserByEmailOrUsername(
             email,
@@ -25,8 +24,19 @@ export async function login(req: Request, res: Response) {
             return;
         }
 
+        const accessToken = await auth.generateAccessToken(user.userID);
+        const refreshToken = await authServices.createRefreshToken(user.userID);
+
+        res.cookie("refreshToken", refreshToken.token, {
+            httpOnly: true,
+            secure: true,
+        });
+
         console.log("User Authentication accepted.");
-        res.status(200).json({ Message: `User successfully Authenticated` });
+        res.status(200).json({
+            Message: `User successfully Authenticated`,
+            accessToken,
+        });
     } catch (error) {
         console.log(`An error occured while authenticating the user: ${error}`);
         res.status(500).json({ error: error });
