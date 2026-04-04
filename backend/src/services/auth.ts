@@ -1,12 +1,15 @@
 import { db } from "../db";
+import { auth } from "../middleware/authentication/auth";
 
 //TODO revisit
 
 const REFRESH_TOKEN_EXPIRY_DAYS = 30;
 
-export async function createRefreshToken(userID: number, token: string) {
+export async function createRefreshToken(userID: number) {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + REFRESH_TOKEN_EXPIRY_DAYS);
+
+    const token = await auth.generateRefreshToken(userID);
 
     return db.refreshToken.create({
         data: { token, userID, expiresAt },
