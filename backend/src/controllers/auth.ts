@@ -44,11 +44,49 @@ export async function login(req: Request, res: Response) {
 }
 
 export async function logOut(req: Request, res: Response) {
-    //TODO
+    try {
+        const token = req.cookies.refreshToken;
+        if (token) {
+            await authServices.revokeRefreshToken(token);
+        }
+        res.clearCookie("refreshToken");
+        res.status(200).json({ Message: "Logged out" });
+    } catch (error) {
+        console.log(`An error occured while Logging out the user: ${error}`);
+        res.status(500).json({ error: error });
+    }
 }
 
 export async function refresh(req: Request, res: Response) {
-    //TODO
+    try {
+        const token = req.cookies.refreshToken;
+        if (!token) {
+            res.status(401).json({ error: "No refresh token" });
+            return;
+        }
+
+        const payload = auth.verifyRefreshToken(token);
+
+        const stored = await authServices.findRefreshToken(token);
+        if (!stored || stored.used) {
+            res.status(401).json({ error: "Invalid refresh token" });
+            return;
+        }
+
+        await authServices.revokeRefreshToken(token);
+        const newRefreshToken = await authServices.createRefreshToken(
+            payload.userID
+        );
+
+        const accessToken = await auth.generateAccessToken(payload.userID);
+        res.cookie("refreshToken", newRefreshToken.token, {
+            httpOnly: true,
+            secure: true,
+        });
+        res.status(200).json({ accessToken });
+    } catch (err) {
+        res.status(401).json({ error: "Invalid refresh token" });
+    }
 }
 
 export const authController = {
