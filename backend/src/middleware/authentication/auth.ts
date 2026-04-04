@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET!;
@@ -18,6 +19,21 @@ function verifyAccessToken(token: string): { userID: number } {
 
 function verifyRefreshToken(token: string): { userID: number } {
     return jwt.verify(token, REFRESH_TOKEN_SECRET) as { userID: number };
+}
+
+//Attach to ALL endpoints
+function withAuth(req: Request, res: Response, next: NextFunction) {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+        res.status(401).json({ error: "No token" });
+        return;
+    }
+    try {
+        const payload = verifyAccessToken(token);
+        next();
+    } catch {
+        res.status(401).json({ error: "Invalid token" });
+    }
 }
 
 async function hashPassword(password: string) {

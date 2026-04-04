@@ -1,8 +1,6 @@
 import { db } from "../db";
 import { auth } from "../middleware/authentication/auth";
 
-//TODO revisit
-
 const REFRESH_TOKEN_EXPIRY_DAYS = 30;
 
 export async function createRefreshToken(userID: number) {
