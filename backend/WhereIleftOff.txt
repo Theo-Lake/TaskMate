@@ -1,4 +1,4 @@
 Theo:
-    finish my schemas, implement schemas in requests, then move to auth
+    Continue on Auth primarily access tokens and refresh tokens and auth services,routes, controller and auth middleware. Then move onto Stripe and email verification
 
 Toby:
