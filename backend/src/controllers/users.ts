@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { userServices } from "../services/users"; // Abstraction so that db and business logic is managed by services.
 
 // Get users function
-export async function getAllUsers(req: Request, res: Response) {
+async function getAllUsers(req: Request, res: Response) {
     try {
         const users = await userServices.getAllUsers(); // calling user service to get all users
 
@@ -20,7 +20,7 @@ export async function getAllUsers(req: Request, res: Response) {
 }
 
 // Get user by id function
-export async function getUserById(req: Request, res: Response) {
+async function getUserById(req: Request, res: Response) {
     try {
         const userID = Number(req.params.userId);
         const user = await userServices.getUserById(userID);
@@ -38,9 +38,15 @@ export async function getUserById(req: Request, res: Response) {
     }
 }
 
-export async function createUser(req: Request, res: Response) {
+async function createUser(req: Request, res: Response) {
     try {
         //TODO generate token
+        const user = await userServices.getUserByEmailOrUsername(req.body.email, req.body.username);
+        if (user) {
+            res.status(409).json({ error: "Username or email already in use" });
+            return;
+        }
+
         await userServices.createUser(req.body); // Calling user service to create user with req.body
         console.log("User data POST accepted.");
         res.status(200).json({ Message: "User data successfully created" });
@@ -50,7 +56,7 @@ export async function createUser(req: Request, res: Response) {
     }
 }
 
-export async function updateUser(req: Request, res: Response) {
+async function updateUser(req: Request, res: Response) {
     try {
         const userID = Number(req.params.userId);
 
@@ -68,7 +74,7 @@ export async function updateUser(req: Request, res: Response) {
     }
 }
 
-export async function deleteUser(req: Request, res: Response) {
+async function deleteUser(req: Request, res: Response) {
     try {
         const userID = Number(req.params.userId);
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import {  Text, useTheme, TextInput, Checkbox, CheckboxItem, Button, IconButton } from "react-native-paper";
+import {  Text, useTheme, TextInput, Checkbox,  Button, IconButton } from "react-native-paper";
 import {styles} from "./styles"
 import * as ImagePicker from 'expo-image-picker'
 import CustomHeader from "../../components/navBar/CustomHeader";
@@ -75,13 +75,14 @@ export default function CreateTaskScreen({navigation}:any) {
                         style={styles.textBox}
                         left={<TextInput.Icon icon="calendar" />}
                         keyboardType="numeric"
+                        value={date}
+                        onChangeText={setDate}
                         render={props => (
                             <TextInputMask
                                 {...props}
                                 type={'datetime'}
                                 options={{format:'DD/MM/YYYY'}}
-                                value={date}
-                                onChangeText={text => setDate(text)}
+                                
                             />
                         )}
                     />
