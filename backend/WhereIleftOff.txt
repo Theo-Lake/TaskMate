@@ -1,4 +1,7 @@
 Theo:
-    Continue on Auth primarily access tokens and refresh tokens and auth services,routes, controller and auth middleware. Then move onto Stripe and email verification
+    Stripe and email verification
+
+
+
 
 Toby:
