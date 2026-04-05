@@ -37,13 +37,11 @@ router.get(
     taskController.getTaskAssignmentByUserID
 );
 
-router.put("/:taskId/assign/:userId", auth.withAuth, taskController.assignTask);
-
-router.delete(
-    "/:taskId/assign/:userId",
-    auth.withAuth,
-    taskController.unAssignTask
-);
+// TASK APPLICATION
+router.post("/:taskId/apply/:userId", auth.withAuth, taskController.applyForTask);
+router.put("/:taskId/apply/:userId/accept", auth.withAuth, taskController.acceptApplication);
+router.put("/:taskId/apply/:userId/reject", auth.withAuth, taskController.rejectApplication);
+router.delete("/:taskId/apply/:userId", auth.withAuth, taskController.unAssignTask);
 
 // TASK STATUS PATCH
 router.patch("/:taskId/status", auth.withAuth, taskController.patchTaskStatus);

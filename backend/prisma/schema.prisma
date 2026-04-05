@@ -62,11 +62,12 @@ model Task {
 
 // Holds the record of assigned jobs: | AssingmentID | job | Assignee |
 model TaskAssignment {
-  assignmentID Int  @id @default(autoincrement())
-  task         Task @relation(fields: [taskID], references: [taskID], onDelete: Cascade)
+  assignmentID Int               @id @default(autoincrement())
+  task         Task              @relation(fields: [taskID], references: [taskID], onDelete: Cascade)
   taskID       Int
-  assignee     User @relation(fields: [assigneeID], references: [userID])
+  assignee     User              @relation(fields: [assigneeID], references: [userID])
   assigneeID   Int
+  status       ApplicationStatus @default(pending)
 
   @@unique([assignmentID, assigneeID])
 }
@@ -135,7 +136,13 @@ model Message {
   created_at     DateTime     @default(now())
 }
 
-// ENUM TYPES: 
+// ENUM TYPES:
+
+enum ApplicationStatus {
+  pending
+  accepted
+  rejected
+}
 
 enum Status {
   complete
