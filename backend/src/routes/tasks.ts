@@ -1,7 +1,7 @@
 import express from "express";
 import { taskController } from "../controllers/tasks";
 import { validate } from "../middleware/validation/validate";
-import { TaskSchema } from "../middleware/validation/schemas/tasks";
+import { TaskSchema, TaskUpdateSchema } from "../middleware/validation/schemas/tasks";
 import { auth } from "../middleware/authentication/auth";
 const router = express.Router(); // Creating a different router for every route, so circular dependency does not occur
 
@@ -45,11 +45,14 @@ router.delete(
     taskController.unAssignTask
 );
 
-// TASK PUT
-router.put(
+// TASK STATUS PATCH
+router.patch("/:taskId/status", auth.withAuth, taskController.patchTaskStatus);
+
+// TASK PATCH
+router.patch(
     "/:taskId",
     auth.withAuth,
-    validate(TaskSchema),
+    validate(TaskUpdateSchema),
     taskController.putTask
 );
 

@@ -164,6 +164,21 @@ async function putTask(req: Request, res: Response) {
     }
 }
 
+async function patchTaskStatus(req: Request, res: Response) {
+    try {
+        const taskID = Number(req.params.taskId);
+        const { status } = req.body;
+        await taskServices.updateTaskStatus(taskID, status);
+        console.log("Task status PATCH accepted.");
+        res.status(200).json({ Message: "Task status successfully updated" });
+    } catch (error) {
+        console.log(`An error occured while patching the Task status: ${error}`);
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
+
 async function deleteTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
@@ -189,5 +204,6 @@ export const taskController = {
     unAssignTask,
     postTask,
     putTask,
+    patchTaskStatus,
     deleteTask,
 };

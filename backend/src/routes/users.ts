@@ -1,7 +1,7 @@
 import express from "express";
 import { userController } from "../controllers/users";
 import { validate } from "../middleware/validation/validate";
-import { UserSchema } from "../middleware/validation/schemas/users";
+import { UserSchema, UserUpdateSchema } from "../middleware/validation/schemas/users";
 import { auth } from "../middleware/authentication/auth";
 const router = express.Router(); // Creating a different router for every route, so circular dependency does not occuro
 
@@ -14,11 +14,11 @@ router.get("/:userId", userController.getUserById);
 // USER DATA POST
 router.post("/", validate(UserSchema), userController.createUser);
 
-// USER DATA PUT
-router.put(
+// USER DATA PATCH
+router.patch(
     "/:userId",
     auth.withAuth,
-    validate(UserSchema),
+    validate(UserUpdateSchema),
     userController.updateUser
 );
 

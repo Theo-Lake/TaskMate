@@ -102,6 +102,10 @@ async function assignTask(taskID: Number, userID: Number) {
                 user2ID: Number(userID),
             },
         }),
+        db.task.update({
+            where: { taskID: Number(taskID) },
+            data: { status: Status.pending },
+        }),
     ]);
 }
 
@@ -197,6 +201,19 @@ async function updateTask(taskID: Number, body: JsonObject) {
     });
 }
 
+async function updateTaskStatus(taskID: Number, status: Status) {
+    const task = await getTaskByID(taskID);
+    if (!task) throw new Error(`Task ${taskID} not found`);
+
+    return await db.task.update({
+        where: { taskID: Number(taskID) },
+        data: {
+            status,
+            completedDate: status === Status.complete ? new Date() : undefined,
+        },
+    });
+}
+
 async function deleteTask(taskID: Number) {
     await db.task.delete({
         where: {
@@ -218,5 +235,6 @@ export const taskServices = {
     unAssignTask,
     createTask,
     updateTask,
+    updateTaskStatus,
     deleteTask,
 };
