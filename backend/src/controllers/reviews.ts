@@ -64,18 +64,11 @@ async function getReviewById(req: Request, res: Response) {
 
 async function createReview(req: Request, res: Response) {
     try {
-        const userID = Number(req.params.userId);
+        const userID = req.user!.userID;
         const assigneeID = Number(req.params.assigneeId);
 
         if (userID === assigneeID) {
             res.status(400).json({ error: "You cannot review yourself" });
-        }
-
-        //TODO maybe remove ALL of these and the userIDs from the routes, and just use req.user!.userID.
-        if (userID !== req.user!.userID) {
-            res.status(403).json({
-                error: "Request userID does not match authenticated user",
-            });
             return;
         }
 

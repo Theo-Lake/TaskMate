@@ -16,7 +16,7 @@ router.get("/id/:reviewId", reviewController.getReviewById);
 
 // REVIEW POST create review ENDPOINT
 router.post(
-    "/:userId/create/:assigneeId",
+    "/:assigneeId",
     auth.withAuth,
     validate(ReviewSchema),
     reviewController.createReview
