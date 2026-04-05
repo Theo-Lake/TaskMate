@@ -1,5 +1,5 @@
 import { db } from "../db";
-import { Status, TaskTypes } from "../generated/prisma/enums";
+import { ApplicationStatus, Status, TaskTypes } from "../generated/prisma/enums";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
 import { TaskAssignment } from "../generated/prisma/client";
 
@@ -67,33 +67,44 @@ async function createTask(publisherID: Number, body: JsonObject) {
     });
 }
 
-async function assignTask(taskID: Number, userID: Number) {
+async function applyForTask(taskID: Number, userID: Number) {
     const task = await db.task.findUnique({
         where: { taskID: Number(taskID) },
         select: { publisherID: true },
     });
     if (!task) throw new Error(`Task ${taskID} not found`);
 
-    const user = await db.taskAssignment.findFirst({
-        where: {
-            taskID: Number(taskID),
-            assigneeID: Number(userID),
-        },
+    const existing = await db.taskAssignment.findFirst({
+        where: { taskID: Number(taskID), assigneeID: Number(userID) },
     });
-
-    if (user)
-        throw new Error(`User ${userID} is already assigned to task ${taskID}`);
+    if (existing) throw new Error(`User ${userID} has already applied to task ${taskID}`);
 
     if (task.publisherID === Number(userID))
-        throw new Error("Publisher cannot be assigned to their own task");
+        throw new Error("Publisher cannot apply to their own task");
+
+    await db.taskAssignment.create({
+        data: { taskID: Number(taskID), assigneeID: Number(userID) },
+    });
+}
+
+async function acceptApplication(taskID: Number, userID: Number) {
+    const task = await db.task.findUnique({
+        where: { taskID: Number(taskID) },
+        select: { publisherID: true },
+    });
+    if (!task) throw new Error(`Task ${taskID} not found`);
+
+    const application = await db.taskAssignment.findFirst({
+        where: { taskID: Number(taskID), assigneeID: Number(userID) },
+    });
+    if (!application) throw new Error(`No application found for user ${userID} on task ${taskID}`);
+    if (application.status === ApplicationStatus.accepted)
+        throw new Error(`Application already accepted`);
 
     await db.$transaction([
-        //EITHER ALL SUCCEED OR ALL FAIL.
-        db.taskAssignment.create({
-            data: {
-                taskID: Number(taskID),
-                assigneeID: Number(userID),
-            },
+        db.taskAssignment.update({
+            where: { assignmentID: application.assignmentID },
+            data: { status: ApplicationStatus.accepted },
         }),
         db.conversation.create({
             data: {
@@ -107,6 +118,17 @@ async function assignTask(taskID: Number, userID: Number) {
             data: { status: Status.pending },
         }),
     ]);
+}
+
+async function rejectApplication(taskID: Number, userID: Number) {
+    const application = await db.taskAssignment.findFirst({
+        where: { taskID: Number(taskID), assigneeID: Number(userID) },
+    });
+    if (!application) throw new Error(`No application found for user ${userID} on task ${taskID}`);
+
+    await db.taskAssignment.delete({
+        where: { assignmentID: application.assignmentID },
+    });
 }
 
 async function unAssignTask(taskID: Number, userID: Number) {
@@ -231,7 +253,9 @@ export const taskServices = {
     getTaskAllTaskAssignments,
     getTaskAssignmentsByTaskID,
     getTaskAssignmentsByUserID,
-    assignTask,
+    applyForTask,
+    acceptApplication,
+    rejectApplication,
     unAssignTask,
     createTask,
     updateTask,

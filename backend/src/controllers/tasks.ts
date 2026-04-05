@@ -120,15 +120,45 @@ async function postTask(req: Request, res: Response) {
     }
 }
 
-async function assignTask(req: Request, res: Response) {
+async function applyForTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
         const userID = Number(req.params.userId);
-        await taskServices.assignTask(taskID, userID);
-        console.log("Task ASSIGN accepted.");
-        res.status(200).json({ Message: "Task successfully assigned" });
+        await taskServices.applyForTask(taskID, userID);
+        console.log("Task APPLICATION accepted.");
+        res.status(200).json({ Message: "Successfully applied for task" });
     } catch (error) {
-        console.log(`An error occured while assigning the Task: ${error}`);
+        console.log(`An error occured while applying for the Task: ${error}`);
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
+
+async function acceptApplication(req: Request, res: Response) {
+    try {
+        const taskID = Number(req.params.taskId);
+        const userID = Number(req.params.userId);
+        await taskServices.acceptApplication(taskID, userID);
+        console.log("Task APPLICATION accepted by publisher.");
+        res.status(200).json({ Message: "Application successfully accepted" });
+    } catch (error) {
+        console.log(`An error occured while accepting the application: ${error}`);
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
+
+async function rejectApplication(req: Request, res: Response) {
+    try {
+        const taskID = Number(req.params.taskId);
+        const userID = Number(req.params.userId);
+        await taskServices.rejectApplication(taskID, userID);
+        console.log("Task APPLICATION rejected by publisher.");
+        res.status(200).json({ Message: "Application successfully rejected" });
+    } catch (error) {
+        console.log(`An error occured while rejecting the application: ${error}`);
         res.status(500).json({
             error: error instanceof Error ? error.message : error,
         });
@@ -200,7 +230,9 @@ export const taskController = {
     getTaskAllTaskAssignments,
     getTaskAssignmentByTaskID,
     getTaskAssignmentByUserID,
-    assignTask,
+    applyForTask,
+    acceptApplication,
+    rejectApplication,
     unAssignTask,
     postTask,
     putTask,
