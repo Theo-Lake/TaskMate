@@ -101,6 +101,14 @@ async function getTaskAssignmentByUserID(req: Request, res: Response) {
 async function postTask(req: Request, res: Response) {
     try {
         const publisherID = Number(req.params.publisherId);
+
+        if (publisherID !== req.user!.userID) {
+            res.status(403).json({
+                error: "Request userID does not match authenticated user",
+            });
+            return;
+        }
+
         await taskServices.createTask(publisherID, req.body); // Calling user service to create user with req.body
         console.log("Task data POST accepted.");
         res.status(200).json({ Message: "Task data successfully posted" });

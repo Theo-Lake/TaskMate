@@ -82,6 +82,13 @@ async function updateUser(req: Request, res: Response) {
             return;
         }
 
+        if (userID !== req.user!.userID) {
+            res.status(403).json({
+                error: "Request userID does not match authenticated user",
+            });
+            return;
+        }
+
         await userServices.updateUser(userID, req.body); // Calling user service to create update with req.body
         console.log("User data PUT accepted.");
         res.status(200).json({ Message: "User data successfully updated" });
@@ -95,8 +102,15 @@ async function deleteUser(req: Request, res: Response) {
     try {
         const userID = Number(req.params.userId);
 
-        if (!userID) {
+        if (!userID || isNaN(userID)) {
             res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        if (userID !== req.user!.userID) {
+            res.status(403).json({
+                error: "Request userID does not match authenticated user",
+            });
             return;
         }
 
