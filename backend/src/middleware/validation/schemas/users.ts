@@ -41,4 +41,6 @@ export const UserSchema = z.object({
     emailVerified: z.never(),
 });
 
+export const UserUpdateSchema = UserSchema.partial();
+
 export type User = z.infer<typeof UserSchema>;

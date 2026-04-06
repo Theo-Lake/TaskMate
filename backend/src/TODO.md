@@ -28,7 +28,7 @@ PRIORITY:
 
         SERVICES
             [/] - users.ts — implement createUser (bcrypt), updateUser, deleteUser, getUserById
-            [ ] - Bycrypt
+            [/] - Bycrypt
             [/] - tasks.ts — implement createTask, updateTask, deleteTask, getTaskById
             [/] - conversations.ts — implement getAllMessages, createMessage, getConversationById
             [ ] - More logic such as checkUser, checkTask (using AI thing we said), ... etc
@@ -48,7 +48,7 @@ PRIORITY:
         AUTHENTICATION FLOW
             [ ] - POST /api/users/login — verify credentials, return JWT
             [ ] - GET /api/users/verify-email?token=... — mark emailVerified = true
-            [ ] - Add JWT_SECRET to .env and load in auth middleware
+            [/] - Add JWT_SECRET to .env and load in auth middleware
             [ ] - Ensure registration hashes password and creates EmailVerificationToken
     ]
 
@@ -70,10 +70,5 @@ PRIORITY:
     ]
 
 
-LIST OF COMPLETION: {
-    FIRST : [
-        - Conversation Routes and Controller
-        - Task Routes
-    ]
-}
+
 

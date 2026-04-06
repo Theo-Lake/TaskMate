@@ -2,6 +2,7 @@ import express from "express";
 import { reviewController } from "../controllers/reviews";
 import { validate } from "../middleware/validation/validate";
 import { ReviewSchema } from "../middleware/validation/schemas/reviews";
+import { auth } from "../middleware/authentication/auth";
 const router = express.Router();
 
 // REVIEW GET all reviews user has made ENDPOINT
@@ -14,12 +15,22 @@ router.get("/received/:userId", reviewController.getReviewsGivenToUser);
 router.get("/id/:reviewId", reviewController.getReviewById);
 
 // REVIEW POST create review ENDPOINT
-router.post("/:userId/create/:assigneeId", validate(ReviewSchema), reviewController.createReview);
+router.post(
+    "/:assigneeId",
+    auth.withAuth,
+    validate(ReviewSchema),
+    reviewController.createReview
+);
 
 // REVIEW PUT edit review ENDPOINT
-router.put("/update/:reviewId", validate(ReviewSchema), reviewController.updateReview)
+router.put(
+    "/:reviewId",
+    auth.withAuth,
+    validate(ReviewSchema),
+    reviewController.updateReview
+);
 
 // REVIEW DELETE review ENDPOINT
-router.delete("/delete/:reviewId", reviewController.deleteReview)
+router.delete("/:reviewId", auth.withAuth, reviewController.deleteReview);
 
 export default router;

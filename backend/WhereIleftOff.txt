@@ -1,4 +1,7 @@
 Theo:
-    finish my schemas, implement schemas in requests, then move to auth
+    email password change verification
 
-Toby:
+
+
+
+Toby: //TODO check for all error: error and Stringify it so the error can be seen, see how stripe will be implemeneted
