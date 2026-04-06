@@ -1,5 +1,6 @@
 import { db } from "../db";
 import { auth } from "../middleware/authentication/auth";
+import crypto from "crypto";
 
 const REFRESH_TOKEN_EXPIRY_DAYS = 30;
 
@@ -27,8 +28,63 @@ export async function revokeRefreshToken(token: string) {
     });
 }
 
+async function verifyEmailToken(userID: number, token: string) {
+    const existing = await db.emailVerificationToken.findFirst({
+        where: {
+            token: token,
+            userID: userID,
+        },
+    });
+
+    if (!existing) {
+        throw new Error(
+            `Token ${token} does not exist or not assigned to User ${userID}`
+        );
+    }
+
+    if (existing.expiresAt <= new Date(Date.now())) {
+        await db.emailVerificationToken.delete({
+            where: {
+                token: token,
+            },
+        });
+        throw new Error(`Token ${token} has expired.`);
+    }
+
+    console.log(`User ${userID}'s email was verified using token: ${token}`);
+
+    await db.user.update({
+        where: {
+            userID: userID,
+        },
+        data: { emailVerified: true },
+    });
+
+    await db.emailVerificationToken.delete({
+        where: {
+            token: token,
+        },
+    });
+}
+
+async function generateEmailVerificationToken(userID: number) {
+    const token = crypto.randomBytes(32).toString("hex"); // random 64-char string
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); //10 minutes (its in miliseconds)
+    await db.emailVerificationToken.create({
+        data: {
+            userID,
+            token,
+            expiresAt,
+        },
+    });
+
+    return token;
+}
+
 export const authServices = {
     createRefreshToken,
     findRefreshToken,
     revokeRefreshToken,
+    verifyEmailToken,
+    generateEmailVerificationToken,
 };

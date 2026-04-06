@@ -5,5 +5,6 @@ import { authController } from "../controllers/auth";
 router.post("/login", authController.login);
 router.post("/logout", authController.logOut);
 router.post("/refresh", authController.refresh);
+router.post("/verifyEmail/:userId", authController.verifyEmail);
 
 export default router;

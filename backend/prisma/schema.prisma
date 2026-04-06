@@ -99,7 +99,7 @@ model EmailVerificationToken {
   user         User     @relation(fields: [userID], references: [userID], onDelete: Cascade)
   userID       Int
   expiresAt    DateTime
-  used         Boolean  @default(false)
+  used         Boolean  @default(false) //TODO redunant and not used (tokens which are used are deleted)
   created_at   DateTime @default(now())
 }
 
