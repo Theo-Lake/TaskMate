@@ -89,6 +89,13 @@ async function updateUser(req: Request, res: Response) {
             return;
         }
 
+        if (req.body.password) {
+            res.status(400).json({
+                error: "To change your password, use the password reset flow.",
+            });
+            return;
+        }
+
         await userServices.updateUser(userID, req.body); // Calling user service to create update with req.body
         console.log("User data PUT accepted.");
         res.status(200).json({ Message: "User data successfully updated" });
