@@ -14,6 +14,14 @@ Backend:
 - tsx / ts-node
 - PostgreSQL (via @prisma/adapter-pg)
 
+Authentication:
+    Login — verifies credentials, issues access + refresh token 
+    Logout — revokes refresh token, clears cookie 
+    Refresh — rotates refresh token (marks old as used), issues new access token 
+    withAuth middleware — applied to all mutating routes 
+    Ownership checks — in place for all routes with a userId param 
+    req.user — attached in withAuth, typed via express.d.ts 
+
 Frontend:
 - React Native
 - Expo
@@ -23,3 +31,4 @@ Frontend:
 - react-native-pager-view
 - @expo/vector-icons
 - TypeScript
+

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { userServices } from "../services/users"; // Abstraction so that db and business logic is managed by services.
-import { auth } from "../middleware/authentication/auth";
-
+import { authServices } from "../services/auth";
+import { emailServices } from "../services/email";
 // Get users function
 async function getAllUsers(req: Request, res: Response) {
     try {
@@ -41,19 +41,35 @@ async function getUserById(req: Request, res: Response) {
 
 async function createUser(req: Request, res: Response) {
     try {
-        //TODO generate token
-        const user = await userServices.getUserByEmailOrUsername(req.body.email, req.body.username);
-        if (user) {
+        const existing = await userServices.getUserByEmailOrUsername(
+            req.body.email,
+            req.body.username
+        );
+        if (existing) {
             res.status(409).json({ error: "Username or email already in use" });
             return;
         }
 
-        await userServices.createUser(req.body); // Calling user service to create user with req.body
+        const newUser = await userServices.createUser(req.body);
+
+        const token = await authServices.generateEmailVerificationToken(
+            newUser.userID
+        );
+
+        await emailServices.sendVerificationEmail(
+            newUser.email,
+            newUser.username,
+            token
+        );
+
         console.log("User data POST accepted.");
-        res.status(200).json({ Message: "User data successfully created" });
+        res.status(201).json({
+            message: "Account created. Please verify your email.",
+            userID: newUser.userID,
+        });
     } catch (error) {
         console.log(`An error occured while posting the user data: ${error}`);
-        res.status(500).json({ error: error });
+        res.status(500).json({ error: String(error) });
     }
 }
 
@@ -63,6 +79,13 @@ async function updateUser(req: Request, res: Response) {
 
         if (isNaN(userID)) {
             res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        if (userID !== req.user!.userID) {
+            res.status(403).json({
+                error: "Request userID does not match authenticated user",
+            });
             return;
         }
 
@@ -79,8 +102,15 @@ async function deleteUser(req: Request, res: Response) {
     try {
         const userID = Number(req.params.userId);
 
-        if (!userID) {
+        if (!userID || isNaN(userID)) {
             res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        if (userID !== req.user!.userID) {
+            res.status(403).json({
+                error: "Request userID does not match authenticated user",
+            });
             return;
         }
 

@@ -31,4 +31,6 @@ export const TaskSchema = z.object({
     updated_at: z.never(),
 });
 
+export const TaskUpdateSchema = TaskSchema.partial();
+
 export type Task = z.infer<typeof TaskSchema>;

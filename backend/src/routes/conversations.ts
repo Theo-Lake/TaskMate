@@ -3,6 +3,7 @@ const router = express.Router(); // Creating a different router for every route,
 import { conversationController } from "../controllers/conversations";
 import { validate } from "../middleware/validation/validate";
 import { MessageSchema } from "../middleware/validation/schemas/messages";
+import { auth } from "../middleware/authentication/auth";
 
 // CONVERSATION GET all conversations ENDPOINT
 router.get("/", conversationController.getAllConversations);
@@ -22,6 +23,7 @@ router.get(
 // MESSAGES POST ENDPOINT
 router.post(
     "/:convoId/messages/:senderId",
+    auth.withAuth,
     validate(MessageSchema),
     conversationController.createMessage
 );
@@ -29,6 +31,7 @@ router.post(
 // MESSAGES delete (by ID) ENDPOINT
 router.delete(
     "/:convoId/messages/:messageId",
+    auth.withAuth,
     conversationController.deleteMessage
 );
 

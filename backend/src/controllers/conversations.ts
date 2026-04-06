@@ -74,6 +74,14 @@ async function createMessage(req: Request, res: Response) {
     try {
         const conversationID = Number(req.params.convoId);
         const senderID = Number(req.params.senderId);
+
+        if (Number(req.params.senderId) !== req.user!.userID) {
+            res.status(403).json({
+                error: "Forbidden: Request userID does not match authenticated user",
+            });
+            return;
+        }
+
         const message = await conversationServices.createMessage(
             conversationID,
             senderID,
@@ -108,6 +116,13 @@ async function deleteMessage(req: Request, res: Response) {
         );
         if (!message) {
             res.status(404).json({ error: "Message not found" });
+            return;
+        }
+
+        if (message.senderID !== req.user!.userID) {
+            res.status(403).json({
+                error: "Forbidden: Request userID does not match authenticated user",
+            });
             return;
         }
 

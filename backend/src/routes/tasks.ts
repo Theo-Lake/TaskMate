@@ -1,11 +1,17 @@
 import express from "express";
 import { taskController } from "../controllers/tasks";
 import { validate } from "../middleware/validation/validate";
-import { TaskSchema } from "../middleware/validation/schemas/tasks";
+import { TaskSchema, TaskUpdateSchema } from "../middleware/validation/schemas/tasks";
+import { auth } from "../middleware/authentication/auth";
 const router = express.Router(); // Creating a different router for every route, so circular dependency does not occur
 
 // TASK POST (no need for conversation post since if a task is created so is a convo)
-router.post("/:publisherId", validate(TaskSchema), taskController.postTask);
+router.post(
+    "/:publisherId",
+    auth.withAuth,
+    validate(TaskSchema),
+    taskController.postTask
+);
 
 // TASK GET all tasks
 router.get("/", taskController.getAllTasks);
@@ -31,14 +37,24 @@ router.get(
     taskController.getTaskAssignmentByUserID
 );
 
-router.put("/:taskId/assign/:userId", taskController.assignTask);
+// TASK APPLICATION
+router.post("/:taskId/apply/:userId", auth.withAuth, taskController.applyForTask);
+router.put("/:taskId/apply/:userId/accept", auth.withAuth, taskController.acceptApplication);
+router.put("/:taskId/apply/:userId/reject", auth.withAuth, taskController.rejectApplication);
+router.delete("/:taskId/apply/:userId", auth.withAuth, taskController.unAssignTask);
 
-router.delete("/:taskId/assign/:userId", taskController.unAssignTask);
+// TASK STATUS PATCH
+router.patch("/:taskId/status", auth.withAuth, taskController.patchTaskStatus);
 
-// TASK PUT
-router.put("/:taskId", validate(TaskSchema), taskController.putTask);
+// TASK PATCH
+router.patch(
+    "/:taskId",
+    auth.withAuth,
+    validate(TaskUpdateSchema),
+    taskController.putTask
+);
 
 // TASK DELETE
-router.delete("/:taskId", taskController.deleteTask);
+router.delete("/:taskId", auth.withAuth, taskController.deleteTask);
 
 export default router;

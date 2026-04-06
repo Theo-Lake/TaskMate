@@ -2,6 +2,7 @@ import express from "express";
 import { hashtagController } from "../controllers/hashtags";
 import { validate } from "../middleware/validation/validate";
 import { HashtagSchema } from "../middleware/validation/schemas/hashtags";
+import { auth } from "../middleware/authentication/auth";
 const router = express.Router();
 
 // GET all hashtags
@@ -20,17 +21,27 @@ router.get(
 );
 
 // CREATE hashtag
-router.post("/create/", validate(HashtagSchema), hashtagController.createHashtag);
+router.post(
+    "/",
+    auth.withAuth,
+    validate(HashtagSchema),
+    hashtagController.createHashtag
+);
 
 // DELETE hashtag
-router.delete("/delete/:hashtagId", hashtagController.deleteHashtag);
+router.delete("/:hashtagId", auth.withAuth, hashtagController.deleteHashtag);
 
 // ADD hashtag
-router.put("/:taskId/add/:hashtagId", hashtagController.addHashtagToTask);
+router.put(
+    "/:taskId/add/:hashtagId",
+    auth.withAuth,
+    hashtagController.addHashtagToTask
+);
 
 // REMOVE hashtag
 router.put(
     "/:taskId/remove/:hashtagId",
+    auth.withAuth,
     hashtagController.removeHashtagFromTask
 );
 
