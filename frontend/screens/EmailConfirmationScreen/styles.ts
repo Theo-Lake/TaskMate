@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: '#ffffff',
   },
+  /* Can be used later for header  
   header: {
     backgroundColor: '#4a875a', 
     paddingTop: 50, 
@@ -15,19 +16,21 @@ export const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: '500',
-  },
+  }, */
+
   content: {
     flex: 1,
     paddingHorizontal: 30, 
     alignItems: 'center', 
   },
   logo: {
-    width: 120,
-    height: 120,
-    marginTop: 40,
+    
+    width: '100%',
+    height: 150,
+    marginTop: 80,
     marginBottom: 30,
   },
-  instructionText: {
+  instuuctionText: {
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -70,9 +73,7 @@ export const styles = StyleSheet.create({
     borderRadius: 25, 
     elevation: 4, 
     shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
+  
   },
   buttonContent: {
     paddingVertical: 8,

@@ -3,38 +3,26 @@ import {View, Text, Image, TextInput} from 'react-native';
 import {Checkbox, Button} from 'react-native-paper';
 import {styles} from './styles';
 import Logo from '../../assets/img/logoNoText.png';
+import CustomHeader from '../../components/navBar/CustomHeader';
 
-const EmailConfirmationScreen = () => {
+const EmailConfirmationScreen = ({navigation}:any) => {
   const [code, setCode] = useState<string>('');
   const [isTickboxChecked, setIsTickboxChecked] = useState<boolean>(false);
 
   return(
     <View style={styles.container}>
       
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Sign Up</Text>
-      </View>
+      <CustomHeader title="Sign Up" navigation={navigation} showBackArrow={true} showProfilePicture={false}/>
+      
 
       <View style={styles.content}>
         
-        <Image
-          source={Logo}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        <Image source={Logo} style={styles.logo} resizeMode="contain"/>
 
-        <Text style={styles.instructionText}>
-          The confirmation code has been sent to your email.
+        <Text style={styles.instuuctionText}> The confirmation code has been sent to your email.
         </Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Code"
-          placeholderTextColor="#888"
-          value={code}
-          onChangeText={setCode}
-          keyboardType="number-pad" 
-        />
+        <TextInput style={styles.input} placeholder="Code" placeholderTextColor="#888" value={code} onChangeText={setCode} keyboardType="number-pad" />
 
         <View style={styles.checkboxContainer}>
           <View style={styles.checkboxWrapper}>
@@ -49,16 +37,7 @@ const EmailConfirmationScreen = () => {
           </Text>
         </View>
 
-        <Button 
-          icon="account-outline" 
-          mode="contained" 
-          onPress={() => console.log('Sign Up button clicked by user.')}
-          style={styles.button}
-          contentStyle={styles.buttonContent}
-          buttonColor="#3b824a"
-        >
-          Sign Up
-        </Button>
+        <Button icon="account-outline" mode="contained" onPress={() => console.log('Sign Up button clicked by user.')} style={styles.button} contentStyle={styles.buttonContent} buttonColor="#3b824a">Sign Up</Button>
 
       </View>
     </View>

@@ -9,13 +9,13 @@ export default function DevMenuScreen({ navigation }: any) {
       <Text variant="titleLarge" style={styles.title}>
         Deveoper navigation
       </Text>
+      <Text style={styles.sectionTitle}>Abandon hope, all ye who enter here</Text>
+
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Auth </Text>
         <Button mode="contained" style={styles.btn} onPress={() => navigation.navigate('OpeningTabs')}>Opening Screen</Button>
-        <Button mode="outlined" style={styles.btn} onPress={() => navigation.navigate('OpeningTabs', {screen:'Login'})}> Login</Button>
-        <Button mode="outlined" style={styles.btn} onPress={() => navigation.navigate('OpeningTabs', {screen:'SignUp'})}> SignUp</Button>
-        <Button mode="outlined" style={styles.btn} onPress={() => navigation.navigate('OpeningTabs', {screen:'EmailConfirmation'})}> Email Confirmation</Button>
+
       </View>
 
       <View style={styles.section}>

@@ -54,7 +54,6 @@ export default function CreateTaskScreen({navigation}:any) {
     }
     return (
         <ScrollView>
-            <CustomHeader title="Create Task" navigation={navigation} showBackArrow={true} showProfilePicture={true}/>
             <View style = {styles.content}>
                 <TextInput mode='outlined' label="Task title:" value={taskTitle} onChangeText={text => setTaskTitleText(text)} style={styles.textBox}/>
                 <TextInput mode='outlined'  label="Task description:" value={taskDesc} onChangeText={text => setTaskDesc(text)} style={styles.textBoxTall} multiline={true} textAlignVertical="top"/>
