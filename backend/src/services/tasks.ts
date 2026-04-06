@@ -1,7 +1,10 @@
 import { db } from "../db";
-import { ApplicationStatus, Status, TaskTypes } from "../generated/prisma/enums";
+import {
+    ApplicationStatus,
+    Status,
+    TaskTypes,
+} from "../generated/prisma/enums";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
-import { TaskAssignment } from "../generated/prisma/client";
 
 async function getAllTasks() {
     return await db.task.findMany();
@@ -77,7 +80,8 @@ async function applyForTask(taskID: Number, userID: Number) {
     const existing = await db.taskAssignment.findFirst({
         where: { taskID: Number(taskID), assigneeID: Number(userID) },
     });
-    if (existing) throw new Error(`User ${userID} has already applied to task ${taskID}`);
+    if (existing)
+        throw new Error(`User ${userID} has already applied to task ${taskID}`);
 
     if (task.publisherID === Number(userID))
         throw new Error("Publisher cannot apply to their own task");
@@ -97,7 +101,10 @@ async function acceptApplication(taskID: Number, userID: Number) {
     const application = await db.taskAssignment.findFirst({
         where: { taskID: Number(taskID), assigneeID: Number(userID) },
     });
-    if (!application) throw new Error(`No application found for user ${userID} on task ${taskID}`);
+    if (!application)
+        throw new Error(
+            `No application found for user ${userID} on task ${taskID}`
+        );
     if (application.status === ApplicationStatus.accepted)
         throw new Error(`Application already accepted`);
 
@@ -124,7 +131,10 @@ async function rejectApplication(taskID: Number, userID: Number) {
     const application = await db.taskAssignment.findFirst({
         where: { taskID: Number(taskID), assigneeID: Number(userID) },
     });
-    if (!application) throw new Error(`No application found for user ${userID} on task ${taskID}`);
+    if (!application)
+        throw new Error(
+            `No application found for user ${userID} on task ${taskID}`
+        );
 
     await db.taskAssignment.delete({
         where: { assignmentID: application.assignmentID },

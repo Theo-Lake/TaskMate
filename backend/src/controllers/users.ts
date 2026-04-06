@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { userServices } from "../services/users"; // Abstraction so that db and business logic is managed by services.
-import { auth } from "../middleware/authentication/auth";
 import { authServices } from "../services/auth";
-
+import { emailServices } from "../services/email";
 // Get users function
 async function getAllUsers(req: Request, res: Response) {
     try {
@@ -52,24 +51,25 @@ async function createUser(req: Request, res: Response) {
         }
 
         const newUser = await userServices.createUser(req.body);
-        const accessToken = await auth.generateAccessToken(newUser.userID);
-        const refreshToken = await authServices.createRefreshToken(
+
+        const token = await authServices.generateEmailVerificationToken(
             newUser.userID
         );
 
-        res.cookie("refreshToken", refreshToken.token, {
-            httpOnly: true,
-            secure: true,
-        });
+        await emailServices.sendVerificationEmail(
+            newUser.email,
+            newUser.username,
+            token
+        );
 
         console.log("User data POST accepted.");
         res.status(201).json({
-            Message: "User successfully created",
-            accessToken,
+            message: "Account created. Please verify your email.",
+            userID: newUser.userID,
         });
     } catch (error) {
         console.log(`An error occured while posting the user data: ${error}`);
-        res.status(500).json({ error: error });
+        res.status(500).json({ error: String(error) });
     }
 }
 

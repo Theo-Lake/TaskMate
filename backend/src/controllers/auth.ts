@@ -24,6 +24,11 @@ export async function login(req: Request, res: Response) {
             return;
         }
 
+        if (!user.emailVerified) {
+            res.status(403).json({ error: "Email not verified" });
+            return;
+        }
+
         const accessToken = await auth.generateAccessToken(user.userID);
         const refreshToken = await authServices.createRefreshToken(user.userID);
 
@@ -89,8 +94,31 @@ export async function refresh(req: Request, res: Response) {
     }
 }
 
+export async function verifyEmail(req: Request, res: Response) {
+    try {
+        const userID = Number(req.params.userId);
+
+        const { token } = req.body;
+
+        await authServices.verifyEmailToken(userID, token);
+
+        const accessToken = await auth.generateAccessToken(userID);
+        const refreshToken = await authServices.createRefreshToken(userID);
+
+        res.cookie("refreshToken", refreshToken.token, {
+            httpOnly: true,
+            secure: true,
+        });
+
+        res.status(200).json({ message: "Email verified", accessToken });
+    } catch (error) {
+        res.status(400).json({ error: String(error) });
+    }
+}
+
 export const authController = {
     login,
     logOut,
     refresh,
+    verifyEmail,
 };
