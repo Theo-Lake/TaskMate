@@ -11,6 +11,8 @@ import OpeningScreen from './screens/OpeningScreen/OpeningScreen';
 import LoginScreen from './screens/LoginScreen/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 
+import EmailConfirmationScreen from './screens/EmailConfirmationScreen/EmailConfirmation';
+
 import MainNavigationTabs from "./navigation/MainNavigationTab";
 import { StackScreen } from "react-native-screens";
 
@@ -35,6 +37,9 @@ function OpeningTabs(){
       <Tab.Screen name='Login' component={LoginScreen}/>
       <Tab.Screen name='Opening' component={OpeningScreen}/>
       <Tab.Screen name='SignUp' component={SignUpScreen}/>
+
+      <Tab.Screen name ='EmailConfirmation' component={EmailConfirmationScreen}/>
+      
     </Tab.Navigator>
     
   );
