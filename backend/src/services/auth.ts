@@ -81,10 +81,30 @@ async function generateEmailVerificationToken(userID: number) {
     return token;
 }
 
+async function verifyPasswordResetToken(token: string) {
+    const existing = await db.emailVerificationToken.findFirst({
+        where: { token },
+    });
+
+    if (!existing) {
+        throw new Error("Invalid or expired token.");
+    }
+
+    if (existing.expiresAt <= new Date()) {
+        await db.emailVerificationToken.delete({ where: { token } });
+        throw new Error("Token has expired.");
+    }
+
+    await db.emailVerificationToken.delete({ where: { token } });
+
+    return existing.userID;
+}
+
 export const authServices = {
     createRefreshToken,
     findRefreshToken,
     revokeRefreshToken,
     verifyEmailToken,
     generateEmailVerificationToken,
+    verifyPasswordResetToken,
 };
