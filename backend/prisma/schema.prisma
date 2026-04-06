@@ -20,6 +20,7 @@ model User {
   email                   String                   @unique
   password_hash           String
   publishedTasks          Task[]
+  publishedEvents         Event[]
   assignedTasks           TaskAssignment[]
   occupation              String
   profilePicture          String                   @default("null") //TODO default should be a default picture
@@ -60,6 +61,29 @@ model Task {
   @@unique([taskID, publisherID])
 }
 
+//TODO finish event and remove TaskType with EventType
+model Event {
+  eventID     Int  @id @default(autoincrement())
+  publisher   User @relation(fields: [publisherID], references: [userID], onDelete: Cascade)
+  publisherID Int
+
+  name          String
+  type          TaskTypes
+  status        Status    @default(not_Complete)
+  completedDate DateTime?
+  dueDate       DateTime
+  description   String
+  images        String?
+
+  created_at DateTime @default(now()) // auto-set when row is created
+  updated_at DateTime @updatedAt // auto-update when row is changed
+
+  hashtags      Hashtags[]
+  conversations Conversation[]
+
+  @@unique([eventID, publisherID])
+}
+
 // Holds the record of assigned jobs: | AssingmentID | job | Assignee |
 model TaskAssignment {
   assignmentID Int               @id @default(autoincrement())
@@ -73,10 +97,12 @@ model TaskAssignment {
 }
 
 model Hashtags {
-  hashtagID  Int      @id @default(autoincrement())
-  name       String   @unique
-  tasks      Task[]
-  created_at DateTime @default(now()) // auto-set when row is created
+  hashtagID    Int      @id @default(autoincrement())
+  name         String   @unique
+  tasks        Task[]
+  created_at   DateTime @default(now()) // auto-set when row is created
+  event        Event?   @relation(fields: [eventEventID], references: [eventID])
+  eventEventID Int?
 }
 
 model Reviews {
@@ -124,6 +150,8 @@ model Conversation {
   messages       Message[]
   created_at     DateTime  @default(now())
   updated_at     DateTime  @updatedAt
+  event          Event?    @relation(fields: [eventEventID], references: [eventID])
+  eventEventID   Int?
 }
 
 model Message {
