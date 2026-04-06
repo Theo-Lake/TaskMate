@@ -6,5 +6,7 @@ router.post("/login", authController.login);
 router.post("/logout", authController.logOut);
 router.post("/refresh", authController.refresh);
 router.post("/verifyEmail/:userId", authController.verifyEmail);
+router.post("/requestPasswordReset", authController.requestPasswordReset);
+router.post("/resetPassword", authController.resetPassword);
 
 export default router;

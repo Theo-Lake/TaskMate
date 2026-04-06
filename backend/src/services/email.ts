@@ -20,7 +20,6 @@ export async function sendWelcomeEmail(toEmail: string, username: string) {
     });
 }
 
-//TODO needs to call generate token and input it in this function in user controller
 async function sendVerificationEmail(
     toEmail: string,
     username: string,
@@ -42,8 +41,25 @@ async function sendVerificationEmail(
     });
 }
 
-async function sendPasswordResetEmail() {
-    //TODO
+async function sendPasswordResetEmail(
+    toEmail: string,
+    username: string,
+    token: string
+) {
+    await transporter.sendMail({
+        from: `"TaskMate" <${process.env.SMTP_USER}>`,
+        to: toEmail,
+        subject: "Verify your password change",
+        text: `Hi ${username}, your password change verification token is: ${token}`,
+        html: `
+            <p>Hi <strong>${username}</strong>,</p>
+            <p>Use the token below to change your password:</p>
+            <div style="margin: 20px 0; padding: 16px; background: #f4f4f4; border-radius: 8px; text-align: center; font-size: 24px; font-family: monospace; letter-spacing: 4px;">
+                ${token}
+            </div>
+            <p>This token expires in <strong>10 minutes</strong>. If you didn't request a password change, you can ignore this email.</p>
+        `,
+    });
 }
 
 export const emailServices = {
