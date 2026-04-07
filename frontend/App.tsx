@@ -1,3 +1,4 @@
+/*#FIX: navigation in opening tabs. Maybe switch to Stack*/ 
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
@@ -34,11 +35,11 @@ const Tab = createMaterialTopTabNavigator();
 function OpeningTabs(){
   return(
     <Tab.Navigator initialRouteName='Opening' tabBar={()=>null} screenOptions={{tabBarStyle : {display : 'none'}, }}>
-      <Tab.Screen name='Login' component={LoginScreen}/>
-      <Tab.Screen name='Opening' component={OpeningScreen}/>
-      <Tab.Screen name='SignUp' component={SignUpScreen}/>
+      <Tab.Screen name='Login' component={LoginScreen} options={{ swipeEnabled: true }}/>
+      <Tab.Screen name='Opening' component={OpeningScreen} options={{ swipeEnabled: true }}/>
+      <Tab.Screen name='SignUp' component={SignUpScreen} options={{ swipeEnabled: true }}/>
 
-      <Tab.Screen name ='EmailConfirmation' component={EmailConfirmationScreen}/>
+      <Tab.Screen name ='EmailConfirmation' component={EmailConfirmationScreen} options={{ swipeEnabled: false }}/>
       
     </Tab.Navigator>
     

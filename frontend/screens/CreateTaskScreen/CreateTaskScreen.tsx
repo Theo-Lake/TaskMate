@@ -53,6 +53,8 @@ export default function CreateTaskScreen({navigation}:any) {
         );
     }
     return (
+        <View>
+            <CustomHeader title="Create Task" navigation={navigation} showBackArrow={true} showProfilePicture={false}/>
         <ScrollView>
             <View style = {styles.content}>
                 <TextInput mode='outlined' label="Task title:" value={taskTitle} onChangeText={text => setTaskTitleText(text)} style={styles.textBox}/>
@@ -95,6 +97,8 @@ export default function CreateTaskScreen({navigation}:any) {
                 </View>
             </View>
         </ScrollView>
+        </View>
+        
 
     );
 }

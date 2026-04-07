@@ -97,7 +97,7 @@ export default function MyTasksScreen({navigation}:any) {
 
         <View style={{flex:7}}>
 
-            <View style={{flexDirection: 'row', marginTop:10, marginHorizontal:6}}>
+            <View style={{flexDirection: 'row', marginTop:25, marginHorizontal:6}}>
                 <Button 
                     style={[styles.button, selectedStatus === "published" ? styles.activeButton : styles.inactiveButton]} 
                     mode={selectedStatus === "published" ? "contained" : "outlined"} 
@@ -171,7 +171,7 @@ export default function MyTasksScreen({navigation}:any) {
                     style={styles.fab}
                     customSize={75}
                     color="white"
-                    onPress={() => navigation.navigate('CreateTaskScreen')}
+                    onPress={() => navigation.navigate('TasksTab', { screen: 'CreateTaskScreen' })}
                 />
     
             </View>
