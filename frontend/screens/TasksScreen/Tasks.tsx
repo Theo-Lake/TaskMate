@@ -125,7 +125,7 @@ export default function TasksScreen({navigation}:any) {
                         price={item.price}
                         imageUrl={item.imageUrl}
                         description={item.description}
-                        onPress={() => console.log('Opened task', item.title)}
+                        onPress={() => navigation.navigate("ViewTaskScreen")}
                       />
                     )}
                   />
@@ -174,7 +174,7 @@ export default function TasksScreen({navigation}:any) {
                   price={item.price}
                   imageUrl={item.imageUrl}
                   description={item.description}
-                  onPress={() => console.log('Opened task', item.title)}
+                  onPress={() => navigation.navigate("ViewTaskScreen")}
                 />
               )}
             />
