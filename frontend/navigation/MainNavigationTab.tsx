@@ -23,7 +23,7 @@ import EventsScreen from '../screens/EventsScreen/EventsScreen';
 import ViewEventScreen from '../screens/ViewEventScreen/ViewEventScreen';
 import CreateEventScreen from '../screens/CreateEventScreen/CreateEventScreen';
 
-
+import EditTaskScreen from "../screens/EditTask/EditTaskScreen";
 
 
 
@@ -48,6 +48,7 @@ function MyTasksStackNavigator(){
         <MyTasksStack.Navigator screenOptions={{headerShown: false}}>
             <MyTasksStack.Screen name="MyTasks" component={MyTasksScreen}/>
             <MyTasksStack.Screen name="ViewOwnTask" component={ViewOwnTaskScreen}/>
+            <MyTasksStack.Screen name="EditTaskScreen" component={EditTaskScreen}/>
             <MyTasksStack.Screen name="UserProfileScreen" component={UserProfileScreen}/>
             <MyTasksStack.Screen name="SettingsScreen" component={SettingsScreen}/>
 
