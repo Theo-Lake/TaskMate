@@ -1,3 +1,4 @@
+
 import React from "react";
 import { View, StyleSheet, Image, FlatList, ScrollView, SectionList } from 'react-native';
 import {  Text, useTheme,Appbar, Avatar, Chip,Button, IconButton } from "react-native-paper";
@@ -103,8 +104,8 @@ export default function ViewOwnTaskScreen({navigation}:any) {
 
                     </View>
                     <View style={{flexDirection:'row',gap:5}}>
-                        <Button icon="pencil-outline" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Edit</Button>
-                        <Button icon="close" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Remove</Button>
+                        <Button icon="pencil-outline" mode="contained" onPress={() => navigation.navigate('MyTasksTab', { screen: 'EditTaskScreen' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Edit</Button>
+                        <Button icon="close" mode="contained" onPress={() => navigation.navigate('MyTasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Remove</Button>
                     </View>
 
                 </View>
