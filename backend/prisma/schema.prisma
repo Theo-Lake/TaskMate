@@ -22,6 +22,7 @@ model User {
   publishedTasks          Task[]
   publishedEvents         Event[]
   assignedTasks           TaskAssignment[]
+  assignedEvents          EventAssignment[]
   occupation              String
   profilePicture          String                   @default("null") //TODO default should be a default picture
   myPublishedReviews      Reviews[]                @relation("PublishedReviews")
@@ -43,6 +44,7 @@ model Task {
   // A User(assignee) can be assigned many jobs, and a job can have many assignees m-m
   assignments TaskAssignment[]
 
+  //TODO implement LOCATION and people required 
   name          String
   type          TaskTypes
   status        Status    @default(not_Complete)
@@ -61,15 +63,16 @@ model Task {
   @@unique([taskID, publisherID])
 }
 
-//TODO finish event and remove TaskType with EventType
+//TODO implement LOCATION and people required 
 model Event {
   eventID     Int  @id @default(autoincrement())
   publisher   User @relation(fields: [publisherID], references: [userID], onDelete: Cascade)
   publisherID Int
 
   name          String
-  type          TaskTypes
-  status        Status    @default(not_Complete)
+  type          EventTypes
+  status        Status     @default(not_Complete)
+  location      String
   completedDate DateTime?
   dueDate       DateTime
   description   String
@@ -80,6 +83,7 @@ model Event {
 
   hashtags      Hashtags[]
   conversations Conversation[]
+  assignments   EventAssignment[]
 
   @@unique([eventID, publisherID])
 }
@@ -94,6 +98,17 @@ model TaskAssignment {
   status       ApplicationStatus @default(pending)
 
   @@unique([assignmentID, assigneeID])
+}
+
+model EventAssignment {
+  eventAssignmentID Int               @id @default(autoincrement())
+  event             Event             @relation(fields: [eventID], references: [eventID], onDelete: Cascade)
+  eventID           Int
+  assignee          User              @relation(fields: [assigneeID], references: [userID])
+  assigneeID        Int
+  status            ApplicationStatus @default(pending)
+
+  @@unique([eventAssignmentID, assigneeID])
 }
 
 model Hashtags {
@@ -187,6 +202,16 @@ enum TaskTypes {
   moving
   tech_support
   general
+  other
+}
+
+enum EventTypes {
+  social
+  sport
+  academic
+  career
+  cultural
+  volunteering
   other
 }
 

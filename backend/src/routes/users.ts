@@ -1,7 +1,10 @@
 import express from "express";
 import { userController } from "../controllers/users";
 import { validate } from "../middleware/validation/validate";
-import { UserSchema, UserUpdateSchema } from "../middleware/validation/schemas/users";
+import {
+    UserSchema,
+    UserUpdateSchema,
+} from "../middleware/validation/schemas/users";
 import { auth } from "../middleware/authentication/auth";
 const router = express.Router(); // Creating a different router for every route, so circular dependency does not occuro
 
@@ -22,7 +25,7 @@ router.patch(
     userController.updateUser
 );
 
-// USER DATA PUT
+// USER DATA DELETE
 router.delete("/:userId", auth.withAuth, userController.deleteUser);
 
 export default router;
