@@ -135,7 +135,7 @@ export default function EventsScreen({navigation}:any) {
                             price={item.date}
                             imageUrl={item.imageUrl}
                             description={item.description}
-                            onPress={() => console.log('Opened event', item.title)}
+                            onPress={() => navigation.navigate("ViewEventScreen")}
                             />
                         )}
                         />
@@ -185,7 +185,7 @@ export default function EventsScreen({navigation}:any) {
                         date={item.date}
                         imageUrl={item.imageUrl}
                         description={item.description}
-                        onPress={() => console.log('Opened event', item.title)}
+                        onPress={() => navigation.navigate("ViewEventScreen")}
                     />
                     )}
                 />

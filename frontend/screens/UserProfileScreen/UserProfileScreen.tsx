@@ -86,7 +86,7 @@ export default function UserProfileScreen({navigation}:any) {
                         title={item.title}
                         review={item.review}
                         description={item.description}
-                        onPress={() => console.log('Opened task', item.title)}
+                        onPress={() => console.log('Opened rewiew', item.title)}
                         />
                     )}
                     />
