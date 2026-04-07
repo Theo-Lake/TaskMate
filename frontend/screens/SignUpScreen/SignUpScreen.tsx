@@ -33,7 +33,7 @@ export default function SignUpScreen({ navigation }: any) {
                 </View>
 
                 <View style={{marginHorizontal:100}}>
-                    <Button icon="account-outline" mode="contained" onPress={() => navigation.navigate('Home')} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Sign Up</Button>
+                    <Button icon="account-outline" mode="contained" onPress={() => navigation.navigate('OpeningTabs', { screen: 'EmailConfirmation' })} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Sign Up</Button>
                 </View>
             </View>
             

@@ -196,7 +196,7 @@ export default function EventsScreen({navigation}:any) {
                     style={styles.fab}
                     customSize={75}
                     color="white"
-                    onPress={() => navigation.navigate('CreateTaskScreen')}
+                    onPress={() => navigation.navigate('CreateEventScreen')}
                 />
     
             </View>
