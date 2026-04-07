@@ -160,7 +160,7 @@ export default function MyTasksScreen({navigation}:any) {
                         price={item.price}
                         imageUrl={item.imageUrl}
                         description={item.description}
-                        onPress={() => console.log('Opened task', item.title)}
+                        onPress={() => navigation.navigate("ViewOwnTask")}
                     />
                     )}
                 />

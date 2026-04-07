@@ -11,45 +11,35 @@ type ReviewCardProps = {
 
   // uri image from server
   // imageUrl: string;
-  description?: string;
-  onPress?: () => void;
+
 };
 
 export default function ReviewCard({
   title,
   review,
-  description,
-  onPress,
+
 }: ReviewCardProps) {
   const theme = useTheme();
 
   return (
-    <Card mode="outlined" style={styles.card} onPress={onPress}>
+    <Card mode="outlined" style={styles.card} >
       <View style={styles.row}>
 
         <Avatar.Icon size={50} icon="account" style={{backgroundColor:'#64A376', marginRight:10}} color="black"/>
 
         <View style={styles.content}>
 
-          <Text variant="titleSmall" numberOfLines={1} style={{fontWeight: 'bold'}}>
+          <Text variant="titleSmall"  style={{fontWeight: 'bold',color:'black'}}>
             {title}
           </Text>
-          
-          {description ? (
-            <Text
-              variant="bodySmall"
-              numberOfLines={2}
-              style={[styles.description, { color: theme.colors.onSurfaceVariant }]}
-            >
-              {description}
-            </Text>
-          ) : null}
-          
-        </View>
+          <View  style={styles.review}>
+            <StarRating rating={review}/>
+          </View>
 
-        <View style={styles.review}>
-          <StarRating rating={review}/>
+          
         </View>
+        
+
 
       
       </View>
@@ -59,17 +49,19 @@ export default function ReviewCard({
 
 const styles = StyleSheet.create({
   card: {
-    marginHorizontal: 12,
-    marginVertical: 6,
+    marginVertical: 2,
     borderRadius: 10,
     overflow: 'hidden',
     borderColor: '#C5C5C5',
+    width:'100%',
+    alignSelf: 'stretch'
   },
   row: {
     flexDirection: 'row',
     padding: 10,
     alignItems: 'center',
     backgroundColor: '#E8E8E8',
+    width:'100%'
   },
   image: {
     width: 72,
@@ -86,9 +78,8 @@ const styles = StyleSheet.create({
   },
   review: {
     // probably a better way to do this than a huge top margin
-    marginTop: 40,
     marginRight: 10,
-    marginLeft:10,
+    marginLeft:0,
     fontWeight: 'bold',
   },
 });
