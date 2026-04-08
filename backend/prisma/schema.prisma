@@ -158,8 +158,8 @@ model RefreshToken {
 
 model Conversation {
   conversationID Int       @id @default(autoincrement())
-  task           Task      @relation(fields: [taskCID], references: [taskID], onDelete: Cascade)
-  taskCID        Int
+  task           Task?      @relation(fields: [taskCID], references: [taskID], onDelete: Cascade)
+  taskCID        Int?
   user1          User      @relation("User1", fields: [user1ID], references: [userID])
   user1ID        Int
   user2          User      @relation("User2", fields: [user2ID], references: [userID])
