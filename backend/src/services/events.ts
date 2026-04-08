@@ -1,10 +1,10 @@
 import { de } from "zod/locales";
 import { db } from "../db";
-import { Status, EventTypes } from "../generated/prisma/enums";
+import { ApplicationStatus, Status, EventTypes } from "../generated/prisma/enums";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
 
 async function getAllEvents() {
-    return await db.emailVerificationToken.findMany();
+    return await db.event.findMany();
 }
 
 async function getEventByEventID(eventID: Number) {
@@ -115,6 +115,123 @@ async function updateEventStatus(eventID: Number, status: Status) {
     });
 }
 
+async function applyForEvent(eventID: Number, userID: Number) {
+    const event = await db.event.findUnique({
+        where: { eventID: Number(eventID) },
+        select: { publisherID: true },
+    });
+    if (!event) throw new Error(`Event ${eventID} not found`);
+
+    const existing = await db.eventAssignment.findFirst({
+        where: { eventID: Number(eventID), assigneeID: Number(userID) },
+    });
+    if (existing)
+        throw new Error(`User ${userID} has already applied to event ${eventID}`);
+
+    if (event.publisherID === Number(userID))
+        throw new Error("Publisher cannot apply to their own event");
+
+    await db.eventAssignment.create({
+        data: { eventID: Number(eventID), assigneeID: Number(userID) },
+    });
+}
+
+async function acceptApplication(eventID: Number, userID: Number) {
+    const event = await db.event.findUnique({
+        where: { eventID: Number(eventID) },
+        select: { publisherID: true },
+    });
+    if (!event) throw new Error(`Event ${eventID} not found`);
+
+    const application = await db.eventAssignment.findFirst({
+        where: { eventID: Number(eventID), assigneeID: Number(userID) },
+    });
+    if (!application)
+        throw new Error(
+            `No application found for user ${userID} on event ${eventID}`
+        );
+    if (application.status === ApplicationStatus.accepted)
+        throw new Error(`Application already accepted`);
+
+    await db.$transaction([
+        db.eventAssignment.update({
+            where: { eventAssignmentID: application.eventAssignmentID },
+            data: { status: ApplicationStatus.accepted },
+        }),
+        db.conversation.create({
+            data: {
+                eventEventID: Number(eventID),
+                user1ID: event.publisherID,
+                user2ID: Number(userID),
+            },
+        }),
+        db.event.update({
+            where: { eventID: Number(eventID) },
+            data: { status: Status.pending },
+        }),
+    ]);
+}
+
+async function rejectApplication(eventID: Number, userID: Number) {
+    const application = await db.eventAssignment.findFirst({
+        where: { eventID: Number(eventID), assigneeID: Number(userID) },
+    });
+    if (!application)
+        throw new Error(
+            `No application found for user ${userID} on event ${eventID}`
+        );
+
+    await db.eventAssignment.delete({
+        where: { eventAssignmentID: application.eventAssignmentID },
+    });
+}
+
+async function unassignEvent(eventID: Number, userID: Number) {
+    const conversation = await db.conversation.findFirst({
+        //This finds the first Conversation row where both eventEventID and userID match. findUnique couldn't be used here because the filter is on a combination of non-unique fields — findUnique requires a single unique/primary key field.
+        where: {
+            eventEventID: Number(eventID),
+            user2ID: Number(userID),
+        },
+        select: { conversationID: true },
+    });
+    if (!conversation)
+        throw new Error(
+            `Conversation for event ${eventID} and user ${userID} not found`
+        );
+
+    const user = await db.eventAssignment.findFirst({
+        where: {
+            eventID: Number(eventID),
+            assigneeID: Number(userID),
+        },
+    });
+
+    if (!user)
+        throw new Error(`User ${userID} is not assigned to event ${eventID}`);
+
+    const event = await db.event.findUnique({
+        where: { eventID: Number(eventID) },
+        select: { publisherID: true },
+    });
+    if (!event) throw new Error(`Event ${eventID} not found`);
+
+    if (event.publisherID === Number(userID))
+        throw new Error("Publisher can't be unassigned from their own event.");
+
+    await db.$transaction([
+        db.eventAssignment.deleteMany({
+            where: {
+                eventID: Number(eventID),
+                assigneeID: Number(userID),
+            },
+        }),
+        db.conversation.delete({
+            where: { conversationID: conversation.conversationID },
+        }),
+    ]);
+}
+
 
 export const eventServices = {
     getAllEvents,
@@ -124,4 +241,8 @@ export const eventServices = {
     deleteEvent,
     updateEvent,
     updateEventStatus,
+    applyForEvent,
+    acceptApplication,
+    rejectApplication,
+    unassignEvent,
 };
