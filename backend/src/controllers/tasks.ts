@@ -185,7 +185,7 @@ async function putTask(req: Request, res: Response) {
         const taskID = Number(req.params.taskId);
         await taskServices.updateTask(taskID, req.body); // Calling user service to create update with req.body
         console.log("Task data PUT accepted.");
-        res.status(200).json({ Message: "Task data successfully updated" });
+        res.status(200).json({ Message: `Task ${taskID} successfully updated.` });
     } catch (error) {
         console.log(`An error occured while putting the Task data: ${error}`);
         res.status(500).json({
