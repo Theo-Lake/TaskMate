@@ -47,7 +47,17 @@ async function getTaskAssignmentsByTaskID(taskID: Number) {
 }
 
 async function createTask(publisherID: Number, body: JsonObject) {
-    let { name, type, payment, dueDate, description, images, hashtags } = body;
+    let {
+        name,
+        type,
+        payment,
+        dueDate,
+        description,
+        images,
+        location,
+        peopleRequired,
+        hashtags,
+    } = body;
 
     return await db.task.create({
         data: {
@@ -55,6 +65,8 @@ async function createTask(publisherID: Number, body: JsonObject) {
             name: name as string,
             type: type as TaskTypes,
             payment: payment as number,
+            location: location as string,
+            peopleRequired: peopleRequired as number,
             dueDate: new Date(dueDate as string),
             description: description as string,
             images: images as string | undefined,
@@ -203,6 +215,8 @@ async function updateTask(taskID: Number, body: JsonObject) {
         dueDate,
         completedDate,
         description,
+        location,
+        peopleRequired,
         images,
         hashtags,
     } = body;
@@ -220,6 +234,8 @@ async function updateTask(taskID: Number, body: JsonObject) {
                 : undefined,
             description: description as string | undefined,
             images: images as string | undefined,
+            location: location as string | undefined,
+            peopleRequired: peopleRequired as number | undefined,
             hashtags: hashtags
                 ? {
                       set: [],
