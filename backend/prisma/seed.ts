@@ -9,85 +9,156 @@ const adapter = new PrismaPg({
 });
 export const prisma = new PrismaClient({ adapter });
 
-/* 
-This command above is used so that prisma knows how to communicate with the DB
-it creates a connection adapter instance, taking the URL as a config so it can
-talk to postgreSQL, this adapter is then passed to the prisma client so that it
-knows what connection method to use. PrismaClient is to create an instance to connect
-to the DB.
-*/
-
-const testPassword = await bcrypt.hash("testynesty123", 10);
+// Meets UserSchema validation: uppercase, lowercase, number, special char, 8-20 chars
+const testPassword = await bcrypt.hash("Test@1234", 10);
 
 async function seed() {
-    // Clear existing data (order matters due to foreign keys)
-    await prisma.user.deleteMany();
+    // Clear in safe order (respect foreign key constraints)
+    await prisma.reviews.deleteMany();
     await prisma.taskAssignment.deleteMany();
+    await prisma.eventAssignment.deleteMany();
+    await prisma.task.deleteMany(); // cascades conversations & messages
+    await prisma.event.deleteMany();
     await prisma.hashtags.deleteMany();
-    await prisma.task.deleteMany();
+    await prisma.user.deleteMany();
 
+    // USERS
     await prisma.user.createMany({
         data: [
             {
                 userID: 1,
                 firstName: "Trevor",
                 lastName: "Tester",
-                email: "testemail@gmail.com",
-                occupation: "Tester",
+                email: "trevor@test.com",
+                occupation: "Student",
                 password_hash: testPassword,
-                universityID: 1234,
-                username: "TrevorTheTester",
+                universityID: 1001,
+                username: "TrevorTester",
             },
             {
                 userID: 2,
-                firstName: "Johnny",
-                lastName: "Testing",
-                email: "jonnytesting@gmail.com",
-                occupation: "Tester",
+                firstName: "Alice",
+                lastName: "Applicant",
+                email: "alice@test.com",
+                occupation: "Student",
                 password_hash: testPassword,
-                universityID: 12345,
-                username: "JohnnyTheTester",
+                universityID: 1002,
+                username: "AliceApplicant",
+            },
+            {
+                userID: 3,
+                firstName: "Bob",
+                lastName: "Builder",
+                email: "bob@test.com",
+                occupation: "Part-time Worker",
+                password_hash: testPassword,
+                universityID: 1003,
+                username: "BobBuilder",
             },
         ],
     });
+
+    // HASHTAGS
     await prisma.hashtags.createMany({
         data: [
-            {
-                hashtagID: 1,
-                name: "Quick and Easy",
-            },
+            { hashtagID: 1, name: "Quick and Easy" },
+            { hashtagID: 2, name: "Students Only" },
+            { hashtagID: 3, name: "Paid" },
+            { hashtagID: 4, name: "Remote" },
         ],
     });
+
+    // TASKS  (use create not createMany so hashtag connect works)
+
+    // Trevor's delivery task — 1 applicant pending, 1 rejected
     await prisma.task.create({
-        //create only creates a single object at a time, but handles connections (hashtag), createMany does not handle connections, but allows for a list of objects.
         data: {
             taskID: 1,
-            name: "Delivery",
-            description: "Delivering groceries",
-            payment: 20.0,
-            dueDate: new Date(2026, 1, 11), // month is indexed, 0 = jan ...
+            name: "Grocery Delivery",
+            description:
+                "Delivering groceries from Tesco to my flat on campus. One bag, won't take long.",
+            location: "Lancaster University",
+            peopleRequired: 1,
+            payment: 15.0,
+            dueDate: new Date(2026, 5, 1),
             type: "delivery",
             publisherID: 1,
-            hashtags: {
-                connect: [{ hashtagID: 1 }],
-            },
+            hashtags: { connect: [{ hashtagID: 1 }, { hashtagID: 3 }] },
         },
     });
-    await prisma.taskAssignment.createMany({
+
+    // Trevor's tutoring task — Alice accepted
+    await prisma.task.create({
+        data: {
+            taskID: 2,
+            name: "Maths Tutoring",
+            description:
+                "Need help with calculus and statistics for my second year exams. Weekly sessions preferred.",
+            location: "Library Study Room 3",
+            peopleRequired: 1,
+            payment: 25.0,
+            dueDate: new Date(2026, 4, 20),
+            type: "tutoring",
+            publisherID: 1,
+            hashtags: { connect: [{ hashtagID: 2 }, { hashtagID: 3 }] },
+        },
+    });
+
+    // Alice's moving task — needs 3 people, Trevor pending, Bob accepted
+    await prisma.task.create({
+        data: {
+            taskID: 3,
+            name: "Help Me Move Flat",
+            description:
+                "Moving boxes from Alexandra Square to Bowland College. Plenty of boxes but nothing too heavy.",
+            location: "Alexandra Square, Lancaster University",
+            peopleRequired: 3,
+            payment: 40.0,
+            dueDate: new Date(2026, 6, 15),
+            type: "moving",
+            publisherID: 2,
+            hashtags: { connect: [{ hashtagID: 1 }] },
+        },
+    });
+
+    // Bob's tech support task — no applicants yet
+    await prisma.task.create({
+        data: {
+            taskID: 4,
+            name: "Fix My Laptop",
+            description:
+                "Laptop keeps freezing on startup. Need someone to diagnose and fix it, preferably same day.",
+            location: "Remote or on campus",
+            peopleRequired: 1,
+            payment: 30.0,
+            dueDate: new Date(2026, 4, 30),
+            type: "tech_support",
+            publisherID: 3,
+            hashtags: { connect: [{ hashtagID: 3 }, { hashtagID: 4 }] },
+        },
+    });
+
+    // REVIEWS
+    await prisma.reviews.createMany({
         data: [
             {
-                taskID: 1,
-                assigneeID: 2,
+                name: "Great tutor, very patient",
+                comment:
+                    "Alice explained everything clearly and helped me pass my exam. Would hire again.",
+                rating: "FIVE",
+                reviewPublisherID: 1,
+                reviewAssigneeID: 2,
+            },
+            {
+                name: "Clear instructions, easy job",
+                comment:
+                    "Trevor was upfront about what he needed. Smooth experience overall.",
+                rating: "FOUR",
+                reviewPublisherID: 2,
+                reviewAssigneeID: 1,
             },
         ],
     });
-    //TODO create more seed test data here.
-} // also make it so publisherID can only accept valid, existing publishers, or it cascade deletes.
-
-// IDS SHOULD NOT BE DECLARED, they are MANAGED BY the DBMS but, in this test data, it is.
-
-// The seed is the inital data that will always be here when the db initializes, or resets.
-// It is used to have some data so the database can function. In this case it is test data.
+}
 
 seed().then(() => prisma.$disconnect());
-//used to prevent data leaks due to not closing connection.

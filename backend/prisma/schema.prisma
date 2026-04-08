@@ -45,14 +45,16 @@ model Task {
   assignments TaskAssignment[]
 
   //TODO implement LOCATION and people required 
-  name          String
-  type          TaskTypes
-  status        Status    @default(not_Complete)
-  payment       Decimal
-  completedDate DateTime?
-  dueDate       DateTime
-  description   String
-  images        String?
+  name           String
+  type           TaskTypes
+  status         Status    @default(not_Complete)
+  payment        Decimal
+  location       String
+  peopleRequired Int
+  completedDate  DateTime?
+  dueDate        DateTime
+  description    String
+  images         String?
 
   created_at DateTime @default(now()) // auto-set when row is created
   updated_at DateTime @updatedAt // auto-update when row is changed
@@ -63,20 +65,20 @@ model Task {
   @@unique([taskID, publisherID])
 }
 
-//TODO implement LOCATION and people required 
 model Event {
   eventID     Int  @id @default(autoincrement())
   publisher   User @relation(fields: [publisherID], references: [userID], onDelete: Cascade)
   publisherID Int
 
-  name          String
-  type          EventTypes
-  status        Status     @default(not_Complete)
-  location      String
-  completedDate DateTime?
-  dueDate       DateTime
-  description   String
-  images        String?
+  name           String
+  type           EventTypes
+  status         Status     @default(not_Complete)
+  location       String
+  peopleRequired Int
+  completedDate  DateTime?
+  dueDate        DateTime
+  description    String
+  images         String?
 
   created_at DateTime @default(now()) // auto-set when row is created
   updated_at DateTime @updatedAt // auto-update when row is changed
