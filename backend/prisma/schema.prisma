@@ -113,12 +113,11 @@ model EventAssignment {
 }
 
 model Hashtags {
-  hashtagID    Int      @id @default(autoincrement())
-  name         String   @unique
-  tasks        Task[]
-  created_at   DateTime @default(now()) // auto-set when row is created
-  event        Event?   @relation(fields: [eventEventID], references: [eventID])
-  eventEventID Int?
+  hashtagID  Int      @id @default(autoincrement())
+  name       String   @unique
+  tasks      Task[]
+  events     Event[]
+  created_at DateTime @default(now()) // auto-set when row is created
 }
 
 model Reviews {
@@ -157,7 +156,7 @@ model RefreshToken {
 
 model Conversation {
   conversationID Int       @id @default(autoincrement())
-  task           Task?      @relation(fields: [taskCID], references: [taskID], onDelete: Cascade)
+  task           Task?     @relation(fields: [taskCID], references: [taskID], onDelete: Cascade)
   taskCID        Int?
   user1          User      @relation("User1", fields: [user1ID], references: [userID])
   user1ID        Int
@@ -166,8 +165,8 @@ model Conversation {
   messages       Message[]
   created_at     DateTime  @default(now())
   updated_at     DateTime  @updatedAt
-  event          Event?    @relation(fields: [eventEventID], references: [eventID])
-  eventEventID   Int?
+  event          Event?    @relation(fields: [eventID], references: [eventID])
+  eventID        Int?
 }
 
 model Message {

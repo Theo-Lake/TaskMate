@@ -6,11 +6,6 @@ async function getReviewsMadeByUser(req: Request, res: Response) {
         const userID = Number(req.params.userId);
         const reviews = await reviewServices.getReviewsMadeByUser(userID);
 
-        if (!reviews) {
-            res.status(404).json({ error: "User or Reviews not found" });
-            return;
-        }
-
         console.log("Review GET made by user request accepted.");
         res.status(200).json(reviews);
     } catch (error) {
@@ -25,11 +20,6 @@ async function getReviewsGivenToUser(req: Request, res: Response) {
     try {
         const userID = Number(req.params.userId);
         const reviews = await reviewServices.getReviewsGivenToUser(userID);
-
-        if (!reviews) {
-            res.status(404).json({ error: "User or Reviews not found" });
-            return;
-        }
 
         console.log("Review GET given to user request accepted.");
         res.status(200).json(reviews);
@@ -94,13 +84,18 @@ async function createReview(req: Request, res: Response) {
 async function updateReview(req: Request, res: Response) {
     try {
         const reviewID = Number(req.params.reviewId);
-        const review = await reviewServices.updateReview(reviewID, req.body);
 
-        if (!review) {
+        const existing = await reviewServices.getReviewById(reviewID);
+        if (!existing) {
             res.status(404).json({ error: "Review not found" });
             return;
         }
+        if (existing.reviewPublisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to update this review" });
+            return;
+        }
 
+        const review = await reviewServices.updateReview(reviewID, req.body);
         console.log("Review UPDATE request accepted.");
         res.status(200).json(review);
     } catch (error) {
@@ -112,13 +107,18 @@ async function updateReview(req: Request, res: Response) {
 async function deleteReview(req: Request, res: Response) {
     try {
         const reviewID = Number(req.params.reviewId);
-        const review = await reviewServices.deleteReview(reviewID);
 
-        if (!review) {
+        const existing = await reviewServices.getReviewById(reviewID);
+        if (!existing) {
             res.status(404).json({ error: "Review not found" });
             return;
         }
+        if (existing.reviewPublisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to delete this review" });
+            return;
+        }
 
+        const review = await reviewServices.deleteReview(reviewID);
         console.log("Review DELETE request accepted.");
         res.status(200).json(review);
     } catch (error) {

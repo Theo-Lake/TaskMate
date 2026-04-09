@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { hashtagServices } from "../services/hashtags";
+import { taskServices } from "../services/tasks";
 
 async function getHashtagByID(req: Request, res: Response) {
     try {
@@ -25,11 +26,6 @@ async function getAllHashtags(req: Request, res: Response) {
     try {
         const hashtags = await hashtagServices.getAllHashtags();
 
-        if (!hashtags) {
-            res.status(404).json({ error: "Hashtags not found " });
-            return;
-        }
-
         console.log("Hashtags GET request accepted.");
         res.status(200).json({ hashtags: hashtags });
     } catch (error) {
@@ -45,11 +41,6 @@ async function getAllHashtagsFromTask(req: Request, res: Response) {
         const taskID = Number(req.params.taskId);
         const hashtags = await hashtagServices.getAllHashtagsFromTask(taskID);
 
-        if (!hashtags) {
-            res.status(404).json({ error: "Hashtags not found " });
-            return;
-        }
-
         console.log("Hashtags GET hashtags from task request accepted.");
         res.status(200).json({ hashtags: hashtags });
     } catch (error) {
@@ -64,11 +55,6 @@ async function getAllTasksFromHashtag(req: Request, res: Response) {
     try {
         const hashtagID = Number(req.params.hashtagId);
         const tasks = await hashtagServices.getAllTasksFromHashtag(hashtagID);
-
-        if (!tasks) {
-            res.status(404).json({ error: "Tasks not found " });
-            return;
-        }
 
         console.log("Hashtags GET tasks from hashtag request accepted.");
         res.status(200).json({ tasks: tasks });
@@ -116,7 +102,7 @@ async function deleteHashtag(req: Request, res: Response) {
         }
 
         console.log("Hashtags DELETE request accepted.");
-        res.status(200).json({ hashtahs: hashtag });
+        res.status(200).json({ hashtags: hashtag });
     } catch (error) {
         console.log(
             `An error occured while trying to get all hashtags: ${error}`
@@ -129,6 +115,17 @@ async function addHashtagToTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
         const hashtagID = Number(req.params.hashtagId);
+
+        const task = await taskServices.getTaskByID(taskID);
+        if (!task) {
+            res.status(404).json({ error: "Task not found" });
+            return;
+        }
+        if (task.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to modify hashtags on this task" });
+            return;
+        }
+
         const hashtag = await hashtagServices.addHashtagToTask(
             taskID,
             hashtagID
@@ -153,6 +150,17 @@ async function removeHashtagFromTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
         const hashtagID = Number(req.params.hashtagId);
+
+        const task = await taskServices.getTaskByID(taskID);
+        if (!task) {
+            res.status(404).json({ error: "Task not found" });
+            return;
+        }
+        if (task.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to modify hashtags on this task" });
+            return;
+        }
+
         const hashtag = await hashtagServices.removeHashtagFromTask(
             taskID,
             hashtagID

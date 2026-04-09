@@ -31,17 +31,13 @@ export async function login(req: Request, res: Response) {
         }
 
         const accessToken = await auth.generateAccessToken(user.userID);
-        const refreshToken = await authServices.createRefreshToken(user.userID);
-
-        res.cookie("refreshToken", refreshToken.token, {
-            httpOnly: true,
-            secure: true,
-        });
+        const { token: refreshToken } = await authServices.createRefreshToken(user.userID);
 
         console.log("User Authentication accepted.");
         res.status(200).json({
             Message: `User successfully Authenticated`,
             accessToken,
+            refreshToken,
         });
     } catch (error) {
         console.log(`An error occured while authenticating the user: ${error}`);
@@ -51,11 +47,10 @@ export async function login(req: Request, res: Response) {
 
 export async function logOut(req: Request, res: Response) {
     try {
-        const token = req.cookies.refreshToken;
+        const token = req.body.refreshToken;
         if (token) {
             await authServices.revokeRefreshToken(token);
         }
-        res.clearCookie("refreshToken");
         res.status(200).json({ Message: "Logged out" });
     } catch (error) {
         console.log(`An error occured while Logging out the user: ${error}`);
@@ -65,7 +60,7 @@ export async function logOut(req: Request, res: Response) {
 
 export async function refresh(req: Request, res: Response) {
     try {
-        const token = req.cookies.refreshToken;
+        const token = req.body.refreshToken;
         if (!token) {
             res.status(401).json({ error: "No refresh token" });
             return;
@@ -80,16 +75,10 @@ export async function refresh(req: Request, res: Response) {
         }
 
         await authServices.revokeRefreshToken(token);
-        const newRefreshToken = await authServices.createRefreshToken(
-            payload.userID
-        );
+        const { token: refreshToken } = await authServices.createRefreshToken(payload.userID);
 
         const accessToken = await auth.generateAccessToken(payload.userID);
-        res.cookie("refreshToken", newRefreshToken.token, {
-            httpOnly: true,
-            secure: true,
-        });
-        res.status(200).json({ accessToken });
+        res.status(200).json({ accessToken, refreshToken });
     } catch (err) {
         res.status(401).json({ error: "Invalid refresh token" });
     }
@@ -107,14 +96,9 @@ export async function verifyEmail(req: Request, res: Response) {
         await emailServices.sendWelcomeEmail(user!.email, user!.username);
 
         const accessToken = await auth.generateAccessToken(userID);
-        const refreshToken = await authServices.createRefreshToken(userID);
+        const { token: refreshToken } = await authServices.createRefreshToken(userID);
 
-        res.cookie("refreshToken", refreshToken.token, {
-            httpOnly: true,
-            secure: true,
-        });
-
-        res.status(200).json({ message: "Email verified", accessToken });
+        res.status(200).json({ message: "Email verified", accessToken, refreshToken });
     } catch (error) {
         res.status(400).json({ error: String(error) });
     }

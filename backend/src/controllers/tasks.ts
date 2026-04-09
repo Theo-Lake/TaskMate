@@ -124,6 +124,12 @@ async function applyForTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
         const userID = Number(req.params.userId);
+
+        if (userID !== req.user!.userID) {
+            res.status(403).json({ error: "Cannot apply on behalf of another user" });
+            return;
+        }
+
         await taskServices.applyForTask(taskID, userID);
         console.log("Task APPLICATION accepted.");
         res.status(200).json({ Message: "Successfully applied for task" });
@@ -139,6 +145,17 @@ async function acceptApplication(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
         const userID = Number(req.params.userId);
+
+        const task = await taskServices.getTaskByID(taskID);
+        if (!task) {
+            res.status(404).json({ error: "Task not found" });
+            return;
+        }
+        if (task.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to accept applications for this task" });
+            return;
+        }
+
         await taskServices.acceptApplication(taskID, userID);
         console.log("Task APPLICATION accepted by publisher.");
         res.status(200).json({ Message: "Application successfully accepted" });
@@ -154,6 +171,17 @@ async function rejectApplication(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
         const userID = Number(req.params.userId);
+
+        const task = await taskServices.getTaskByID(taskID);
+        if (!task) {
+            res.status(404).json({ error: "Task not found" });
+            return;
+        }
+        if (task.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to reject applications for this task" });
+            return;
+        }
+
         await taskServices.rejectApplication(taskID, userID);
         console.log("Task APPLICATION rejected by publisher.");
         res.status(200).json({ Message: "Application successfully rejected" });
@@ -169,6 +197,17 @@ async function unAssignTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
         const userID = Number(req.params.userId);
+
+        const task = await taskServices.getTaskByID(taskID);
+        if (!task) {
+            res.status(404).json({ error: "Task not found" });
+            return;
+        }
+        if (task.publisherID !== req.user!.userID && userID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to unassign from this task" });
+            return;
+        }
+
         await taskServices.unAssignTask(taskID, userID);
         console.log("Task UNASSIGN accepted.");
         res.status(200).json({ Message: "Task successfully unassigned" });
@@ -183,7 +222,18 @@ async function unAssignTask(req: Request, res: Response) {
 async function putTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
-        await taskServices.updateTask(taskID, req.body); // Calling user service to create update with req.body
+
+        const task = await taskServices.getTaskByID(taskID);
+        if (!task) {
+            res.status(404).json({ error: "Task not found" });
+            return;
+        }
+        if (task.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to update this task" });
+            return;
+        }
+
+        await taskServices.updateTask(taskID, req.body);
         console.log("Task data PUT accepted.");
         res.status(200).json({ Message: `Task ${taskID} successfully updated.` });
     } catch (error) {
@@ -198,6 +248,17 @@ async function patchTaskStatus(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
         const { status } = req.body;
+
+        const task = await taskServices.getTaskByID(taskID);
+        if (!task) {
+            res.status(404).json({ error: "Task not found" });
+            return;
+        }
+        if (task.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to update this task's status" });
+            return;
+        }
+
         await taskServices.updateTaskStatus(taskID, status);
         console.log("Task status PATCH accepted.");
         res.status(200).json({ Message: "Task status successfully updated" });
@@ -212,9 +273,20 @@ async function patchTaskStatus(req: Request, res: Response) {
 async function deleteTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
-        const task = await taskServices.deleteTask(taskID); // Calling user service to create delete with req.body
+
+        const task = await taskServices.getTaskByID(taskID);
+        if (!task) {
+            res.status(404).json({ error: "Task not found" });
+            return;
+        }
+        if (task.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to delete this task" });
+            return;
+        }
+
+        await taskServices.deleteTask(taskID);
         console.log("Task DELETE accepted.");
-        res.status(200).json({ Message: `Task ${task} successfully deleted` });
+        res.status(200).json({ Message: `Task ${taskID} successfully deleted` });
     } catch (error) {
         console.log(`An error occured while deleting the user data: ${error}`);
         res.status(500).json({

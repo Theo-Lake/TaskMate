@@ -7,16 +7,11 @@ async function getAllUsers(req: Request, res: Response) {
     try {
         const users = await userServices.getAllUsers(); // calling user service to get all users
 
-        if (!users) {
-            res.status(404).json({ error: "Users not found" });
-            return;
-        }
-
         console.log("Users GET all accepted.");
         res.status(200).json({ users: users });
     } catch (error) {
         console.log(`An error occured while trying to get User data: ${error}`);
-        res.status(500).json({ error: { error } });
+        res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }
 
@@ -35,7 +30,7 @@ async function getUserById(req: Request, res: Response) {
         res.status(200).json({ users: { user } });
     } catch (error) {
         console.log(`An error occured while trying to get User data: ${error}`);
-        res.status(500).json({ error: { error } });
+        res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }
 
@@ -101,7 +96,7 @@ async function updateUser(req: Request, res: Response) {
         res.status(200).json({ Message: "User data successfully updated" });
     } catch (error) {
         console.log(`An error occured while putting the user data: ${error}`);
-        res.status(500).json({ error: error });
+        res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }
 
@@ -126,7 +121,7 @@ async function deleteUser(req: Request, res: Response) {
         res.status(200).json({ Message: `User successfully deleted` });
     } catch (error) {
         console.log(`An error occured while deleting the user data: ${error}`);
-        res.status(500).json({ error: error });
+        res.status(500).json({ error: error instanceof Error ? error.message : error });
     }
 }
 

@@ -7,8 +7,12 @@ async function getAllEvents(req: Request, res: Response) {
         console.log("Events GET all accepted.");
         res.status(200).json({ events: events });
     } catch (error) {
-        console.log(`An error occured while trying to get events data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error, });
+        console.log(
+            `An error occured while trying to get events data: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
@@ -25,8 +29,12 @@ async function getEventByEventID(req: Request, res: Response) {
         console.log("Event GET by event id accepted.");
         res.status(200).json({ events: event });
     } catch (error) {
-        console.log(`An error occured while trying to get events data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error, });
+        console.log(
+            `An error occured while trying to get events data: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
@@ -35,17 +43,15 @@ async function getEventsByPublisherID(req: Request, res: Response) {
         const publisherID = Number(req.params.publisherId);
         const events = await eventServices.getEventsByPublisherID(publisherID);
 
-        if (!events) {
-            res.status(404).json({ error: "Event not found" });
-            return;
-        }
-
         console.log("Events GET by publisher id accepted.");
         res.status(200).json({ events: events });
-
     } catch (error) {
-        console.log(`An error occured while trying to get events data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error, });
+        console.log(
+            `An error occured while trying to get events data: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
@@ -54,7 +60,9 @@ async function createEvent(req: Request, res: Response) {
         const publisherID = Number(req.params.publisherId);
 
         if (publisherID !== req.user!.userID) {
-            res.status(403).json({ error: "Request userID does not match authenticated user" });
+            res.status(403).json({
+                error: "Request userID does not match authenticated user",
+            });
             return;
         }
 
@@ -62,38 +70,70 @@ async function createEvent(req: Request, res: Response) {
         console.log("Event POST accepted");
         res.status(200).json({ Message: "Event successfully created" });
     } catch (error) {
-        console.log(`An error occured while trying to get events data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error, });
+        console.log(
+            `An error occured while trying to get events data: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
 async function deleteEvent(req: Request, res: Response) {
     try {
         const eventID = Number(req.params.eventId);
-        const event = await eventServices.deleteEvent(eventID);
 
+        const event = await eventServices.getEventByEventID(eventID);
         if (!event) {
             res.status(404).json({ error: "Event not found" });
             return;
         }
+        if (event.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to delete this event" });
+            return;
+        }
 
+        await eventServices.deleteEvent(eventID);
         console.log("Event DELETE accepted.");
-        res.status(200).json({ Message: `Event ${eventID} successfully deleted` });
+        res.status(200).json({
+            Message: `Event ${eventID} successfully deleted`,
+        });
     } catch (error) {
-        console.log(`An error occured while trying to get events data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error, });
+        console.log(
+            `An error occured while trying to get events data: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
 async function updateEvent(req: Request, res: Response) {
     try {
         const eventID = Number(req.params.eventId);
+
+        const event = await eventServices.getEventByEventID(eventID);
+        if (!event) {
+            res.status(404).json({ error: "Event not found" });
+            return;
+        }
+        if (event.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to update this event" });
+            return;
+        }
+
         await eventServices.updateEvent(eventID, req.body);
         console.log("Event UPDATE accepted.");
-        res.status(200).json({ Message: `Event ${eventID} successfully updated.` });
+        res.status(200).json({
+            Message: `Event ${eventID} successfully updated.`,
+        });
     } catch (error) {
-        console.log(`An error occured while trying to get events data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error, });
+        console.log(
+            `An error occured while trying to get events data: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
@@ -101,12 +141,27 @@ async function patchEventStatus(req: Request, res: Response) {
     try {
         const eventID = Number(req.params.eventId);
         const { status } = req.body;
+
+        const event = await eventServices.getEventByEventID(eventID);
+        if (!event) {
+            res.status(404).json({ error: "Event not found" });
+            return;
+        }
+        if (event.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to update this event's status" });
+            return;
+        }
+
         await eventServices.updateEventStatus(eventID, status);
         console.log("Event status UPDATE accepted.");
         res.status(200).json({ Message: "Event status successfully updated" });
     } catch (error) {
-        console.log(`An error occured while trying to get events data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error, });
+        console.log(
+            `An error occured while trying to get events data: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
@@ -114,6 +169,12 @@ async function applyForEvent(req: Request, res: Response) {
     try {
         const eventID = Number(req.params.eventId);
         const userID = Number(req.params.userId);
+
+        if (userID !== req.user!.userID) {
+            res.status(403).json({ error: "Cannot apply on behalf of another user" });
+            return;
+        }
+
         await eventServices.applyForEvent(eventID, userID);
         console.log("Event APPLICATION accepted.");
         res.status(200).json({ Message: "Successfully applied for event" });
@@ -129,11 +190,24 @@ async function acceptApplication(req: Request, res: Response) {
     try {
         const eventID = Number(req.params.eventId);
         const userID = Number(req.params.userId);
+
+        const event = await eventServices.getEventByEventID(eventID);
+        if (!event) {
+            res.status(404).json({ error: "Event not found" });
+            return;
+        }
+        if (event.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to accept applications for this event" });
+            return;
+        }
+
         await eventServices.acceptApplication(eventID, userID);
         console.log("Event APPLICATION accepted by publisher.");
         res.status(200).json({ Message: "Application successfully accepted" });
     } catch (error) {
-        console.log(`An error occured while accepting the application: ${error}`);
+        console.log(
+            `An error occured while accepting the application: ${error}`
+        );
         res.status(500).json({
             error: error instanceof Error ? error.message : error,
         });
@@ -144,11 +218,24 @@ async function rejectApplication(req: Request, res: Response) {
     try {
         const eventID = Number(req.params.eventId);
         const userID = Number(req.params.userId);
+
+        const event = await eventServices.getEventByEventID(eventID);
+        if (!event) {
+            res.status(404).json({ error: "Event not found" });
+            return;
+        }
+        if (event.publisherID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to reject applications for this event" });
+            return;
+        }
+
         await eventServices.rejectApplication(eventID, userID);
         console.log("Event APPLICATION rejected by publisher.");
         res.status(200).json({ Message: "Application successfully rejected" });
     } catch (error) {
-        console.log(`An error occured while rejecting the application: ${error}`);
+        console.log(
+            `An error occured while rejecting the application: ${error}`
+        );
         res.status(500).json({
             error: error instanceof Error ? error.message : error,
         });
@@ -159,6 +246,17 @@ async function unassignEvent(req: Request, res: Response) {
     try {
         const eventID = Number(req.params.eventId);
         const userID = Number(req.params.userId);
+
+        const event = await eventServices.getEventByEventID(eventID);
+        if (!event) {
+            res.status(404).json({ error: "Event not found" });
+            return;
+        }
+        if (event.publisherID !== req.user!.userID && userID !== req.user!.userID) {
+            res.status(403).json({ error: "Not authorized to unassign from this event" });
+            return;
+        }
+
         await eventServices.unassignEvent(eventID, userID);
         console.log("Event UNASSIGN accepted.");
         res.status(200).json({ Message: "event successfully unassigned" });

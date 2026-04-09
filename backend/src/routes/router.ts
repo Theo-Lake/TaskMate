@@ -17,6 +17,9 @@ router.use("/reviews", reviewRoutes);
 import hashtagRoutes from "./hashtags";
 router.use("/hashtags", hashtagRoutes);
 
+import eventRoutes from "./events";
+router.use("/events", eventRoutes);
+
 import authRoutes from "./auth";
 router.use("/auth", authRoutes);
 
