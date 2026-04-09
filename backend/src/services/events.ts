@@ -1,6 +1,9 @@
-import { de } from "zod/locales";
 import { db } from "../db";
-import { ApplicationStatus, Status, EventTypes } from "../generated/prisma/enums";
+import {
+    ApplicationStatus,
+    Status,
+    EventTypes,
+} from "../generated/prisma/enums";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
 
 async function getAllEvents() {
@@ -9,13 +12,13 @@ async function getAllEvents() {
 
 async function getEventByEventID(eventID: Number) {
     return await db.event.findUnique({
-        where: { eventID: Number(eventID) }
+        where: { eventID: Number(eventID) },
     });
 }
 
 async function getEventsByPublisherID(publisherID: Number) {
     return await db.event.findMany({
-        where: { publisherID: Number(publisherID) }
+        where: { publisherID: Number(publisherID) },
     });
 }
 
@@ -28,7 +31,7 @@ async function createEvent(publisherID: Number, body: JsonObject) {
         dueDate,
         description,
         images,
-        hashtags
+        hashtags,
     } = body;
 
     return await db.event.create({
@@ -41,28 +44,31 @@ async function createEvent(publisherID: Number, body: JsonObject) {
             dueDate: new Date(dueDate as string),
             description: description as string,
             images: images as string | undefined,
-            hashtags: hashtags 
+            hashtags: hashtags
                 ? {
-                    connectOrCreate: (hashtags as string[]).map((tag) => ({
-                        where: { name: tag},
-                        create: { name: tag},
-                    })),
-                }
+                      connectOrCreate: (hashtags as string[]).map((tag) => ({
+                          where: { name: tag },
+                          create: { name: tag },
+                      })),
+                  }
                 : undefined,
-        }
+        },
     });
 }
 
 async function deleteEvent(eventID: Number) {
     return await db.event.delete({
-        where: { eventID: Number(eventID) }
-    })
+        where: { eventID: Number(eventID) },
+    });
 }
 
 async function updateEvent(eventID: Number, body: JsonObject) {
     const event = await getEventByEventID(eventID);
 
-    if (!event) throw new Error(`Event ${eventID} can't be updated as it does not exist.`);
+    if (!event)
+        throw new Error(
+            `Event ${eventID} can't be updated as it does not exist.`
+        );
 
     let {
         name,
@@ -74,7 +80,7 @@ async function updateEvent(eventID: Number, body: JsonObject) {
         completedDate,
         description,
         images,
-        hashtags
+        hashtags,
     } = body;
 
     return await db.event.update({
@@ -84,9 +90,11 @@ async function updateEvent(eventID: Number, body: JsonObject) {
             type: type as EventTypes | undefined,
             status: status as Status | undefined,
             location: location as string | undefined,
-            peopleRequired: peopleRequired as number,
+            peopleRequired: peopleRequired as number | undefined,
             dueDate: dueDate ? new Date(dueDate as string) : undefined,
-            completedDate: completedDate ? new Date(completedDate as string) : undefined,
+            completedDate: completedDate
+                ? new Date(completedDate as string)
+                : undefined,
             description: description as string | undefined,
             images: images as string | undefined,
             hashtags: hashtags
@@ -98,20 +106,20 @@ async function updateEvent(eventID: Number, body: JsonObject) {
                       })),
                   }
                 : undefined,
-        }
+        },
     });
 }
 
 async function updateEventStatus(eventID: Number, status: Status) {
     const event = await getEventByEventID(eventID);
     if (!event) throw new Error(`Event ${eventID} does not exist.`);
-    
+
     return await db.event.update({
         where: { eventID: Number(eventID) },
         data: {
             status,
             completedDate: status === Status.complete ? new Date() : undefined,
-        }
+        },
     });
 }
 
@@ -126,7 +134,9 @@ async function applyForEvent(eventID: Number, userID: Number) {
         where: { eventID: Number(eventID), assigneeID: Number(userID) },
     });
     if (existing)
-        throw new Error(`User ${userID} has already applied to event ${eventID}`);
+        throw new Error(
+            `User ${userID} has already applied to event ${eventID}`
+        );
 
     if (event.publisherID === Number(userID))
         throw new Error("Publisher cannot apply to their own event");
@@ -160,7 +170,7 @@ async function acceptApplication(eventID: Number, userID: Number) {
         }),
         db.conversation.create({
             data: {
-                eventEventID: Number(eventID),
+                eventID: Number(eventID),
                 user1ID: event.publisherID,
                 user2ID: Number(userID),
             },
@@ -188,9 +198,8 @@ async function rejectApplication(eventID: Number, userID: Number) {
 
 async function unassignEvent(eventID: Number, userID: Number) {
     const conversation = await db.conversation.findFirst({
-        //This finds the first Conversation row where both eventEventID and userID match. findUnique couldn't be used here because the filter is on a combination of non-unique fields — findUnique requires a single unique/primary key field.
         where: {
-            eventEventID: Number(eventID),
+            eventID: Number(eventID),
             user2ID: Number(userID),
         },
         select: { conversationID: true },
@@ -231,7 +240,6 @@ async function unassignEvent(eventID: Number, userID: Number) {
         }),
     ]);
 }
-
 
 export const eventServices = {
     getAllEvents,

@@ -58,12 +58,10 @@ export async function getMessageByID(
     conversationID: Number,
     messageID: Number
 ) {
-    return await db.message.findUnique({
+    return await db.message.findFirst({
         where: {
             messageID: Number(messageID),
-            AND: {
-                conversationID: Number(conversationID),
-            },
+            conversationID: Number(conversationID),
         },
     });
 }
@@ -72,7 +70,7 @@ export async function deleteMessage(conversationID: Number, messageID: Number) {
     return await db.message.delete({
         where: {
             messageID: Number(messageID),
-            AND: { conversationID: Number(conversationID) },
+            conversationID: Number(conversationID),
         },
     });
 }

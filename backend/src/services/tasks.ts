@@ -263,13 +263,11 @@ async function updateTaskStatus(taskID: Number, status: Status) {
 }
 
 async function deleteTask(taskID: Number) {
-    await db.task.delete({
+    return await db.task.delete({
         where: {
             taskID: Number(taskID),
         },
     });
-
-    return;
 }
 
 export const taskServices = {
