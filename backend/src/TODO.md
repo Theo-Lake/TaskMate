@@ -3,9 +3,7 @@
 
 PRIORITY: 
     BUG : [
-        CRITICAL BUGS
-            [ ] - ALL UPDATES NEED TO CHECK IF __ exist first or else it'll just post.
-            [ ] - POST /tasks/:publisherId - Create a task ✅ ❌ (for empty)  + requires validation
+
     ]
     
     FIRST : [
@@ -24,14 +22,14 @@ PRIORITY:
 
         CONTROLLERS
             [/] - Implement all task handlers in controllers/tasks.ts (currently empty) 
-            [ ] - Wire validation middleware calls into all controllers
+            [/ ] - Wire validation middleware calls into all controllers
 
         SERVICES
             [/] - users.ts — implement createUser (bcrypt), updateUser, deleteUser, getUserById
             [/] - Bycrypt
             [/] - tasks.ts — implement createTask, updateTask, deleteTask, getTaskById
             [/] - conversations.ts — implement getAllMessages, createMessage, getConversationById
-            [ ] - More logic such as checkUser, checkTask (using AI thing we said), ... etc
+            [ /] - More logic such as checkUser, checkTask (using AI thing we said), ... etc
 
         [/] - CREATE HASHTAGS AND REVIEWS 
 
@@ -41,20 +39,20 @@ PRIORITY:
 
     AFTER : [
         MIDDLEWARE
-            [ ] - Implement JWT validation in middleware/auth.ts 
-            [ ] - Implement request body validation in middleware/validate.ts
-            [ ] - Implement global error handler in middleware/errorHandler.ts
-            [ ] - Configure CORS with an origin whitelist in app.ts
+            [ /] - Implement JWT validation in middleware/auth.ts 
+            [ /] - Implement request body validation in middleware/validate.ts
+            [/ ] - Implement global error handler in middleware/errorHandler.ts
+            [ /] - Configure CORS with an origin whitelist in app.ts
         AUTHENTICATION FLOW
-            [ ] - POST /api/users/login — verify credentials, return JWT
-            [ ] - GET /api/users/verify-email?token=... — mark emailVerified = true
+            [ /] - POST /api/users/login — verify credentials, return JWT
+            [ /] - GET /api/users/verify-email?token=... — mark emailVerified = true
             [/] - Add JWT_SECRET to .env and load in auth middleware
-            [ ] - Ensure registration hashes password and creates EmailVerificationToken
+            [ /] - Ensure registration hashes password and creates EmailVerificationToken
     ]
 
     LAST : [
         ENVIRONMENT & CONFIG
-        [ ] - Add JWT_SECRET, NODE_ENV, CORS_ORIGIN to .env and .env.example
+        [/ ] - Add JWT_SECRET, NODE_ENV, CORS_ORIGIN to .env and .env.example
         [ ] - Add rate limiting on login and registration routes
 
     TESTING & DATA

@@ -1,6 +1,5 @@
 Theo:
-    //TODO fix res.cookie because that doesn't work in react, send cookie in body as a response.
-
+    // frontend client token will be stored in asyncStorage
 
 
 
