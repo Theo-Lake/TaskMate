@@ -15,15 +15,15 @@ export const EventSchema = z.object({
         message: "Due date must be in the future!",
     }),
     completedDate: z.coerce.date().optional(),
-    description: z 
+    description: z
         .string()
         .min(10, "Description is too short!")
         .max(500, "Description is too long!"),
     images: z.array(z.url({ message: "Invalid image URL" })).optional(),
     created_at: z.never(),
-    updated_at: z.never()
+    updated_at: z.never(),
 });
 
 export const EventUpdateSchema = EventSchema.partial();
 
-export type Task = z.infer<typeof EventSchema>;
+export type Event = z.infer<typeof EventSchema>;
