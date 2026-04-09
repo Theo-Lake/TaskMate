@@ -44,7 +44,6 @@ model Task {
   // A User(assignee) can be assigned many jobs, and a job can have many assignees m-m
   assignments TaskAssignment[]
 
-  //TODO implement LOCATION and people required 
   name           String
   type           TaskTypes
   status         Status    @default(not_Complete)
