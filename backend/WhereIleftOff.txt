@@ -1,5 +1,5 @@
 Theo:
-    fix res.cookie because that doesn't work in react, send cookie in body as a response.
+    //TODO fix res.cookie because that doesn't work in react, send cookie in body as a response.
 
 
 
