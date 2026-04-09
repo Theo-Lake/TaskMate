@@ -5,6 +5,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { PaperProvider, MD3LightTheme } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 import OpeningScreen from "./src/screens/OpeningScreen/OpeningScreen";
 import LoginScreen from "./src/screens/LoginScreen/LoginScreen";
@@ -66,6 +69,7 @@ function OpeningTabs() {
 
 export default function App() {
 	return (
+		<QueryClientProvider client={queryClient}>
 		<PaperProvider theme={customTheme}>
 			<NavigationContainer>
 				<StatusBar style="dark" />
@@ -86,5 +90,6 @@ export default function App() {
 				</Stack.Navigator>
 			</NavigationContainer>
 		</PaperProvider>
+		</QueryClientProvider>
 	);
 }
