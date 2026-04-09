@@ -7,7 +7,7 @@ async function getAllEvents(req: Request, res: Response) {
         console.log("Events GET all accepted.");
         res.status(200).json({ events: events });
     } catch (error) {
-        console.log(`An error occured while trying to get Tasks data: ${error}`);
+        console.log(`An error occured while trying to get events data: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error, });
     }
 }
@@ -25,7 +25,7 @@ async function getEventByEventID(req: Request, res: Response) {
         console.log("Event GET by event id accepted.");
         res.status(200).json({ events: event });
     } catch (error) {
-        console.log(`An error occured while trying to get Tasks data: ${error}`);
+        console.log(`An error occured while trying to get events data: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error, });
     }
 }
@@ -44,7 +44,7 @@ async function getEventsByPublisherID(req: Request, res: Response) {
         res.status(200).json({ events: events });
 
     } catch (error) {
-        console.log(`An error occured while trying to get Tasks data: ${error}`);
+        console.log(`An error occured while trying to get events data: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error, });
     }
 }
@@ -62,7 +62,7 @@ async function createEvent(req: Request, res: Response) {
         console.log("Event POST accepted");
         res.status(200).json({ Message: "Event successfully created" });
     } catch (error) {
-        console.log(`An error occured while trying to get Tasks data: ${error}`);
+        console.log(`An error occured while trying to get events data: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error, });
     }
 }
@@ -80,7 +80,7 @@ async function deleteEvent(req: Request, res: Response) {
         console.log("Event DELETE accepted.");
         res.status(200).json({ Message: `Event ${eventID} successfully deleted` });
     } catch (error) {
-        console.log(`An error occured while trying to get Tasks data: ${error}`);
+        console.log(`An error occured while trying to get events data: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error, });
     }
 }
@@ -92,7 +92,7 @@ async function updateEvent(req: Request, res: Response) {
         console.log("Event UPDATE accepted.");
         res.status(200).json({ Message: `Event ${eventID} successfully updated.` });
     } catch (error) {
-        console.log(`An error occured while trying to get Tasks data: ${error}`);
+        console.log(`An error occured while trying to get events data: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error, });
     }
 }
@@ -105,11 +105,70 @@ async function patchEventStatus(req: Request, res: Response) {
         console.log("Event status UPDATE accepted.");
         res.status(200).json({ Message: "Event status successfully updated" });
     } catch (error) {
-        console.log(`An error occured while trying to get Tasks data: ${error}`);
+        console.log(`An error occured while trying to get events data: ${error}`);
         res.status(500).json({ error: error instanceof Error ? error.message : error, });
     }
 }
 
+async function applyForEvent(req: Request, res: Response) {
+    try {
+        const eventID = Number(req.params.eventId);
+        const userID = Number(req.params.userId);
+        await eventServices.applyForEvent(eventID, userID);
+        console.log("Event APPLICATION accepted.");
+        res.status(200).json({ Message: "Successfully applied for event" });
+    } catch (error) {
+        console.log(`An error occured while applying for the event: ${error}`);
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
+
+async function acceptApplication(req: Request, res: Response) {
+    try {
+        const eventID = Number(req.params.eventId);
+        const userID = Number(req.params.userId);
+        await eventServices.acceptApplication(eventID, userID);
+        console.log("Event APPLICATION accepted by publisher.");
+        res.status(200).json({ Message: "Application successfully accepted" });
+    } catch (error) {
+        console.log(`An error occured while accepting the application: ${error}`);
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
+
+async function rejectApplication(req: Request, res: Response) {
+    try {
+        const eventID = Number(req.params.eventId);
+        const userID = Number(req.params.userId);
+        await eventServices.rejectApplication(eventID, userID);
+        console.log("Event APPLICATION rejected by publisher.");
+        res.status(200).json({ Message: "Application successfully rejected" });
+    } catch (error) {
+        console.log(`An error occured while rejecting the application: ${error}`);
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
+
+async function unassignEvent(req: Request, res: Response) {
+    try {
+        const eventID = Number(req.params.eventId);
+        const userID = Number(req.params.userId);
+        await eventServices.unassignEvent(eventID, userID);
+        console.log("Event UNASSIGN accepted.");
+        res.status(200).json({ Message: "event successfully unassigned" });
+    } catch (error) {
+        console.log(`An error occured while unassigning the event: ${error}`);
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
 
 export const eventController = {
     getAllEvents,
@@ -119,4 +178,8 @@ export const eventController = {
     deleteEvent,
     updateEvent,
     patchEventStatus,
+    applyForEvent,
+    acceptApplication,
+    rejectApplication,
+    unassignEvent,
 };
