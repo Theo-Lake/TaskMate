@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, Image, TextInput} from 'react-native';
 import {Checkbox, Button} from 'react-native-paper';
 import {styles} from './styles';
-import Logo from '../../assets/img/logoNoText.png';
+import Logo from '../../../assets/img/logoNoText.png';
 import CustomHeader from '../../components/navBar/CustomHeader';
 
 const EmailConfirmationScreen = ({navigation}:any) => {

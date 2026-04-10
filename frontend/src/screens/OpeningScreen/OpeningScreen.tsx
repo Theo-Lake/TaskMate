@@ -8,7 +8,7 @@ export default function OpeningScreen({navigation} : any){
     const theme = useTheme();
     return(
         <View style={styles.container}>
-            <Image source={require('../../assets/img/logoNoText.png')} style ={styles.logo} resizeMode="contain"/>
+            <Image source={require('../../../assets/img/logoNoText.png')} style ={styles.logo} resizeMode="contain"/>
             <Text variant="displaySmall" style={[styles.title,{color: theme.colors.softBlack}]}> {/* This is how u put custom colors. U can put MD3 colors in Styleshet*/}
                 Welcome to TaskMate!
             </Text>

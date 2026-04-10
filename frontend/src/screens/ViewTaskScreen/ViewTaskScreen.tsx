@@ -13,7 +13,7 @@ const task = {
     id: '1',
     title: 'Study buddy',
     price: '10',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'need study buddy for 2 hours example example example example example example example example example example example example example',
     poster: 'Joe Doe',
     posterReputation:3.5,
