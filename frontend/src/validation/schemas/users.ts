@@ -44,7 +44,15 @@ export const UserSchema = z.object({
 	occupation: z.string(),
 	profilePicture: z.string(),
 });
-
+//schema for settings page
 export const UserUpdateSchema = UserSchema.partial();
 
+export const SignUpSchema = UserSchema.pick({
+	firstName: true,
+	lastName: true,
+	email: true,
+	password: true
+})
+
 export type User = z.infer<typeof UserSchema>;
+export type SignUpU = z.infer<typeof SignUpSchema>;
