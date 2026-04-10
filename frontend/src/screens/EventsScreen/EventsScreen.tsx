@@ -15,7 +15,7 @@ const events = [
     title: 'Games night',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'board games night at barkers!',
   },
   {
@@ -23,7 +23,7 @@ const events = [
     title: 'Footy at sports centre',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'chill football match, all skill levels',
   },
   {
@@ -31,7 +31,7 @@ const events = [
     title: 'Jazzercise',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'jazzercise',
   },
   {
@@ -39,7 +39,7 @@ const events = [
     title: 'test',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'asdfasdf',
   },
   {
@@ -47,7 +47,7 @@ const events = [
     title: 'Games night',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'board games night at barkers!',
   },
   {
@@ -55,7 +55,7 @@ const events = [
     title: 'Footy at sports centre',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'chill football match, all skill levels',
   },
   {
@@ -63,7 +63,7 @@ const events = [
     title: 'Jazzercise',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'jazzercise',
   },
   {
@@ -71,7 +71,7 @@ const events = [
     title: 'test',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'asdfasdf',
   },
 ];
@@ -83,7 +83,7 @@ const noticeEvents = [
     title: 'Games night',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'board games night at barkers!',
   },
   {
@@ -91,7 +91,7 @@ const noticeEvents = [
     title: 'Footy at sports centre',
     time: '17:00',
     date: '20/12/2026',
-    imageUrl: require('../../assets/img/img.png'),
+    imageUrl: require('../../../assets/img/img.png'),
     description: 'chill football match, all skill levels',
   },
 ];

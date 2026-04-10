@@ -3,7 +3,7 @@ import { View, StyleSheet, Image } from 'react-native';
 import { Appbar, TextInput, Button } from "react-native-paper";
 import {styles} from "./styles"
 
-import Logo from '../../assets/img/logoNoText.png';
+import Logo from '../../../assets/img/logoNoText.png';
 import CustomHeader from "../../components/navBar/CustomHeader";
 
 export default function LoginScreen({ navigation }: any) {

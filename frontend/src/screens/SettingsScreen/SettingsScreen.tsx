@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import {  Text, useTheme, TextInput, Button, IconButton  } from "react-native-paper";
 import * as ImagePicker from 'expo-image-picker'
-//#TODO FIX SAVE CHANGES BUTTON
+//#TODO FIX SAVE CHANGES BUTTON. Optional - add delete user button
 import CustomHeader from "../../components/navBar/CustomHeader";
 import CustomerAvatar from "../../components/avatars/CustomerAvatars";
 import {styles} from "./styles"
