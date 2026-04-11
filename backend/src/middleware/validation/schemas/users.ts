@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const UserSchema = z.object({
-    userID: z.never(),
     username: z
         .string()
         .min(3, "Username is too small!")
@@ -27,8 +26,6 @@ export const UserSchema = z.object({
     universityID: z
         .int("Must be a whole number!")
         .positive("Must be a positive number!"),
-    created_at: z.never(),
-    updated_at: z.never(),
     email: z
         .email("Invalid email address!")
         .max(100, "Email is too long!")
@@ -45,8 +42,7 @@ export const UserSchema = z.object({
             "Password must contain at least one special character, i.e. !-?.'"
         ),
     occupation: z.string(),
-    profilePicture: z.string(),
-    emailVerified: z.never(),
+    profilePicture: z.string().optional(),
 });
 
 export const UserUpdateSchema = UserSchema.partial();

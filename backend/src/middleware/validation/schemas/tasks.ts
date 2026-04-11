@@ -6,8 +6,6 @@ import { Status, TaskTypes } from "../../../generated/prisma/enums";
 //TODO validate everythig written by user so it isnt a bad word or something not permitted
 
 export const TaskSchema = z.object({
-    taskID: z.never(),
-    publisherID: z.never(),
     name: z
         .string()
         .min(5, "Task name is too small!")
@@ -27,8 +25,6 @@ export const TaskSchema = z.object({
         .min(15, "Description is too short!")
         .max(200, "Description is too large!"),
     images: z.array(z.url({ message: "Invalid image URL" })).optional(),
-    created_at: z.never(),
-    updated_at: z.never(),
 });
 
 export const TaskUpdateSchema = TaskSchema.partial();

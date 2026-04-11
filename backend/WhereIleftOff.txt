@@ -1,5 +1,5 @@
 Theo:
-    // frontend client token will be stored in asyncStorage
+    //TODO limit rating
 
 
 

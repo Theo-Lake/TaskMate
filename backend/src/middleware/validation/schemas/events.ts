@@ -2,8 +2,6 @@ import { z } from "zod";
 import { Status, EventTypes } from "../../../generated/prisma/enums";
 
 export const EventSchema = z.object({
-    eventID: z.never(),
-    publisherID: z.never(),
     name: z
         .string()
         .min(4, "Event name is too small!")
@@ -20,8 +18,6 @@ export const EventSchema = z.object({
         .min(10, "Description is too short!")
         .max(500, "Description is too long!"),
     images: z.array(z.url({ message: "Invalid image URL" })).optional(),
-    created_at: z.never(),
-    updated_at: z.never(),
 });
 
 export const EventUpdateSchema = EventSchema.partial();

@@ -16,6 +16,9 @@ export default function SignUpScreen({ navigation }: any) {
     const [lastNameText, setLastNameText] = React.useState("");
     const [emailText, setEmailText] = React.useState("");
     const [passText, setPassText] = React.useState("");
+    const [usernameText, setUsernameText] = React.useState("");
+    const [universityIDText, setUniversityIDText] = React.useState("");
+    const [occupationText, setOccupationText] = React.useState("");
 
     //csaves validation errors
     const [errors, setErrors] = useState<any>({});
@@ -28,6 +31,9 @@ export default function SignUpScreen({ navigation }: any) {
             lastName: lastNameText,
             email: emailText,
             password: passText,
+            username: usernameText,
+            universityID: Number(universityIDText),
+            occupation: occupationText,
         };
         const result = validate(SignUpSchema, formData);
         if(!result.success){
@@ -61,8 +67,11 @@ export default function SignUpScreen({ navigation }: any) {
                 </View>
 
                 <View style={{padding:20}}>
+                    <TextInput mode='outlined' label="Username" value={usernameText} onChangeText={text => setUsernameText(text)} style={styles.textBox} error={!!errors.username}/>
                     <TextInput mode='outlined' label="Email" value={emailText} onChangeText={text => setEmailText(text)} style={styles.textBox} error={!!errors.email}/>
                     <TextInput mode='outlined' label="Password" value={passText} onChangeText={text => setPassText(text)} secureTextEntry style={styles.textBox} error={!!errors.password}/>
+                    <TextInput mode='outlined' label="University ID" value={universityIDText} onChangeText={text => setUniversityIDText(text)} keyboardType="numeric" style={styles.textBox} error={!!errors.universityID}/>
+                    <TextInput mode='outlined' label="Occupation" value={occupationText} onChangeText={text => setOccupationText(text)} style={styles.textBox} error={!!errors.occupation}/>
                 </View>
 
                 <View style={{marginHorizontal:100}}>

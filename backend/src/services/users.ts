@@ -16,12 +16,13 @@ export async function getUserById(userID: Number) {
 
 export async function getUserByEmailOrUsername(
     email: String,
-    username: String
+    username?: String
 ) {
+    const conditions: any[] = [{ email: String(email) }];
+    if (username !== undefined) conditions.push({ username: String(username) });
+
     return db.user.findFirst({
-        where: {
-            OR: [{ email: String(email) }, { username: String(username) }],
-        },
+        where: { OR: conditions },
     });
 }
 
@@ -34,6 +35,7 @@ export async function createUser(body: JsonObject) {
         email,
         password,
         occupation,
+        profilePicture,
     } = body;
 
     const password_hash = await auth.hashPassword(password as string);
@@ -58,6 +60,7 @@ export async function createUser(body: JsonObject) {
             firstName: firstName as string,
             lastName: lastName as string,
             universityID: Number(universityID),
+            profilePicture: profilePicture as string,
             email: email as string,
             password_hash: password_hash as string,
             occupation: occupation as string,
