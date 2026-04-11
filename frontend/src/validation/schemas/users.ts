@@ -51,7 +51,10 @@ export const SignUpSchema = UserSchema.pick({
 	firstName: true,
 	lastName: true,
 	email: true,
-	password: true
+	password: true,
+	username: true,
+	universityID: true,
+	occupation: true,
 })
 
 export type User = z.infer<typeof UserSchema>;
