@@ -26,7 +26,7 @@ async function seed() {
     await prisma.user.createMany({
         data: [
             {
-                userID: 1,
+                userID: 123456,
                 firstName: "Trevor",
                 lastName: "Tester",
                 email: "trevor@test.com",
@@ -36,7 +36,7 @@ async function seed() {
                 username: "TrevorTester",
             },
             {
-                userID: 2,
+                userID: 2345678,
                 firstName: "Alice",
                 lastName: "Applicant",
                 email: "alice@test.com",
@@ -46,7 +46,7 @@ async function seed() {
                 username: "AliceApplicant",
             },
             {
-                userID: 3,
+                userID: 345678,
                 firstName: "Bob",
                 lastName: "Builder",
                 email: "bob@test.com",
@@ -61,10 +61,10 @@ async function seed() {
     // HASHTAGS
     await prisma.hashtags.createMany({
         data: [
-            { hashtagID: 1, name: "Quick and Easy" },
-            { hashtagID: 2, name: "Students Only" },
-            { hashtagID: 3, name: "Paid" },
-            { hashtagID: 4, name: "Remote" },
+            { hashtagID: 12345678, name: "Quick and Easy" },
+            { hashtagID: 2345678, name: "Students Only" },
+            { hashtagID: 345678, name: "Paid" },
+            { hashtagID: 45678, name: "Remote" },
         ],
     });
 
@@ -73,7 +73,7 @@ async function seed() {
     // Trevor's delivery task — 1 applicant pending, 1 rejected
     await prisma.task.create({
         data: {
-            taskID: 1,
+            taskID: 12345678,
             name: "Grocery Delivery",
             description:
                 "Delivering groceries from Tesco to my flat on campus. One bag, won't take long.",
@@ -82,15 +82,17 @@ async function seed() {
             payment: 15.0,
             dueDate: new Date(2026, 5, 1),
             type: "delivery",
-            publisherID: 1,
-            hashtags: { connect: [{ hashtagID: 1 }, { hashtagID: 3 }] },
+            publisherID: 123456,
+            hashtags: {
+                connect: [{ hashtagID: 12345678 }, { hashtagID: 345678 }],
+            },
         },
     });
 
     // Trevor's tutoring task — Alice accepted
     await prisma.task.create({
         data: {
-            taskID: 2,
+            taskID: 2345678,
             name: "Maths Tutoring",
             description:
                 "Need help with calculus and statistics for my second year exams. Weekly sessions preferred.",
@@ -99,15 +101,17 @@ async function seed() {
             payment: 25.0,
             dueDate: new Date(2026, 4, 20),
             type: "tutoring",
-            publisherID: 1,
-            hashtags: { connect: [{ hashtagID: 2 }, { hashtagID: 3 }] },
+            publisherID: 123456,
+            hashtags: {
+                connect: [{ hashtagID: 2345678 }, { hashtagID: 345678 }],
+            },
         },
     });
 
     // Alice's moving task — needs 3 people, Trevor pending, Bob accepted
     await prisma.task.create({
         data: {
-            taskID: 3,
+            taskID: 3456789,
             name: "Help Me Move Flat",
             description:
                 "Moving boxes from Alexandra Square to Bowland College. Plenty of boxes but nothing too heavy.",
@@ -116,15 +120,15 @@ async function seed() {
             payment: 40.0,
             dueDate: new Date(2026, 6, 15),
             type: "moving",
-            publisherID: 2,
-            hashtags: { connect: [{ hashtagID: 1 }] },
+            publisherID: 2345678,
+            hashtags: { connect: [{ hashtagID: 12345678 }] },
         },
     });
 
     // Bob's tech support task — no applicants yet
     await prisma.task.create({
         data: {
-            taskID: 4,
+            taskID: 4567890,
             name: "Fix My Laptop",
             description:
                 "Laptop keeps freezing on startup. Need someone to diagnose and fix it, preferably same day.",
@@ -133,8 +137,10 @@ async function seed() {
             payment: 30.0,
             dueDate: new Date(2026, 4, 30),
             type: "tech_support",
-            publisherID: 3,
-            hashtags: { connect: [{ hashtagID: 3 }, { hashtagID: 4 }] },
+            publisherID: 345678,
+            hashtags: {
+                connect: [{ hashtagID: 345678 }, { hashtagID: 45678 }],
+            },
         },
     });
 
@@ -146,16 +152,16 @@ async function seed() {
                 comment:
                     "Alice explained everything clearly and helped me pass my exam. Would hire again.",
                 rating: "FIVE",
-                reviewPublisherID: 1,
-                reviewAssigneeID: 2,
+                reviewPublisherID: 123456,
+                reviewAssigneeID: 2345678,
             },
             {
                 name: "Clear instructions, easy job",
                 comment:
                     "Trevor was upfront about what he needed. Smooth experience overall.",
                 rating: "FOUR",
-                reviewPublisherID: 2,
-                reviewAssigneeID: 1,
+                reviewPublisherID: 2345678,
+                reviewAssigneeID: 123456,
             },
         ],
     });
