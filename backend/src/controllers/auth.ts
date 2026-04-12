@@ -21,7 +21,7 @@ export async function login(req: Request, res: Response) {
         const valid = await auth.comparePassword(password, user.password_hash);
 
         if (!valid) {
-            res.status(401).json({ error: "Invalid Credentials" });
+            res.status(401).json({ error: "Wrong Password" });
             return;
         }
 
@@ -31,7 +31,9 @@ export async function login(req: Request, res: Response) {
         }
 
         const accessToken = await auth.generateAccessToken(user.userID);
-        const { token: refreshToken } = await authServices.createRefreshToken(user.userID);
+        const { token: refreshToken } = await authServices.createRefreshToken(
+            user.userID
+        );
 
         console.log("User Authentication accepted.");
         res.status(200).json({
@@ -75,7 +77,9 @@ export async function refresh(req: Request, res: Response) {
         }
 
         await authServices.revokeRefreshToken(token);
-        const { token: refreshToken } = await authServices.createRefreshToken(payload.userID);
+        const { token: refreshToken } = await authServices.createRefreshToken(
+            payload.userID
+        );
 
         const accessToken = await auth.generateAccessToken(payload.userID);
         res.status(200).json({ accessToken, refreshToken });
@@ -96,9 +100,14 @@ export async function verifyEmail(req: Request, res: Response) {
         await emailServices.sendWelcomeEmail(user!.email, user!.username);
 
         const accessToken = await auth.generateAccessToken(userID);
-        const { token: refreshToken } = await authServices.createRefreshToken(userID);
+        const { token: refreshToken } =
+            await authServices.createRefreshToken(userID);
 
-        res.status(200).json({ message: "Email verified", accessToken, refreshToken });
+        res.status(200).json({
+            message: "Email verified",
+            accessToken,
+            refreshToken,
+        });
     } catch (error) {
         res.status(400).json({ error: String(error) });
     }
@@ -109,10 +118,18 @@ export async function requestPasswordReset(req: Request, res: Response) {
         const { email } = req.body;
         const user = await userServices.getUserByEmailOrUsername(email, "");
         if (user) {
-            const token = await authServices.generateEmailVerificationToken(user.userID);
-            await emailServices.sendPasswordResetEmail(user.email, user.username, token);
+            const token = await authServices.generateEmailVerificationToken(
+                user.userID
+            );
+            await emailServices.sendPasswordResetEmail(
+                user.email,
+                user.username,
+                token
+            );
         }
-        res.status(200).json({ message: "If that email exists, a reset token has been sent." });
+        res.status(200).json({
+            message: "If that email exists, a reset token has been sent.",
+        });
     } catch (error) {
         res.status(400).json({ error: String(error) });
     }
