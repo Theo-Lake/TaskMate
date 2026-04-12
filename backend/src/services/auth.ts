@@ -68,7 +68,7 @@ async function verifyEmailToken(userID: number, token: string) {
 }
 
 async function generateEmailVerificationToken(userID: number) {
-    const token = crypto.randomBytes(32).toString("hex"); // random 64-char string
+    const token = crypto.randomBytes(4).toString("hex"); // random 8-char string
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); //10 minutes (its in miliseconds)
     await db.emailVerificationToken.create({
         data: {
