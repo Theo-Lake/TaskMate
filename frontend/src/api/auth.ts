@@ -18,6 +18,7 @@ export async function logout() {
 export async function verifyEmail(userId: number, token: string) {
     const res = await axios.post(`${API_URL}/auth/verifyEmail/${userId}`, { token });
     await storeTokens(res.data.accessToken, res.data.refreshToken);
+    return res.data;
 }
 
 export async function requestPasswordReset(email: string) {
