@@ -17,7 +17,11 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
   }, */
-
+  errorText:{
+    color: '#d32f2f', 
+    fontSize: 14,
+    textAlign: 'center',
+  },
   content: {
     flex: 1,
     paddingHorizontal: 30, 
