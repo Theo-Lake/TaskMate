@@ -109,6 +109,7 @@ export async function verifyEmail(req: Request, res: Response) {
             refreshToken,
         });
     } catch (error) {
+        console.error("Error:", error)
         res.status(400).json({ error: String(error) });
     }
 }
