@@ -1,4 +1,4 @@
-/*#FIX: navigation in opening tabs. Maybe switch to Stack*/
+/*#FIX: SOLVED navigation in opening tabs. Maybe switch to Stack*/
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -37,33 +37,29 @@ const customTheme = {
 
 function OpeningTabs() {
 	return (
-		<Tab.Navigator
+		<Stack.Navigator
 			initialRouteName="Opening"
-			tabBar={() => null}
-			screenOptions={{ tabBarStyle: { display: "none" } }}
+			screenOptions={{ headerShown: false }}
 		>
-			<Tab.Screen
+			<Stack.Screen
 				name="Login"
 				component={LoginScreen}
-				options={{ swipeEnabled: true }}
 			/>
-			<Tab.Screen
+			<Stack.Screen
 				name="Opening"
 				component={OpeningScreen}
-				options={{ swipeEnabled: true }}
 			/>
-			<Tab.Screen
+			<Stack.Screen
 				name="SignUp"
 				component={SignUpScreen}
-				options={{ swipeEnabled: true }}
 			/>
 
-			<Tab.Screen
+			<Stack.Screen
 				name="EmailConfirmation"
 				component={EmailConfirmationScreen}
-				options={{ swipeEnabled: false }}
+				options={{gestureEnabled:false}}
 			/>
-		</Tab.Navigator>
+		</Stack.Navigator>
 	);
 }
 
