@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { reviewServices } from "../services/reviews";
+import { userServices } from "../services/users";
 
 async function getReviewsMadeByUser(req: Request, res: Response) {
     try {
@@ -27,7 +28,6 @@ async function getReviewsGivenToUser(req: Request, res: Response) {
         console.log(
             `An error occured while trying to get reviews given to user: ${error}`
         );
-        // TODO Conversations sends as a string, but tasks doesn't, which is correct?
         res.status(500).json({ error: String(error) });
     }
 }
@@ -91,7 +91,9 @@ async function updateReview(req: Request, res: Response) {
             return;
         }
         if (existing.reviewPublisherID !== req.user!.userID) {
-            res.status(403).json({ error: "Not authorized to update this review" });
+            res.status(403).json({
+                error: "Not authorized to update this review",
+            });
             return;
         }
 
@@ -114,7 +116,9 @@ async function deleteReview(req: Request, res: Response) {
             return;
         }
         if (existing.reviewPublisherID !== req.user!.userID) {
-            res.status(403).json({ error: "Not authorized to delete this review" });
+            res.status(403).json({
+                error: "Not authorized to delete this review",
+            });
             return;
         }
 
@@ -127,6 +131,28 @@ async function deleteReview(req: Request, res: Response) {
     }
 }
 
+async function getUserRating(req: Request, res: Response) {
+    try {
+        const userID = Number(req.params.userId);
+
+        const user = await userServices.getUserById(userID);
+        if (!user) {
+            res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        const averageRating = await reviewServices.getUserAverageRating(userID);
+
+        console.log("Review GET average rating for user request accepted.");
+        res.status(200).json({ averageRating });
+    } catch (error) {
+        console.log(
+            `An error occured while trying to get average rating for user: ${error}`
+        );
+        res.status(500).json({ error: String(error) });
+    }
+}
+
 export const reviewController = {
     getReviewsMadeByUser,
     getReviewsGivenToUser,
@@ -134,4 +160,5 @@ export const reviewController = {
     createReview,
     updateReview,
     deleteReview,
+    getUserRating,
 };
