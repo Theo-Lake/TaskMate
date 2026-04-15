@@ -6,7 +6,6 @@ import {
 	updateUser,
 	deleteUser,
 } from "../api/users";
-import { any } from "zod";
 
 //gets al users and saves in cache
 export const useAllUsers = () => {
