@@ -73,14 +73,7 @@ async function getMessageById(req: Request, res: Response) {
 async function createMessage(req: Request, res: Response) {
     try {
         const conversationID = Number(req.params.convoId);
-        const senderID = Number(req.params.senderId);
-
-        if (Number(req.params.senderId) !== req.user!.userID) {
-            res.status(403).json({
-                error: "Forbidden: Request userID does not match authenticated user",
-            });
-            return;
-        }
+        const senderID = req.user!.userID;
 
         const message = await conversationServices.createMessage(
             conversationID,

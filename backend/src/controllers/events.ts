@@ -57,14 +57,7 @@ async function getEventsByPublisherID(req: Request, res: Response) {
 
 async function createEvent(req: Request, res: Response) {
     try {
-        const publisherID = Number(req.params.publisherId);
-
-        if (publisherID !== req.user!.userID) {
-            res.status(403).json({
-                error: "Request userID does not match authenticated user",
-            });
-            return;
-        }
+        const publisherID = req.user!.userID;
 
         await eventServices.createEvent(publisherID, req.body);
         console.log("Event POST accepted");
@@ -168,12 +161,7 @@ async function patchEventStatus(req: Request, res: Response) {
 async function applyForEvent(req: Request, res: Response) {
     try {
         const eventID = Number(req.params.eventId);
-        const userID = Number(req.params.userId);
-
-        if (userID !== req.user!.userID) {
-            res.status(403).json({ error: "Cannot apply on behalf of another user" });
-            return;
-        }
+        const userID = req.user!.userID;
 
         await eventServices.applyForEvent(eventID, userID);
         console.log("Event APPLICATION accepted.");

@@ -19,13 +19,13 @@ router.post("/", validate(UserSchema), userController.createUser);
 
 // USER DATA PATCH
 router.patch(
-    "/:userId",
+    "/me",
     auth.withAuth,
     validate(UserUpdateSchema),
     userController.updateUser
 );
 
 // USER DATA DELETE
-router.delete("/:userId", auth.withAuth, userController.deleteUser);
+router.delete("/me", auth.withAuth, userController.deleteUser);
 
 export default router;

@@ -11,7 +11,9 @@ async function getAllUsers(req: Request, res: Response) {
         res.status(200).json({ users: users });
     } catch (error) {
         console.log(`An error occured while trying to get User data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error });
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
@@ -30,7 +32,9 @@ async function getUserById(req: Request, res: Response) {
         res.status(200).json({ users: { user } });
     } catch (error) {
         console.log(`An error occured while trying to get User data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error });
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
@@ -70,17 +74,11 @@ async function createUser(req: Request, res: Response) {
 
 async function updateUser(req: Request, res: Response) {
     try {
-        const userID = Number(req.params.userId);
+        const userID = req.user!.userID;
 
-        if (isNaN(userID)) {
+        const user = await userServices.getUserById(userID);
+        if (!user) {
             res.status(404).json({ error: "User not found" });
-            return;
-        }
-
-        if (userID !== req.user!.userID) {
-            res.status(403).json({
-                error: "Request userID does not match authenticated user",
-            });
             return;
         }
 
@@ -91,37 +89,35 @@ async function updateUser(req: Request, res: Response) {
             return;
         }
 
-        await userServices.updateUser(userID, req.body); // Calling user service to create update with req.body
+        await userServices.updateUser(userID, req.body);
         console.log("User data PUT accepted.");
         res.status(200).json({ Message: "User data successfully updated" });
     } catch (error) {
         console.log(`An error occured while putting the user data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error });
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 
 async function deleteUser(req: Request, res: Response) {
     try {
-        const userID = Number(req.params.userId);
+        const userID = req.user!.userID;
 
-        if (!userID || isNaN(userID)) {
+        const user = await userServices.getUserById(userID);
+        if (!user) {
             res.status(404).json({ error: "User not found" });
             return;
         }
 
-        if (userID !== req.user!.userID) {
-            res.status(403).json({
-                error: "Request userID does not match authenticated user",
-            });
-            return;
-        }
-
-        await userServices.deleteUser(userID); // Calling user service to create delete with req.body
+        await userServices.deleteUser(userID);
         console.log("User DELETE accepted.");
         res.status(200).json({ Message: `User successfully deleted` });
     } catch (error) {
         console.log(`An error occured while deleting the user data: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error });
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
     }
 }
 

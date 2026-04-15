@@ -18,7 +18,7 @@ router.get(
 );
 
 router.post(
-    "/:publisherId",
+    "/",
     auth.withAuth,
     validate(EventSchema),
     eventController.createEvent
@@ -40,7 +40,7 @@ router.patch(
 );
 
 router.post(
-    "/:eventId/apply/:userId",
+    "/:eventId/apply",
     auth.withAuth,
     eventController.applyForEvent
 );
