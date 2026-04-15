@@ -7,7 +7,7 @@ const router = express.Router(); // Creating a different router for every route,
 
 // TASK POST (no need for conversation post since if a task is created so is a convo)
 router.post(
-    "/:publisherId",
+    "/",
     auth.withAuth,
     validate(TaskSchema),
     taskController.postTask
@@ -38,7 +38,7 @@ router.get(
 );
 
 // TASK APPLICATION
-router.post("/:taskId/apply/:userId", auth.withAuth, taskController.applyForTask);
+router.post("/:taskId/apply", auth.withAuth, taskController.applyForTask);
 router.put("/:taskId/apply/:userId/accept", auth.withAuth, taskController.acceptApplication);
 router.put("/:taskId/apply/:userId/reject", auth.withAuth, taskController.rejectApplication);
 router.delete("/:taskId/apply/:userId", auth.withAuth, taskController.unAssignTask);

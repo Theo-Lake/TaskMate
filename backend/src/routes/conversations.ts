@@ -22,7 +22,7 @@ router.get(
 
 // MESSAGES POST ENDPOINT
 router.post(
-    "/:convoId/messages/:senderId",
+    "/:convoId/messages",
     auth.withAuth,
     validate(MessageSchema),
     conversationController.createMessage

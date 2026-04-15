@@ -2,16 +2,11 @@ import { db } from "../db";
 import { auth } from "../middleware/authentication/auth";
 import crypto from "crypto";
 
-const REFRESH_TOKEN_EXPIRY_DAYS = 30;
-
 export async function createRefreshToken(userID: number) {
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + REFRESH_TOKEN_EXPIRY_DAYS);
-
     const token = await auth.generateRefreshToken(userID);
 
     return db.refreshToken.create({
-        data: { token, userID, expiresAt },
+        data: { token, userID },
     });
 }
 
@@ -22,9 +17,14 @@ export async function findRefreshToken(token: string) {
 }
 
 export async function revokeRefreshToken(token: string) {
-    return db.refreshToken.update({
+    return db.refreshToken.delete({
         where: { token },
-        data: { used: true },
+    });
+}
+
+async function deleteUserRefreshTokens(userID: number) {
+    return db.refreshToken.deleteMany({
+        where: { userID },
     });
 }
 
@@ -104,6 +104,7 @@ export const authServices = {
     createRefreshToken,
     findRefreshToken,
     revokeRefreshToken,
+    deleteUserRefreshTokens,
     verifyEmailToken,
     generateEmailVerificationToken,
     verifyPasswordResetToken,

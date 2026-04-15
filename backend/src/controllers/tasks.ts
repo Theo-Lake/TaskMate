@@ -100,16 +100,9 @@ async function getTaskAssignmentByUserID(req: Request, res: Response) {
 
 async function postTask(req: Request, res: Response) {
     try {
-        const publisherID = Number(req.params.publisherId);
+        const publisherID = req.user!.userID;
 
-        if (publisherID !== req.user!.userID) {
-            res.status(403).json({
-                error: "Request userID does not match authenticated user",
-            });
-            return;
-        }
-
-        await taskServices.createTask(publisherID, req.body); // Calling user service to create user with req.body
+        await taskServices.createTask(publisherID, req.body);
         console.log("Task data POST accepted.");
         res.status(200).json({ Message: "Task data successfully posted" });
     } catch (error) {
@@ -123,12 +116,7 @@ async function postTask(req: Request, res: Response) {
 async function applyForTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
-        const userID = Number(req.params.userId);
-
-        if (userID !== req.user!.userID) {
-            res.status(403).json({ error: "Cannot apply on behalf of another user" });
-            return;
-        }
+        const userID = req.user!.userID;
 
         await taskServices.applyForTask(taskID, userID);
         console.log("Task APPLICATION accepted.");

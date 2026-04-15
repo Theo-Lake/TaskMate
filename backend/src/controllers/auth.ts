@@ -30,6 +30,7 @@ export async function login(req: Request, res: Response) {
             return;
         }
 
+        await authServices.deleteUserRefreshTokens(user.userID);
         const accessToken = await auth.generateAccessToken(user.userID);
         const { token: refreshToken } = await authServices.createRefreshToken(
             user.userID
@@ -40,6 +41,7 @@ export async function login(req: Request, res: Response) {
             Message: `User successfully Authenticated`,
             accessToken,
             refreshToken,
+            userID: user.userID,
         });
     } catch (error) {
         console.log(`An error occured while authenticating the user: ${error}`);
@@ -71,7 +73,7 @@ export async function refresh(req: Request, res: Response) {
         const payload = auth.verifyRefreshToken(token);
 
         const stored = await authServices.findRefreshToken(token);
-        if (!stored || stored.used) {
+        if (!stored) {
             res.status(401).json({ error: "Invalid refresh token" });
             return;
         }
