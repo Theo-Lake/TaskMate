@@ -92,6 +92,27 @@ export async function deleteReview(reviewID: Number) {
 }
 
 
+const ratingToNumber: Record<Rating, number> = {
+    ONE: 1,
+    TWO: 2,
+    THREE: 3,
+    FOUR: 4,
+    FIVE: 5,
+};
+
+export async function getUserAverageRating(userID: Number): Promise<number | null> {
+    const reviews = await db.reviews.findMany({
+        where: { reviewAssigneeID: Number(userID) },
+        select: { rating: true },
+    });
+
+    if (reviews.length === 0) return null;
+
+    const sum = reviews.reduce((acc, r) => acc + ratingToNumber[r.rating], 0);
+    return sum / reviews.length;
+}
+
+
 export const reviewServices = {
     getReviewsMadeByUser,
     getReviewsGivenToUser,
@@ -99,4 +120,5 @@ export const reviewServices = {
     createReview,
     updateReview,
     deleteReview,
+    getUserAverageRating,
 };

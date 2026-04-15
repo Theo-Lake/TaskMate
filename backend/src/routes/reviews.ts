@@ -5,6 +5,9 @@ import { ReviewSchema } from "../middleware/validation/schemas/reviews";
 import { auth } from "../middleware/authentication/auth";
 const router = express.Router();
 
+// REVIEW GET average rating for a user ENDPOINT
+router.get("/rating/:userId", reviewController.getUserRating);
+
 // REVIEW GET all reviews user has made ENDPOINT
 router.get("/published/:userId", reviewController.getReviewsMadeByUser);
 
