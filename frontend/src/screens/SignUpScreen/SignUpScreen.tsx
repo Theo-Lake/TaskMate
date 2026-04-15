@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, ScrollView } from 'react-native';
 import { Appbar, TextInput, Button } from "react-native-paper";
 import {styles} from "./styles"
 import CustomHeader from "../../components/navBar/CustomHeader";
@@ -42,8 +42,8 @@ export default function SignUpScreen({ navigation }: any) {
         }
         setErrors({});
         createUser(result.data,{
-            onSuccess:() => {
-                navigation.navigate('OpeningTabs', {screen: 'EmailConformation'});
+            onSuccess:(data:any) => {
+                navigation.navigate('EmailConfirmation',{userID:data.userID});
             },
             onError:(error)=>{
                 console.error("Error:", error);
@@ -54,30 +54,32 @@ export default function SignUpScreen({ navigation }: any) {
     return (
 
         <View style={styles.container}>
-            <CustomHeader title="Sign Up" navigation={navigation}/>
+            <CustomHeader title="Sign Up" navigation={navigation} showBackArrow={true}/>
+            <ScrollView>
+                <View style={styles.content}>
+                    <View style={styles.img}>
+                        <Image source={Logo} style={{width:200, resizeMode:"contain"}}></Image>
+                    </View>
+                    
+                    <View style={styles.namesView}>
+                        <TextInput mode='outlined' label="First Name" value={firstNameText} onChangeText={text => setFirstNameText(text)} style={styles.nameBox} error={!!errors.firstName}/>
+                        <TextInput mode='outlined' label="Last Name" value={lastNameText} onChangeText={text => setLastNameText(text)} style={styles.nameBox} error={!!errors.lastName}/>
+                    </View>
 
-            <View style={styles.content}>
-                <View style={styles.img}>
-                    <Image source={Logo} style={{width:200, resizeMode:"contain"}}></Image>
-                </View>
-                
-                <View style={styles.namesView}>
-                    <TextInput mode='outlined' label="First Name" value={firstNameText} onChangeText={text => setFirstNameText(text)} style={styles.nameBox} error={!!errors.firstName}/>
-                    <TextInput mode='outlined' label="Last Name" value={lastNameText} onChangeText={text => setLastNameText(text)} style={styles.nameBox} error={!!errors.lastName}/>
-                </View>
+                    <View style={{padding:20}}>
+                        <TextInput mode='outlined' label="Username" value={usernameText} onChangeText={text => setUsernameText(text)} style={styles.textBox} error={!!errors.username}/>
+                        <TextInput mode='outlined' label="Email" value={emailText} onChangeText={text => setEmailText(text)} style={styles.textBox} error={!!errors.email}/>
+                        <TextInput mode='outlined' label="Password" value={passText} onChangeText={text => setPassText(text)} secureTextEntry style={styles.textBox} error={!!errors.password}/>
+                        <TextInput mode='outlined' label="University ID" value={universityIDText} onChangeText={text => setUniversityIDText(text)} keyboardType="numeric" style={styles.textBox} error={!!errors.universityID}/>
+                        <TextInput mode='outlined' label="Occupation" value={occupationText} onChangeText={text => setOccupationText(text)} style={styles.textBox} error={!!errors.occupation}/>
+                    </View>
 
-                <View style={{padding:20}}>
-                    <TextInput mode='outlined' label="Username" value={usernameText} onChangeText={text => setUsernameText(text)} style={styles.textBox} error={!!errors.username}/>
-                    <TextInput mode='outlined' label="Email" value={emailText} onChangeText={text => setEmailText(text)} style={styles.textBox} error={!!errors.email}/>
-                    <TextInput mode='outlined' label="Password" value={passText} onChangeText={text => setPassText(text)} secureTextEntry style={styles.textBox} error={!!errors.password}/>
-                    <TextInput mode='outlined' label="University ID" value={universityIDText} onChangeText={text => setUniversityIDText(text)} keyboardType="numeric" style={styles.textBox} error={!!errors.universityID}/>
-                    <TextInput mode='outlined' label="Occupation" value={occupationText} onChangeText={text => setOccupationText(text)} style={styles.textBox} error={!!errors.occupation}/>
+                    <View style={{marginHorizontal:100}}>
+                        <Button icon="account-outline" mode="contained" onPress={handleSignUp} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Sign Up</Button>
+                    </View>
                 </View>
+            </ScrollView>
 
-                <View style={{marginHorizontal:100}}>
-                    <Button icon="account-outline" mode="contained" onPress={handleSignUp} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Sign Up</Button>
-                </View>
-            </View>
             
         </View>
     );
