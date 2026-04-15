@@ -43,7 +43,7 @@ export async function login(req: Request, res: Response) {
         });
     } catch (error) {
         console.log(`An error occured while authenticating the user: ${error}`);
-        res.status(500).json({ error: error });
+        res.status(500).json({ error: String(error) });
     }
 }
 
@@ -56,7 +56,7 @@ export async function logOut(req: Request, res: Response) {
         res.status(200).json({ Message: "Logged out" });
     } catch (error) {
         console.log(`An error occured while Logging out the user: ${error}`);
-        res.status(500).json({ error: error });
+        res.status(500).json({ error: String(error) });
     }
 }
 
