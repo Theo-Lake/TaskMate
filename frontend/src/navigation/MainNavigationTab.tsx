@@ -25,7 +25,7 @@ import CreateEventScreen from '../screens/CreateEventScreen/CreateEventScreen';
 
 import EditTaskScreen from "../screens/EditTask/EditTaskScreen";
 
-
+import ResetPasswordScreen from '../screens/ResetPasswordScreen/ResetPasswordScreen';
 
 const Tab = createBottomTabNavigator();
 const TasksStack = createNativeStackNavigator();
@@ -51,6 +51,7 @@ function MyTasksStackNavigator(){
             <MyTasksStack.Screen name="EditTaskScreen" component={EditTaskScreen}/>
             <MyTasksStack.Screen name="UserProfileScreen" component={UserProfileScreen}/>
             <MyTasksStack.Screen name="SettingsScreen" component={SettingsScreen}/>
+            <MyTasksStack.Screen name="resetPasswordScreen" component={ResetPasswordScreen}/>
 
         </MyTasksStack.Navigator>
     );
