@@ -83,7 +83,9 @@ async function seed() {
             dueDate: new Date(2026, 5, 1),
             type: "delivery",
             publisherID: 123456,
-            hashtags: { connect: [{ hashtagID: 12345678 }, { hashtagID: 345678 }] },
+            hashtags: {
+                connect: [{ hashtagID: 12345678 }, { hashtagID: 345678 }],
+            },
         },
     });
 
@@ -100,7 +102,9 @@ async function seed() {
             dueDate: new Date(2026, 4, 20),
             type: "tutoring",
             publisherID: 123456,
-            hashtags: { connect: [{ hashtagID: 2345678 }, { hashtagID: 345678 }] },
+            hashtags: {
+                connect: [{ hashtagID: 2345678 }, { hashtagID: 345678 }],
+            },
         },
     });
 
@@ -134,7 +138,9 @@ async function seed() {
             dueDate: new Date(2026, 4, 30),
             type: "tech_support",
             publisherID: 345678,
-            hashtags: { connect: [{ hashtagID: 345678 }, { hashtagID: 45678 }] },
+            hashtags: {
+                connect: [{ hashtagID: 345678 }, { hashtagID: 45678 }],
+            },
         },
     });
 
