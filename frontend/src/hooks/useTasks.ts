@@ -64,10 +64,10 @@ export function useTask(taskId: number) {
     });
 }
 
-export function useCreateTask(publisherId: number) {
+export function useCreateTask() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (data: unknown) => createTask(publisherId, data),
+        mutationFn: (data: unknown) => createTask(data),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
     });
 }
@@ -99,8 +99,7 @@ export function useDeleteTask() {
 export function useApplyForTask() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ taskId, userId }: { taskId: number; userId: number }) =>
-            applyForTask(taskId, userId),
+        mutationFn: (taskId: number) => applyForTask(taskId),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
     });
 }
