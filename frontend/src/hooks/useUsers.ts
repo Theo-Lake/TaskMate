@@ -33,19 +33,9 @@ export const useCreateUser = () => {
 export const useUpdateUser = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: ({
-			userId,
-			updateData,
-		}: {
-			userId: string;
-			updateData: any;
-		}) => updateUser(userId, updateData),
-		//reffreshing
-		onSuccess: (data, variables) => {
+		mutationFn: (updateData: any) => updateUser(updateData),
+		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["users"] });
-			queryClient.invalidateQueries({
-				queryKey: ["users", variables.userId],
-			});
 		},
 	});
 };

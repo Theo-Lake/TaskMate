@@ -2,9 +2,8 @@ import { db } from "../db";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
 import { Rating } from "../generated/prisma/enums";
 
-
 export async function getReviewsMadeByUser(userID: Number) {
-    return await db.reviews.findMany({ 
+    return await db.reviews.findMany({
         where: { reviewPublisherID: Number(userID) },
         select: {
             reviewID: true,
@@ -15,9 +14,8 @@ export async function getReviewsMadeByUser(userID: Number) {
     });
 }
 
-
 export async function getReviewsGivenToUser(userID: Number) {
-    return await db.reviews.findMany({ 
+    return await db.reviews.findMany({
         where: { reviewAssigneeID: Number(userID) },
         select: {
             reviewID: true,
@@ -28,17 +26,19 @@ export async function getReviewsGivenToUser(userID: Number) {
     });
 }
 
-
 export async function getReviewById(reviewID: Number) {
     return await db.reviews.findUnique({
-        where: {reviewID: Number(reviewID) },
+        where: { reviewID: Number(reviewID) },
     });
 }
 
-
-export async function createReview(publisherID: Number, assigneeID: Number, body: JsonObject) {
+export async function createReview(
+    publisherID: Number,
+    assigneeID: Number,
+    body: JsonObject
+) {
     const { name, comment, rating } = body;
-    
+
     if (!rating) {
         throw new Error("Rating is missing");
     }
@@ -67,13 +67,12 @@ export async function createReview(publisherID: Number, assigneeID: Number, body
                 },
             },
         },
-    })
+    });
 }
-
 
 export async function updateReview(reviewID: Number, body: JsonObject) {
     let { name, comment, rating } = body;
-    
+
     return await db.reviews.update({
         where: { reviewID: Number(reviewID) },
         data: {
@@ -84,13 +83,11 @@ export async function updateReview(reviewID: Number, body: JsonObject) {
     });
 }
 
-
 export async function deleteReview(reviewID: Number) {
     return await db.reviews.delete({
         where: { reviewID: Number(reviewID) },
     });
 }
-
 
 const ratingToNumber: Record<Rating, number> = {
     ONE: 1,
@@ -100,7 +97,9 @@ const ratingToNumber: Record<Rating, number> = {
     FIVE: 5,
 };
 
-export async function getUserAverageRating(userID: Number): Promise<number | null> {
+export async function getUserAverageRating(
+    userID: Number
+): Promise<number | null> {
     const reviews = await db.reviews.findMany({
         where: { reviewAssigneeID: Number(userID) },
         select: { rating: true },
@@ -111,7 +110,6 @@ export async function getUserAverageRating(userID: Number): Promise<number | nul
     const sum = reviews.reduce((acc, r) => acc + ratingToNumber[r.rating], 0);
     return sum / reviews.length;
 }
-
 
 export const reviewServices = {
     getReviewsMadeByUser,
