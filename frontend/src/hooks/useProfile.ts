@@ -1,13 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import client from "../api/client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const useProfile = (userId : number | null) => {
+export const useProfile = () => {
     return useQuery({
-        queryKey:["profile", userId],
+        queryKey:["myProfile"],
         queryFn: async()=>{
-            const res = await client.get(`/users/${userId}`);
-            return res.data.users.user
+            const myID = await AsyncStorage.getItem('myID');
+            if (!myID){
+                throw new Error('ID is null. relogin')
+            }
+            const res = await client.get(`/users/${myID}`);
+            return res.data.users.user;
         },
-        enabled: !!userId,
     })
 }
