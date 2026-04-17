@@ -6,7 +6,7 @@ import { storeTokens, clearTokens, getRefreshToken } from "../auth/auth";
 
 export async function login(credentials: { password: string; email?: string; username?: string }) {
     const res = await axios.post(`${API_URL}/auth/login`, credentials);
-    await storeTokens(res.data.accessToken, res.data.refreshToken, res.data.userID);
+    return res.data
 }
 
 export async function logout() {
