@@ -6,13 +6,24 @@ import {styles} from "./styles"
 import Logo from '../../../assets/img/logoNoText.png';
 import CustomHeader from "../../components/navBar/CustomHeader";
 import { useLogin } from "../../hooks/useAuth";
+import { useAuth } from "../../context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { validate } from "../../validation/validate";
 import { LoginSchema } from "../../validation/schemas/users";
+/*
+uncoment and reload in nee d to clear cache:
+const clearCache = async () => {
+    await AsyncStorage.clear();
+}
+clearCache();
+*/
+
 export default function LoginScreen({ navigation }: any) {
     const {mutate: loginMutation, isPending} = useLogin();
     const [emailText, setEmailText] = React.useState("");
     const [passText, setPassText] = React.useState("");
+    const {login} = useAuth();
 
     const [errors, setErrors] = useState<any>({});
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -33,8 +44,13 @@ export default function LoginScreen({ navigation }: any) {
         loginMutation(
             formedData,
             {
-                onSuccess: (data) =>{
-                    navigation.replace("MainApp");
+                onSuccess: async (data) =>{
+                    try{
+                        await login(data.accessToken, data.refreshToken);
+                        await AsyncStorage.setItem('myID', String(data.userID));
+                    } catch (e){
+                        setErrorMsg("Failed to save login")
+                    }
                 },
                 onError: (error) => {
                     const msg = error.response?.data?.error || "Login failed";
