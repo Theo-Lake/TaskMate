@@ -1,13 +1,16 @@
 import React from "react";
 import { View, StyleSheet, Image, FlatList, ScrollView, SectionList } from 'react-native';
-import {  Text, useTheme,Appbar, Avatar, Chip,Button, IconButton } from "react-native-paper";
+import {  Text, useTheme,Appbar, Avatar, Chip,Button, IconButton, ActivityIndicator } from "react-native-paper";
 import {styles} from "./styles"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
 import TaskCard from "../../components/cards/TaskCard";
 import NoticeCard from "../../components/cards/NoticeBoardCard";
 import { FAB } from 'react-native-paper';
-import PosterCard from "../../components/cards/PosterCard"
+import PosterCard from "../../components/cards/PosterCard";
+
+import { useTask } from "../../hooks/useTasks";
+import { useProfile } from "../../hooks/useProfile";
 
 const task = {
     id: '1',
@@ -42,26 +45,59 @@ const formatDate = (isoString: string)=>{
     return date.toLocaleDateString('gb-GB')
 }
 
-export default function ViewTaskScreen({navigation}:any) {
+export default function ViewTaskScreen({navigation, route}:any) {
+    const taskId = Number(route.params?.taskId);
+    const passedTask = route.params?.task;
+
+    const { data, isLoading, isError } = useTask(taskId);
+
+    const fetchedTask = data?.task ?? data;
+    const task = passedTask ?? fetchedTask;
+
+    const publisherId = task?.publisherID ?? null;
+    const { data: publisherProfile } = useProfile(publisherId);
+
+    if (isLoading) {
+        return (
+            <View style={{flex:1}}>
+                <CustomHeader title="View Task" navigation={navigation} showBackArrow={true} showProfilePicture={true} />
+                <View style={{marginTop:40, alignItems:"center"}}>
+                    <Text>Loading task...</Text>
+                    <ActivityIndicator style={{marginTop:20}} size="large"/>
+                </View>
+            </View>
+        );
+    }
+
+    if (isError || !task) {
+        return (
+            <View style={{flex:1}}>
+                <CustomHeader title="View Task" navigation={navigation} showBackArrow={true} showProfilePicture={true} />
+                <View style={{marginTop:40, alignItems:"center"}}>
+                    <Text>Could not load task.</Text>
+                </View>
+            </View>
+        );
+    }
+
+    const imageSource = task.images ? { uri: Array.isArray(task.images) ? task.images[0] : task.images} : require("../../../assets/img/img.png");
+
     return (
         <View style={{flex:1}}>
             <CustomHeader title="View Task" navigation={navigation} showBackArrow={true} showProfilePicture={true} />
             <ScrollView>
                 <View style={styles.container}>
-                    {task.imageUrl && (
-                        <Image source={task.imageUrl} style={styles.taskImage} resizeMode="cover"/>
-
-                    )}
+                    <Image source={imageSource} style={styles.taskImage} resizeMode="cover"/>
                     {/*<TextInput mode="flat" underlineColor="tran" value="use" editable={false} style={styles.textBox}/>*/}
-                    <Text variant="titleLarge" style={styles.title}>{task.title}</Text>
+                    <Text variant="titleLarge" style={styles.title}>{task.name}</Text>
                     
                     <Text style={{fontSize:20}}>{task.description}</Text>
 
                     <Text variant="bodyLarge" style={{ marginTop:7, marginBottom:7, textAlign:"left", alignSelf: 'flex-start'}}>Posted by:</Text>
                     <View style={{alignItems:'flex-start',width:'100%'}}>
                         <PosterCard 
-                            title={task.poster}
-                            review={task.posterReputation}
+                            title={publisherProfile?.username ?? "Unknown user"}
+                            review={publisherProfile?.rating ?? 0}
                             />
                     </View>
                     <View style={styles.dateStringContainer}>
@@ -69,7 +105,15 @@ export default function ViewTaskScreen({navigation}:any) {
                             iconColor="#49454F"
                             style={{margin:0,padding:0, width:20}}/>
                         <Text style={styles.dateStringText}>
-                            {formatDate(task.date)}
+                            {formatDate(task.dueDate)}
+                        </Text>
+                    </View>
+                    <View style={styles.dateStringContainer}>
+                        <IconButton icon="map-marker-outline" size={20}
+                            iconColor="#49454F"
+                            style={{margin:0,padding:0, width:20}}/>
+                        <Text style={styles.dateStringText}>
+                            {task.location}
                         </Text>
                     </View>
                     <View style={styles.rewardContainer}>
@@ -77,7 +121,7 @@ export default function ViewTaskScreen({navigation}:any) {
                             iconColor="#49454F"
                             style={{margin:0,padding:0, width:20}}/>
                         <Text style={styles.dateStringText}>
-                            {task.price}
+                            {task.payment}
                         </Text>
                     </View>
                     <View style={styles.bottomContainer}>
@@ -86,7 +130,7 @@ export default function ViewTaskScreen({navigation}:any) {
                                 iconColor="#49454F"
                                 style={{margin:0,padding:0, width:20}}/>
                             <Text style={styles.dateStringText}>
-                                {task.amountOfAssignees}
+                                {task.peopleRequired}
                             </Text>
                         </View>
                         <View style={styles.assigneesRankField}>
