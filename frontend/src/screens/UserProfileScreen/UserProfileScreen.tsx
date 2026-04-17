@@ -8,9 +8,8 @@ import StarRatingGroup from "../../components/StarRatingGroup/StarRatingGroup"
 import { ScrollView } from "react-native";
 import ReviewCard from "../../components/cards/ReviewCard";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useProfile } from "../../hooks/useProfile";
-import { useReceivedReviews } from "../../hooks/useReviews";
+import { useMyReceivedReviews } from "../../hooks/useReviews";
 // hardcoded rewiews. Use for testing. in the future we'll grab from the server
 /*
 const reviews = [
@@ -54,22 +53,15 @@ const reviews = [
 
 export default function UserProfileScreen({navigation}:any) {
   //gfetting userId 
-    const [currentUSerId, setCurrentUserId] = useState<number | null>(null);
-    useEffect(() => {
-      const fetchId = async() =>{
-        const storeId = await AsyncStorage.getItem('userId');
-        console.log("ID  AsyncStorage:", storeId);
-        if (storeId) setCurrentUserId(Number(storeId))
-      }
-    fetchId();
-    }, []);
-    //getting user:
-    const { data: user, isLoading:profileLoading, isError, error } = useProfile(currentUSerId);
-    const {data:reviews, isLoading: reviewsLoading} = useReceivedReviews(currentUSerId);
+    
 
+    //getting user:
+    const { data: user, isLoading:profileLoading, isError, error } = useProfile();
+    const {data:reviews, isLoading: reviewsLoading} = useMyReceivedReviews();
+    console.log('fuck me',reviews)
 
     //loading indicatior while fetching the data for the server:
-    if (profileLoading || !currentUSerId){
+    if (profileLoading){
       return(
         <View style={styles.activityIndicator}>
             <ActivityIndicator size="large" color="#3D8252" />
@@ -85,7 +77,9 @@ export default function UserProfileScreen({navigation}:any) {
     }
     const name = user ? `${user.firstName} ${user.lastName}` : "Unknown User";
     /*const name = "Jane Doe" /* TEmporary*/
-    const reputation = 4.5
+    const reputation = reviews && reviews.length > 0
+      ? (reviews.reduce((acc: number, item: any) => acc + item.rating, 0) / reviews.length).toFixed(1)
+      : 0;
     return (
         <View style={{flex:1}}>
             
@@ -118,7 +112,7 @@ export default function UserProfileScreen({navigation}:any) {
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item }) => (
                         <ReviewCard
-                          title={item.title}
+                          title={item.name}
                           review={item.rating}
                           description={item.comment}
                           onPress={() => console.log('Opened rewiew', item.title)}
