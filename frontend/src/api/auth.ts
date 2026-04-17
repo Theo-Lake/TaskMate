@@ -4,8 +4,8 @@ import { storeTokens, clearTokens, getRefreshToken } from "../auth/auth";
 
 // Plain axios is used here (not client) because auth endpoints don't need a token
 
-export async function login(email: string, password: string) {
-    const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+export async function login(credentials: { password: string; email?: string; username?: string }) {
+    const res = await axios.post(`${API_URL}/auth/login`, credentials);
     await storeTokens(res.data.accessToken, res.data.refreshToken);
 }
 
