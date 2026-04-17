@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { View, StyleSheet, Image, FlatList, ScrollView, SectionList } from 'react-native';
-import {  Text, useTheme,Appbar, Avatar, Chip } from "react-native-paper";
+import {  Text, useTheme,Appbar, Avatar, Chip, ActivityIndicator } from "react-native-paper";
 import {styles} from "../TasksScreen/styles"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
@@ -8,90 +8,97 @@ import TaskCard from "../../components/cards/TaskCard";
 import NoticeCard from "../../components/cards/NoticeBoardCard";
 import { FAB } from 'react-native-paper';
 
-// hardcoded tasks, in the future we'll grab from the server
-const tasks = [
-  {
-    id: '1',
-    title: 'Study buddy',
-    price: '£10',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'need study buddy for 2 hours',
-  },
-  {
-    id: '2',
-    title: 'Referee',
-    price: '£20',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'Referee for game on Sunday night at 8pm',
-  },
-  {
-    id: '3',
-    title: 'Moving stuff',
-    price: '£30',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'Helped wanted moving items out of my flat',
-  },
-  {
-    id: '4',
-    title: 'test',
-    price: '£14',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'asdfasdf',
-  },
-  {
-    id: '5',
-    title: 'Study buddy',
-    price: '£10',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'need study buddy for 2 hours',
-  },
-  {
-    id: '6',
-    title: 'Referee',
-    price: '£20',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'Referee for game on Sunday night at 8pm',
-  },
-  {
-    id: '7',
-    title: 'Moving stuff',
-    price: '£30',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'Helped wanted moving items out of my flat',
-  },
-  {
-    id: '8',
-    title: 'test',
-    price: '£14',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'asdfasdf',
-  },
-];
+// Logic Imports
+// fetches all at once, can't fetch tasks one at a time for infinite scroll
+import { useAllTasks } from "../../hooks/useTasks"
 
-// hardcoded noticeboard tasks
-const noticeTasks = [
-  {
-    id: '1',
-    title: 'Study buddy',
-    price: '£10',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'need study buddy for 2 hours',
-  },
-  {
-    id: '2',
-    title: 'Referee',
-    price: '£20',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'Referee for game on Sunday night at 8pm',
-  },
-];
-
-const taskSections = [{
-  title: "tasks",
-  data: tasks,
-},];
+// used for memo
+type DisplayTask = {
+  id: string;
+  title: string;
+  price: string;
+  description: string;
+  imageUrl: any;
+  category: string;
+  rawTask: any;
+};
 
 export default function TasksScreen({navigation}:any) {
+    // fetch tasks
+    const { data, isLoading, isError } = useAllTasks();
+    // console.log("tasks data:", data);
+    const fetchedTasks = Array.isArray(data?.tasks) ? data.tasks : [];
+
+    // map tasks
+    const mappedTasks = useMemo<DisplayTask[]>(() => {
+      return fetchedTasks.map((task: any) => ({
+        id: String(task.taskID),
+        title: task.name,
+        price: task.payment,
+        description: task.description,
+        imageUrl: task.imageUrl,
+        category: task.type,
+        rawTask: task,
+      }));
+    }, [fetchedTasks]);
+
+    // sectionlist
+    const taskSections = [{
+      title: "tasks",
+      data: mappedTasks,
+    },];
+
+    
+    // random tasks for noticeboard
+    const shuffleArray = <T,>(array: T[]) => {
+      const copy = [...array];
+
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i+1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+
+      return copy;
+    };
+
+    // shuffled tasks for noticeboard
+    const noticeTasks = useMemo<DisplayTask[]>(() => {
+      return shuffleArray(mappedTasks).slice(0, 2);
+    }, [mappedTasks]);
+
+    const onTaskPress = (task: DisplayTask) => {
+      navigation.navigate("ViewTaskScreen", {taskId: Number(task.id), task: task.rawTask});
+    };
+
+    // loading
+    if (isLoading) {
+      return (
+        <>
+        <View>
+          <CustomHeader title="Tasks" navigation={navigation} showProfilePicture={true} />
+        </View>
+        <View style={{alignItems:'center', marginTop:20}}>
+          <Text>Loading tasks...</Text>
+          <ActivityIndicator size="large" style={{marginTop:20}}/>
+        </View>
+        </>
+      )
+    }
+
+    // error
+    if (isError) {
+      return (
+        <>
+        <View>
+          <CustomHeader title="Tasks" navigation={navigation} showProfilePicture={true} />
+        </View>
+        <View style={{alignItems:'center', marginTop:20}}>
+          <Text>Something went wrong loading the tasks!</Text>
+        </View>
+        </>
+      )
+    }
+
     return (
       <>
         <View>
@@ -125,7 +132,7 @@ export default function TasksScreen({navigation}:any) {
                         price={item.price}
                         imageUrl={item.imageUrl}
                         description={item.description}
-                        onPress={() => navigation.navigate("ViewTaskScreen")}
+                        onPress={() => onTaskPress(item)}
                       />
                     )}
                   />
@@ -174,9 +181,14 @@ export default function TasksScreen({navigation}:any) {
                   price={item.price}
                   imageUrl={item.imageUrl}
                   description={item.description}
-                  onPress={() => navigation.navigate("ViewTaskScreen")}
+                  onPress={() => onTaskPress(item)}
                 />
               )}
+              ListEmptyComponent={
+                <View>
+                  <Text>No tasks found.</Text>
+                </View>
+              }
             />
           </View>
 

@@ -9,6 +9,7 @@ export const EventSchema = z.object({
     type: z.enum(EventTypes),
     status: z.enum(Status).optional(),
     location: z.string(),
+    peopleRequired: z.number(),
     dueDate: z.coerce.date().refine((d) => d > new Date(), {
         message: "Due date must be in the future!",
     }),
