@@ -19,6 +19,9 @@ export async function getReviewsGivenToUser(userID: Number) {
         where: { reviewAssigneeID: Number(userID) },
         select: {
             reviewID: true,
+            name: true,
+            comment: true,
+            rating: true,
         },
         orderBy: {
             created_at: "desc",
