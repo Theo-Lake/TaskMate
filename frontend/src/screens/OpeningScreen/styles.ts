@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
     },
     logo:{
         width:'70%',
-        height:'auto',
         aspectRatio:1,
         marginTop:40,
         marginLeft:40,
@@ -30,5 +29,9 @@ export const styles = StyleSheet.create({
     subTitle:{
         fontSize:30,
         paddingTop:30,
+    },
+    btn: {
+        flex: 1, 
+        marginHorizontal: 5,
     }
 });

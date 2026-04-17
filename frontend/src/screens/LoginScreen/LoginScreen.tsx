@@ -64,6 +64,15 @@ export default function LoginScreen({ navigation }: any) {
                         </Text>
                     }
                 </View>
+                <View style={{ alignItems: 'center', marginBottom: 20 }}>
+                    <Button 
+                        mode="text" 
+                        onPress={() => navigation.navigate('ForgotPasswordScreen')}
+                        labelStyle={{ color: '#3D8252', fontSize: 16 }}
+                    >
+                        Forgot Password
+                    </Button>
+                </View>
                 <View style={{marginHorizontal:100}}>
                     <Button icon="account-outline" mode="contained" onPress={handleLogin} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}
                     loading={isPending} disabled={isPending}

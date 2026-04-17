@@ -6,6 +6,8 @@ import { PaperProvider, MD3LightTheme } from "react-native-paper";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
+import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen/ForgotPasswordScreen';
+import ResetForgottenPasswordScreen from './src/screens/ResetForgottenPasswordScreen/ResetForgottenPasswordScreen';
 
 const queryClient = new QueryClient();
 
@@ -36,11 +38,9 @@ function OpeningTabs() {
 			<Stack.Screen name="Login" component={LoginScreen} />
 			<Stack.Screen name="Opening" component={OpeningScreen} />
 			<Stack.Screen name="SignUp" component={SignUpScreen} />
-			<Stack.Screen
-				name="EmailConfirmation"
-				component={EmailConfirmationScreen}
-				options={{ gestureEnabled: false }}
-			/>
+			<Stack.Screen name="EmailConfirmation" component={EmailConfirmationScreen} options={{ gestureEnabled: false }}/>
+			<Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
+			<Stack.Screen name="ResetForgottenPasswordScreen" component={ResetForgottenPasswordScreen} />
 		</Stack.Navigator>
 	);
 }
