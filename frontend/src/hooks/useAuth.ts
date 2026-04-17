@@ -1,23 +1,43 @@
-import {useMutation} from '@tanstack/react-query';
-import { verifyEmail } from '../api/auth';
-import client from '../api/client';
-import { storeTokens } from '../auth/auth';
-
-
-export const useVerifyEmail = () =>{
-    return useMutation({
-        mutationFn:({userId, token}:{userId: number;token:string}) =>
-            verifyEmail(userId,token),
-    });
-};
+import { useMutation } from "@tanstack/react-query";
+import {
+	login,
+	logout,
+	verifyEmail,
+	requestPasswordReset,
+	resetPassword,
+} from "../api/auth";
+import { signOut } from "../auth/authState";
 
 export const useLogin = () => {
-    return useMutation({
-        mutationFn: async (credentials) => {
-            const res = await client.post("/auth/login", credentials);
-            const { accessToken, refreshToken } = res.data;
-            await storeTokens(accessToken, refreshToken);
-            return res.data;
-        }
-    })
-}
+	return useMutation({
+		mutationFn: (credentials: { password: string; email?: string; username?: string }) =>
+			login(credentials),
+	});
+};
+
+export const useLogout = () => {
+	return useMutation({
+		mutationFn: logout,
+		onSuccess: () => signOut(),
+	});
+};
+
+export const useVerifyEmail = () => {
+	return useMutation({
+		mutationFn: ({ userId, token }: { userId: number; token: string }) =>
+			verifyEmail(userId, token),
+	});
+};
+
+export const useRequestPasswordReset = () => {
+	return useMutation({
+		mutationFn: (email: string) => requestPasswordReset(email),
+	});
+};
+
+export const useResetPassword = () => {
+	return useMutation({
+		mutationFn: ({ token, newPassword }: { token: string; newPassword: string }) =>
+			resetPassword(token, newPassword),
+	});
+};

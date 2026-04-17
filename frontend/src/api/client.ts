@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getAccessToken, getRefreshToken, storeTokens, clearTokens } from "../auth/auth";
+import { signOut } from "../auth/authState";
 
 export const API_URL = process.env.EXPO_PUBLIC_API_URL!;
 
@@ -34,7 +35,7 @@ client.interceptors.response.use(
                 return client(original); // retry the original request with the new token
             } catch {
                 await clearTokens();
-                // TODO: redirect user to login screen (wire up navigation here later)
+                signOut();
                 return Promise.reject(error);
             }
         }
