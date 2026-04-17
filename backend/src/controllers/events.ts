@@ -55,6 +55,55 @@ async function getEventsByPublisherID(req: Request, res: Response) {
     }
 }
 
+async function getAllEventAssignments(req: Request, res: Response) {
+    try {
+        const eventAssignments = await eventServices.getAllEventAssignments();
+        console.log("Events Assignment GET ALL accepted.");
+        res.status(200).json({ eventAssignments: eventAssignments });
+    } catch (error) {
+        console.log(
+            `An error occured while trying to GET ALL event Assignments: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
+
+async function getEventAssignmentByEventID(req: Request, res: Response) {
+    try {
+        const eventID = Number(req.params.eventId);
+        const eventAssignment =
+            await eventServices.getEventAssignmentsByEventID(eventID);
+        console.log("Event assignment GET by eventID accepted.");
+        res.status(200).json({ eventAssignment: eventAssignment });
+    } catch (error) {
+        console.log(
+            `An error occured while trying to GET event Assignments by eventID: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
+
+async function getEventAssignmentByUserID(req: Request, res: Response) {
+    try {
+        const userID = Number(req.params.userId);
+        const eventAssignment =
+            await eventServices.getEventAssignmentsByUserID(userID);
+        console.log("Event Assignments by userID GET accepted.");
+        res.status(200).json({ eventAssignment: eventAssignment });
+    } catch (error) {
+        console.log(
+            `An error occured while trying to get event Assignments by userID: ${error}`
+        );
+        res.status(500).json({
+            error: error instanceof Error ? error.message : error,
+        });
+    }
+}
+
 async function createEvent(req: Request, res: Response) {
     try {
         const publisherID = req.user!.userID;
@@ -260,6 +309,9 @@ export const eventController = {
     getAllEvents,
     getEventByEventID,
     getEventsByPublisherID,
+    getAllEventAssignments,
+    getEventAssignmentByEventID,
+    getEventAssignmentByUserID,
     createEvent,
     deleteEvent,
     updateEvent,

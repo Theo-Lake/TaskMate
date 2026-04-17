@@ -11,7 +11,9 @@ export const ReviewSchema = z.object({
     comment: z
         .string()
         .max(500, "Description is too long!"),
-    rating: z.enum(Rating),
+    rating: z.enum(Object.values(Rating) as [string, ...string[]]),
 });
+
+export const ReviewUpdateSchema = ReviewSchema.partial();
 
 export type Review = z.infer<typeof ReviewSchema>;

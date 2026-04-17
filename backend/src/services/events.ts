@@ -22,6 +22,26 @@ async function getEventsByPublisherID(publisherID: Number) {
     });
 }
 
+async function getAllEventAssignments() {
+    return await db.eventAssignment.findMany();
+}
+
+async function getEventAssignmentsByUserID(userID: Number) {
+    return await db.eventAssignment.findMany({
+        where: {
+            assigneeID: Number(userID),
+        },
+    });
+}
+
+async function getEventAssignmentsByEventID(eventID: Number) {
+    return await db.eventAssignment.findMany({
+        where: {
+            eventID: Number(eventID),
+        },
+    });
+}
+
 async function createEvent(publisherID: Number, body: JsonObject) {
     let {
         name,
@@ -245,6 +265,9 @@ export const eventServices = {
     getAllEvents,
     getEventByEventID,
     getEventsByPublisherID,
+    getAllEventAssignments,
+    getEventAssignmentsByEventID,
+    getEventAssignmentsByUserID,
     createEvent,
     deleteEvent,
     updateEvent,
