@@ -44,5 +44,10 @@ export const styles = StyleSheet.create({
         marginBottom: 10,
         overflow: 'hidden',
     },
+    activityIndicator:{
+        flex: 1,
+        justifyContent: 'center', 
+        alignItems: 'center'
+    }
 
 });
