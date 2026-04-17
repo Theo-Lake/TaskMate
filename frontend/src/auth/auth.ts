@@ -3,9 +3,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
 
-export async function storeTokens(accessToken: string, refreshToken: string) {
+export async function storeTokens(accessToken: string, refreshToken: string, userId?: number) {
 	await AsyncStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
 	await AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+	if (userId !== undefined) {
+		await AsyncStorage.setItem("userId", String(userId));
+	}
 }
 
 export async function getAccessToken() {
@@ -19,6 +22,7 @@ export async function getRefreshToken() {
 export async function clearTokens() {
 	await AsyncStorage.removeItem(ACCESS_TOKEN_KEY);
 	await AsyncStorage.removeItem(REFRESH_TOKEN_KEY);
+	await AsyncStorage.removeItem("userId");
 }
 
 // // Store both tokens after login/verify email
