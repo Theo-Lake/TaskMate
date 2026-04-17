@@ -2,6 +2,14 @@ import { db } from "../db";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
 import { Rating } from "../generated/prisma/enums";
 
+export async function getAllReviews() {
+    return await db.reviews.findMany({
+        orderBy: {
+            created_at: "desc",
+        },
+    });
+}
+
 export async function getReviewsMadeByUser(userID: Number) {
     return await db.reviews.findMany({
         where: { reviewPublisherID: Number(userID) },
@@ -115,6 +123,7 @@ export async function getUserAverageRating(
 }
 
 export const reviewServices = {
+    getAllReviews,
     getReviewsMadeByUser,
     getReviewsGivenToUser,
     getReviewById,

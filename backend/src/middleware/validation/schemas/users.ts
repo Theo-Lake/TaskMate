@@ -41,7 +41,7 @@ export const UserSchema = z.object({
             /[^a-zA-Z0-9]/,
             "Password must contain at least one special character, i.e. !-?.'"
         ),
-    occupation: z.string(),
+    occupation: z.string().optional(),
     profilePicture: z.string().optional(),
 });
 

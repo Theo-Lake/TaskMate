@@ -32,14 +32,14 @@ router.post(
 router.delete("/:hashtagId", auth.withAuth, hashtagController.deleteHashtag);
 
 // ADD hashtag
-router.put(
+router.patch(
     "/:taskId/add/:hashtagId",
     auth.withAuth,
     hashtagController.addHashtagToTask
 );
 
 // REMOVE hashtag
-router.put(
+router.patch(
     "/:taskId/remove/:hashtagId",
     auth.withAuth,
     hashtagController.removeHashtagFromTask

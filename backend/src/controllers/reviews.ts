@@ -2,6 +2,18 @@ import { Request, Response } from "express";
 import { reviewServices } from "../services/reviews";
 import { userServices } from "../services/users";
 
+async function getAllReviews(_req: Request, res: Response) {
+    try {
+        const reviews = await reviewServices.getAllReviews();
+
+        console.log("Review GET all request accepted.");
+        res.status(200).json(reviews);
+    } catch (error) {
+        console.log(`An error occured while trying to get all reviews: ${error}`);
+        res.status(500).json({ error: String(error) });
+    }
+}
+
 async function getReviewsMadeByUser(req: Request, res: Response) {
     try {
         const userID = Number(req.params.userId);
@@ -154,6 +166,7 @@ async function getUserRating(req: Request, res: Response) {
 }
 
 export const reviewController = {
+    getAllReviews,
     getReviewsMadeByUser,
     getReviewsGivenToUser,
     getReviewById,

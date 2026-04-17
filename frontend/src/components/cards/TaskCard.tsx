@@ -8,9 +8,9 @@ type TaskCardProps = {
   // need avatar to link to user profile
   title: string;
   price: string;
-  imageUrl: ImageSourcePropType;
+  // imageUrl: ImageSourcePropType;
   // uri image from server
-  // imageUrl: string;
+  imageUrl: string;
   description?: string;
   onPress?: () => void;
 };
@@ -49,13 +49,13 @@ export default function TaskCard({
         </View>
 
         <Text variant="titleMedium" style={styles.price}>
-            {price}
+            £{price}
         </Text>
 
         {/* use uri for server hosted images */}
-        {/* <Image source={{ uri: imageUrl }} style={styles.image} /> */}
+        <Image source={{ uri: imageUrl }} style={styles.image} />
 
-        <Image source={imageUrl} style={styles.image} />
+        {/* <Image source={imageUrl} style={styles.image} /> */}
       
       </View>
     </Card>
