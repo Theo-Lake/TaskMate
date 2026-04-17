@@ -1,7 +1,7 @@
 import express from "express";
 import { reviewController } from "../controllers/reviews";
 import { validate } from "../middleware/validation/validate";
-import { ReviewSchema } from "../middleware/validation/schemas/reviews";
+import { ReviewSchema, ReviewUpdateSchema } from "../middleware/validation/schemas/reviews";
 import { auth } from "../middleware/authentication/auth";
 const router = express.Router();
 
@@ -29,10 +29,10 @@ router.post(
 );
 
 // REVIEW PUT edit review ENDPOINT
-router.put(
+router.patch(
     "/:reviewId",
     auth.withAuth,
-    validate(ReviewSchema),
+    validate(ReviewUpdateSchema),
     reviewController.updateReview
 );
 
