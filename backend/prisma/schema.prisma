@@ -53,7 +53,7 @@ model Task {
   completedDate  DateTime?
   dueDate        DateTime
   description    String
-  images         String?
+  images         String[]
 
   created_at DateTime @default(now()) // auto-set when row is created
   updated_at DateTime @updatedAt // auto-update when row is changed
@@ -77,7 +77,7 @@ model Event {
   completedDate  DateTime?
   dueDate        DateTime
   description    String
-  images         String?
+  images         String[]
 
   created_at DateTime @default(now()) // auto-set when row is created
   updated_at DateTime @updatedAt // auto-update when row is changed
