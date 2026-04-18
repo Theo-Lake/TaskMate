@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { getRefreshToken, storeTokens, clearTokens } from "../auth/auth";
 import { registerSignOut } from "../auth/authState";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 type AuthContextType = {
 	isAuthenticated: boolean;
-	login: (accessToken: string, refreshToken: string) => Promise<void>;
+	login: (accessToken: string, refreshToken: string, userId: number) => Promise<void>;
 	logout: () => Promise<void>;
 };
 
@@ -25,8 +24,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			setIsAuthenticated(false)	
 		});
 	}, []);
-	const login = async(accessToken: string, refreshToken: string  )=> {
-		await storeTokens(accessToken, refreshToken)
+	const login = async(accessToken: string, refreshToken: string, userId: number)=> {
+		await storeTokens(accessToken, refreshToken, userId)
 		setIsAuthenticated(true);
 	}
 	const logout = async()=> {

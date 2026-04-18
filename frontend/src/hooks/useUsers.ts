@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
 	getAllUsers,
 	getUserById,
@@ -6,6 +7,17 @@ import {
 	updateUser,
 	deleteUser,
 } from "../api/users";
+
+export const useCurrentUser = () => {
+	return useQuery({
+		queryKey: ["myProfile"],
+		queryFn: async () => {
+			const userId = await AsyncStorage.getItem("userId");
+			if (!userId) throw new Error("ID is null. relogin");
+			return getUserById(userId);
+		},
+	});
+};
 
 //gets al users and saves in cache
 export const useAllUsers = () => {
@@ -23,7 +35,7 @@ export const useUser = (userId: string) => {
 	});
 };
 
-//registeres user
+//registers user
 export const useCreateUser = () => {
 	return useMutation({
 		mutationFn: createUser,
@@ -36,6 +48,7 @@ export const useUpdateUser = () => {
 		mutationFn: (updateData: any) => updateUser(updateData),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["users"] });
+			queryClient.invalidateQueries({ queryKey: ["myProfile"] });
 		},
 	});
 };
