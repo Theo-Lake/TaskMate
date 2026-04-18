@@ -8,9 +8,10 @@ import {
 	deleteUser,
 } from "../api/users";
 
+//Gets current user
 export const useCurrentUser = () => {
 	return useQuery({
-		queryKey: ["myProfile"],
+		queryKey: ["myUser"],
 		queryFn: async () => {
 			const userId = await AsyncStorage.getItem("userId");
 			if (!userId) throw new Error("ID is null. relogin");
@@ -48,7 +49,7 @@ export const useUpdateUser = () => {
 		mutationFn: (updateData: any) => updateUser(updateData),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["users"] });
-			queryClient.invalidateQueries({ queryKey: ["myProfile"] });
+			queryClient.invalidateQueries({ queryKey: ["myUser"] });
 		},
 	});
 };
