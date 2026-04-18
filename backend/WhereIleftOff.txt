@@ -1,5 +1,5 @@
 Theo:
-    //TODO limit rating
+    //TODO implement Filtering for bad words and description with AI/or with just a word filter.
 
 
 
