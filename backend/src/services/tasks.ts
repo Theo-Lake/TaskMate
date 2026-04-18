@@ -69,7 +69,7 @@ async function createTask(publisherID: Number, body: JsonObject) {
             peopleRequired: peopleRequired as number,
             dueDate: new Date(dueDate as string),
             description: description as string,
-            images: images as string | undefined,
+            images: images as string[] | undefined,
             hashtags: hashtags
                 ? {
                       connectOrCreate: (hashtags as string[]).map((tag) => ({
@@ -233,7 +233,7 @@ async function updateTask(taskID: Number, body: JsonObject) {
                 ? new Date(completedDate as string)
                 : undefined,
             description: description as string | undefined,
-            images: images as string | undefined,
+            images: images as string[] | undefined,
             location: location as string | undefined,
             peopleRequired: peopleRequired as number | undefined,
             hashtags: hashtags
