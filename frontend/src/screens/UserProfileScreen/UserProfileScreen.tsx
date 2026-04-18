@@ -58,7 +58,7 @@ export default function UserProfileScreen({navigation}:any) {
     //getting user:
     const { data: user, isLoading:profileLoading, isError, error } = useProfile();
     const {data:reviews, isLoading: reviewsLoading} = useMyReceivedReviews();
-    console.log('fuck me',reviews)
+    
 
     //loading indicatior while fetching the data for the server:
     if (profileLoading){
@@ -90,8 +90,8 @@ export default function UserProfileScreen({navigation}:any) {
                 </View>
                 <View style={styles.profileInfo}>
                     {/*<TextInput mode="flat" underlineColor="tran" value="use" editable={false} style={styles.textBox}/>*/}
-                    <Text style={{fontSize:20,marginBottom:30}}>{name}</Text>
-                    <Text style={{fontSize:20,marginBottom:30}}>@{user?.username}</Text>
+                    <Text style={{fontSize:25,marginBottom:10}}>{name}</Text>
+                    <Text style={{fontSize:15,marginBottom:10}}>@{user?.username}</Text>
 
                     <Text style={{fontSize:20}}>Reputation:</Text>
                     <StarRatingGroup rating={reputation}/>
