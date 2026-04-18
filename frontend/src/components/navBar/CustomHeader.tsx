@@ -2,7 +2,7 @@ import React, {memo} from "react";
 import {Appbar, Avatar} from 'react-native-paper';
 import CustomerAvatar from "../avatars/CustomerAvatars";
 import { TouchableOpacity } from "react-native";
-
+import { useProfile } from "../../hooks/useProfile";
 interface CustomHeaderProps{
     title: string;
     navigation: any;
@@ -10,10 +10,10 @@ interface CustomHeaderProps{
     showProfilePicture?: boolean;
     onBackPress?: () => void;
 }
-const renderIcon = () => (
-    <Avatar.Icon size={30} icon="account" style={{ backgroundColor: '#ffffff20' }} color="white" />
-);
+
 function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showProfilePicture=false}:CustomHeaderProps){
+
+    const {data:user} = useProfile();
     return(
         
         <Appbar.Header elevated={true}  style={{backgroundColor:'#3D8252'}}>
@@ -35,7 +35,7 @@ function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showPr
 
         {showProfilePicture && (
             <TouchableOpacity onPress={() => navigation.navigate('MyTasksTab', { screen: 'UserProfileScreen' })}>
-                <CustomerAvatar size={40} user={null}/>
+                <CustomerAvatar size={40} user={user}/>
             </TouchableOpacity>
             
             
