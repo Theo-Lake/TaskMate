@@ -15,11 +15,11 @@ export const useMyReceivedReviews = () => {
     return useQuery({
         queryKey:["myReviews"],
         queryFn: async()=>{
-            const myID = await AsyncStorage.getItem('myID');
-            if (!myID){
+            const userId = await AsyncStorage.getItem('userId');
+            if (!userId){
                 throw new Error('ID is null. relogin')
             }
-            const res = await client.get(`/reviews/received/${myID}`);
+            const res = await client.get(`/reviews/received/${userId}`);
             const rawRew = res.data
             return rawRew.map((review:any) =>({
                 ...review,

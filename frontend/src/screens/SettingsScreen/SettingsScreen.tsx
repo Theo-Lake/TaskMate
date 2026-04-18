@@ -8,14 +8,13 @@ import CustomerAvatar from "../../components/avatars/CustomerAvatars";
 import {styles} from "./styles"
 
 //logic hooks
-import { useProfile } from "../../hooks/useProfile";
-import { useUpdateProfile } from "../../hooks/useProfile";
+import { useCurrentUser, useUpdateUser } from "../../hooks/useUsers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../context/AuthContext";
 
 export default function SettingsScreen({navigation}:any) {
-    const {data: user} = useProfile()
-    const {mutate: UpdateProfile, isPending} = useUpdateProfile();
+    const {data: user} = useCurrentUser()
+    const {mutate: UpdateProfile, isPending} = useUpdateUser();
 
     const [FirstNameText, setFirstNameText] = React.useState("");
     const [SecondNameText, setSecondNameText] = React.useState("");

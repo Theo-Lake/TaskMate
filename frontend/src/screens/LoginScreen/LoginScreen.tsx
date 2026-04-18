@@ -7,7 +7,6 @@ import Logo from '../../../assets/img/logoNoText.png';
 import CustomHeader from "../../components/navBar/CustomHeader";
 import { useLogin } from "../../hooks/useAuth";
 import { useAuth } from "../../context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { validate } from "../../validation/validate";
 import { LoginSchema } from "../../validation/schemas/users";
@@ -46,8 +45,7 @@ export default function LoginScreen({ navigation }: any) {
             {
                 onSuccess: async (data) =>{
                     try{
-                        await login(data.accessToken, data.refreshToken);
-                        await AsyncStorage.setItem('myID', String(data.userID));
+                        await login(data.accessToken, data.refreshToken, data.userID);
                     } catch (e){
                         setErrorMsg("Failed to save login")
                     }
