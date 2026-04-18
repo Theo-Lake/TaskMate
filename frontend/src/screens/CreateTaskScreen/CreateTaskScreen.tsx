@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import {  Text, useTheme, TextInput, Checkbox,  Button, IconButton } from "react-native-paper";
+import {  Text, useTheme, TextInput, Checkbox,  Button, IconButton, Menu } from "react-native-paper";
 import {styles} from "./styles"
 import * as ImagePicker from 'expo-image-picker'
 import CustomHeader from "../../components/navBar/CustomHeader";
@@ -17,13 +17,16 @@ export default function CreateTaskScreen({navigation}:any) {
     const [taskDesc, setTaskDesc] = React.useState("");
     const [price, setPrice] = React.useState("");
     const [assignees, setAssignees] = useState("");
-    const [taskType, setTaskType] = useState("other");
+    const [taskType, setTaskType] = useState("");
+    const [taskTypeMenuVisible, setTaskTypeMenuVisible] = useState(false);
     const [peopleRequired, setPeopleRequired] = useState("");
     //u
     const [date, setDate] = useState("");
 
     //image loading:
     const [image, setImage] = useState<string | null>(null);
+    const [imageUri, setImageUri] = useState<string | null>(null);
+    const [imageBase64, setImageBase64] = useState<string | null>(null);
 
     // errors
     const [errors, setErrors] = useState<any>({});
@@ -33,25 +36,55 @@ export default function CreateTaskScreen({navigation}:any) {
 
     const { mutate: createTask, isPending } = useCreateTask();
 
+    const handleSelectTaskType = (type: string) => {
+        setTaskType(type);
+        setTaskTypeMenuVisible(false);
+    };
+
+    // nicer looking text for category picker
+    const getTaskTypeLabel = (type: string) => {
+        switch (type) {
+            case "tutoring":
+                return "Tutoring";
+            case "delivery":
+                return "Delivery";
+            case "freelance":
+                return "Freelance";
+            case "moving":
+                return "Moving";
+            case "tech_support":
+                return "Tech support";
+            case "general":
+                return "General";
+            case "other":
+                return "Other";
+            default:
+                return "Category";
+        }
+    };
+
     //Images loading:
     const pickImageFromPhone = async() =>{
         let imagRes = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
             aspect:[4,3],
-            quality:1
+            quality:0.3,
+            base64: true,
         });
         if (!imagRes.canceled){
-            setImage(imagRes.assets[0].uri)// saves way(uri) to the image 
+            setImageUri(imagRes.assets[0].uri)// saves way(uri) to the image 
+            const formattedImgBase64 = `data:image/jpeg;base64,${imagRes.assets[0].base64}`;
+            setImageBase64(formattedImgBase64);
         }
     }
     let imageContent;
 
-    if (image) {
+    if (imageUri && imageUri?.trim() !== "") {
         imageContent = (
             <View style={styles.imagePrevContain}>
-                <Image source={{uri: image}} style={styles.img}/>
-                <Button mode="text"  onPress={() => setImage(null)} textColor="red" icon="delete" >
+                <Image source={{uri: imageUri}} style={styles.img}/>
+                <Button mode="text"  onPress={() => {setImageUri(null); setImageBase64(null);}} textColor="red" icon="delete" >
                     Delete image
                 </Button>
             </View>
@@ -89,13 +122,15 @@ export default function CreateTaskScreen({navigation}:any) {
 
         const parsedDueDate = timeLimit ? parseDueDate(date) : getFallbackDate();
 
+        const imagesArray = imageBase64 ? [imageBase64] : [];
+
         const formData = {
             name: taskTitle,
             description: taskDesc,
             payment: Number(price),
             dueDate: parsedDueDate,
             type: taskType,
-            images: ["https://picsum.photos/id/237/200"],
+            images: imagesArray,
             location: location,
             peopleRequired: Number(peopleRequired),
         };
@@ -115,7 +150,8 @@ export default function CreateTaskScreen({navigation}:any) {
             ...result.data,
             assignees,
             location,
-            peopleRequired: Number(peopleRequired)
+            peopleRequired: Number(peopleRequired),
+            images: imagesArray,
         },
         {
             onSuccess: () => {
@@ -175,9 +211,46 @@ export default function CreateTaskScreen({navigation}:any) {
                     <Text variant="labelLarge" style={styles.title}>Upload task image:</Text>
                     
                     {imageContent}
-                    <TextInput mode="outlined" label="Location:" value={location} onChangeText={text => setLocation(text)} style={styles.textBox} error={!!errors.location}>{errors.location && (<Text style={{ color: "red"}}>{errors.location[0]}</Text>)}</TextInput>
-                    <TextInput mode="outlined" label="Number of People:" value={peopleRequired} onChangeText={text => setPeopleRequired(text)} style={styles.textBox} error={!!errors.peopleRequired}>{errors.peopleRequired && (<Text style={{ color: "red"}}>{errors.peopleRequired[0]}</Text>)}</TextInput>
-                    <TextInput mode='outlined' label="Assignees:" value={assignees} onChangeText={text => setAssignees(text)} style={styles.textBox} left={<TextInput.Icon icon="account-outline"/>} error={!!errors.assignees}>{errors.assignees && (<Text style={{ color: "red"}}>{errors.assignees[0]}</Text>)}</TextInput>
+                    <TextInput 
+                        mode="outlined" 
+                        label="Location:" 
+                        value={location} 
+                        onChangeText={text => setLocation(text)} 
+                        style={styles.textBox} 
+                        error={!!errors.location}
+                    />
+                    {errors.location && (<Text style={{ color: "red"}}>{errors.location[0]}</Text>)}
+                    <TextInput 
+                        mode="outlined" 
+                        label="Number of People:" 
+                        value={peopleRequired} 
+                        onChangeText={text => setPeopleRequired(text)} 
+                        style={styles.textBox} 
+                        error={!!errors.peopleRequired}
+                    />
+                    {errors.peopleRequired && (<Text style={{ color: "red"}}>{errors.peopleRequired[0]}</Text>)}
+                    
+                    <Menu visible={taskTypeMenuVisible} onDismiss={() => setTaskTypeMenuVisible(false)} anchor={<Button mode="outlined" onPress={() => setTaskTypeMenuVisible(true)} icon="chevron-down" style={styles.categoryBox}>{getTaskTypeLabel(taskType)}</Button>}>
+                        <Menu.Item title="Tutoring" onPress={() => handleSelectTaskType("tutoring")}/>
+                        <Menu.Item title="Delivery" onPress={() => handleSelectTaskType("delivery")}/>
+                        <Menu.Item title="Freelance" onPress={() => handleSelectTaskType("freelance")}/>
+                        <Menu.Item title="Moving" onPress={() => handleSelectTaskType("moving")}/>
+                        <Menu.Item title="Tech support" onPress={() => handleSelectTaskType("tech_support")}/>
+                        <Menu.Item title="General" onPress={() => handleSelectTaskType("general")}/>
+                        <Menu.Item title="Other" onPress={() => handleSelectTaskType("other")}/>
+                    </Menu>
+                    {errors.type && <Text style={{color:"red"}}>{errors.type[0]}</Text>}
+                    
+                    <TextInput 
+                        mode='outlined' 
+                        label="Assignees:" 
+                        value={assignees} 
+                        onChangeText={text => setAssignees(text)} 
+                        style={styles.textBox} 
+                        left={<TextInput.Icon icon="account-outline"/>} 
+                        error={!!errors.assignees}
+                    />
+                    {errors.assignees && (<Text style={{ color: "red"}}>{errors.assignees[0]}</Text>)}
                     <View style={{alignItems:"center"}}>
                         <Button icon="pencil" mode="contained" onPress={handlePostTask} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10, width:'100%'}} disabled={isPending} loading={isPending}>{isPending ? "Submitting..." : "Post Task"}</Button>
                     </View>
