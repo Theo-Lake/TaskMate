@@ -52,5 +52,11 @@ export const styles = StyleSheet.create({
     },
     imagePrevContain:{
         
+    },
+    bottomButtons:{
+        flexDirection:'row',
+        gap:5,
+        marginTop:15,
+        alignSelf: 'center'
     }
 });

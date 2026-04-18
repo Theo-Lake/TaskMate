@@ -10,7 +10,8 @@ import {styles} from "./styles"
 //logic hooks
 import { useProfile } from "../../hooks/useProfile";
 import { useUpdateProfile } from "../../hooks/useProfile";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "../../context/AuthContext";
 
 export default function SettingsScreen({navigation}:any) {
     const {data: user} = useProfile()
@@ -18,6 +19,7 @@ export default function SettingsScreen({navigation}:any) {
 
     const [FirstNameText, setFirstNameText] = React.useState("");
     const [SecondNameText, setSecondNameText] = React.useState("");
+    const {logout} = useAuth()
     //image loading:
 
     const [imageUri, setImageUri] = useState<string | null>(null);
@@ -96,6 +98,28 @@ export default function SettingsScreen({navigation}:any) {
             }
         })
      }
+
+     const handleLogout= async () => {
+        Alert.alert(
+            "Log out",
+            "Do you want to log out?",
+            [
+                {text: "Cancel", style:'cancel'},
+                {
+                    text:'Log Out', 
+                    style: "destructive",
+                    onPress: async()=>{
+                        try{
+                            await AsyncStorage.removeItem('myID')
+                            await logout();
+                        } catch (error){
+                            Alert.alert("Errorr", "Failed to log out")
+                        }
+                    }
+                }
+            ]
+        )
+     }
     return (
         <View style={{flex:1}}>
             <CustomHeader title="Settings" navigation={navigation} showBackArrow={true} showProfilePicture={false} />
@@ -121,6 +145,14 @@ export default function SettingsScreen({navigation}:any) {
 
                     <View style={{marginTop:'auto', marginBottom:30}}>
                         <Button icon="content-save-outline" mode="contained" onPress={handleSaveChanges} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Save changes</Button>
+                        <View style={styles.bottomButtons}>
+                            <View style={{flex:1}}>
+                                <Button icon="logout" mode="contained" onPress={handleLogout} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:16, lineHeight:25}} contentStyle={{marginVertical:10}}>Log out</Button>
+                            </View>
+                            <View style={{flex:1}}>
+                                <Button icon="lock-reset" mode="contained" onPress={() => console.log(" 423")} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:16, lineHeight:25}} contentStyle={{marginVertical:10}}>Reset password</Button>
+                            </View>
+                        </View>
                     </View>
                 </View>
             </ScrollView>
