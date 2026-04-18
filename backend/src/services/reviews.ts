@@ -13,9 +13,6 @@ export async function getAllReviews() {
 export async function getReviewsMadeByUser(userID: Number) {
     return await db.reviews.findMany({
         where: { reviewPublisherID: Number(userID) },
-        select: {
-            reviewID: true,
-        },
         orderBy: {
             created_at: "desc",
         },
@@ -25,12 +22,6 @@ export async function getReviewsMadeByUser(userID: Number) {
 export async function getReviewsGivenToUser(userID: Number) {
     return await db.reviews.findMany({
         where: { reviewAssigneeID: Number(userID) },
-        select: {
-            reviewID: true,
-            name: true,
-            comment: true,
-            rating: true,
-        },
         orderBy: {
             created_at: "desc",
         },
