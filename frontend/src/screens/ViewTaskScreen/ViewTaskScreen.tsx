@@ -12,17 +12,6 @@ import PosterCard from "../../components/cards/PosterCard";
 import { useTask } from "../../hooks/useTasks";
 import { useUser } from "../../hooks/useUsers";
 
-const task = {
-    id: '1',
-    title: 'Study buddy',
-    price: '10',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'need study buddy for 2 hours example example example example example example example example example example example example example',
-    poster: 'Joe Doe',
-    posterReputation:3.5,
-    date: '2020-12-11T14:30:00.000Z',
-    amountOfAssignees: 6
-  }
 const assignees=[
     {
         id:'1',
@@ -56,6 +45,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
 
     const publisherId = task?.publisherID ?? null;
     const { data: publisherProfile } = useUser(publisherId);
+    const publisher = publisherProfile?.users.user;
 
     if (isLoading) {
         return (
@@ -96,8 +86,8 @@ export default function ViewTaskScreen({navigation, route}:any) {
                     <Text variant="bodyLarge" style={{ marginTop:7, marginBottom:7, textAlign:"left", alignSelf: 'flex-start'}}>Posted by:</Text>
                     <View style={{alignItems:'flex-start',width:'100%'}}>
                         <PosterCard 
-                            title={publisherProfile?.username ?? "Unknown user"}
-                            review={publisherProfile?.rating ?? 0}
+                            title={publisher?.username ?? "Unknown user"}
+                            review={publisher?.rating ?? 0}
                             />
                     </View>
                     <View style={styles.dateStringContainer}>

@@ -58,5 +58,11 @@ export  const styles = StyleSheet.create({
         width:200,
         justifyContent: 'center', 
         alignItems: 'center'
+    },
+    categoryBox:{
+        borderRadius:3,
+        marginBottom:10,
+        backgroundColor:"#fffbff",
+        color:"#464146",
     }
 });
