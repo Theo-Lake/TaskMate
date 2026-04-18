@@ -26,6 +26,7 @@ export const styles = StyleSheet.create({
 
     },
     profileInfo:{
+        marginLeft:10,
         justifyContent:"center",
     },
     settingsButton:{
