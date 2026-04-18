@@ -1,15 +1,17 @@
 import React from "react";
 import { View } from "react-native";
 import { Avatar, useTheme } from "react-native-paper";
-//TODO: deal with user object
+//TODO SOLVED: deal with user object
 export default function CustomerAvatar({user, size=40}){
     const theme = useTheme();
+    const pic = user?.profilePicture;
 
-    if (user?.photoUrl){
+    const hasValidPicture = pic && typeof pic === 'string' && pic.trim() !== "" && pic !== 'null';
+    if (hasValidPicture){
         return(
             <Avatar.Image
                 size={size}
-                source={{uri: user.photoUrl}}/>
+                source={{uri: pic}}/>
         )
     }
     return(
