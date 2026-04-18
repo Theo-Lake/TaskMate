@@ -20,8 +20,7 @@ export const useMyReceivedReviews = () => {
                 throw new Error('ID is null. relogin')
             }
             const res = await client.get(`/reviews/received/${myID}`);
-            console.log(res.data)
-            const rawRew = res.data.reviews
+            const rawRew = res.data
             return rawRew.map((review:any) =>({
                 ...review,
                 rating: ratingToNUm[review.rating] || Number(review.rating) || 0
