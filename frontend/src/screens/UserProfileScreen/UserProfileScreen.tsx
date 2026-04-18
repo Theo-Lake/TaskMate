@@ -8,7 +8,7 @@ import StarRatingGroup from "../../components/StarRatingGroup/StarRatingGroup"
 import { ScrollView } from "react-native";
 import ReviewCard from "../../components/cards/ReviewCard";
 
-import { useProfile } from "../../hooks/useProfile";
+import { useCurrentUser } from "../../hooks/useUsers";
 import { useMyReceivedReviews } from "../../hooks/useReviews";
 // hardcoded rewiews. Use for testing. in the future we'll grab from the server
 /*
@@ -56,7 +56,7 @@ export default function UserProfileScreen({navigation}:any) {
     
 
     //getting user:
-    const { data: user, isLoading:profileLoading, isError, error } = useProfile();
+    const { data: user, isLoading:profileLoading, isError, error } = useCurrentUser();
     const {data:reviews, isLoading: reviewsLoading} = useMyReceivedReviews();
     
 

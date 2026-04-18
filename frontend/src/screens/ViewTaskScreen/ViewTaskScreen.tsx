@@ -10,7 +10,7 @@ import { FAB } from 'react-native-paper';
 import PosterCard from "../../components/cards/PosterCard";
 
 import { useTask } from "../../hooks/useTasks";
-import { useProfile } from "../../hooks/useProfile";
+import { useUser } from "../../hooks/useUsers";
 
 const task = {
     id: '1',
@@ -55,7 +55,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
     const task = passedTask ?? fetchedTask;
 
     const publisherId = task?.publisherID ?? null;
-    const { data: publisherProfile } = useProfile(publisherId);
+    const { data: publisherProfile } = useUser(publisherId);
 
     if (isLoading) {
         return (

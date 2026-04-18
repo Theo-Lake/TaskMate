@@ -2,7 +2,7 @@ import React, {memo} from "react";
 import {Appbar, Avatar} from 'react-native-paper';
 import CustomerAvatar from "../avatars/CustomerAvatars";
 import { TouchableOpacity } from "react-native";
-import { useProfile } from "../../hooks/useProfile";
+import { useCurrentUser } from "../../hooks/useUsers";
 interface CustomHeaderProps{
     title: string;
     navigation: any;
@@ -13,7 +13,7 @@ interface CustomHeaderProps{
 
 function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showProfilePicture=false}:CustomHeaderProps){
 
-    const {data:user} = useProfile();
+    const {data:user} = useCurrentUser();
     return(
         
         <Appbar.Header elevated={true}  style={{backgroundColor:'#3D8252'}}>
