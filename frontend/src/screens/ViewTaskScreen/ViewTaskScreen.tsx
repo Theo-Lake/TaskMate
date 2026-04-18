@@ -47,6 +47,28 @@ export default function ViewTaskScreen({navigation, route}:any) {
     const { data: publisherProfile } = useUser(publisherId);
     const publisher = publisherProfile?.users.user;
 
+    // nicer looking text for category
+    const getTaskTypeLabel = (type: string) => {
+        switch (type) {
+            case "tutoring":
+                return "Tutoring";
+            case "delivery":
+                return "Delivery";
+            case "freelance":
+                return "Freelance";
+            case "moving":
+                return "Moving";
+            case "tech_support":
+                return "Tech support";
+            case "general":
+                return "General";
+            case "other":
+                return "Other";
+            default:
+                return "Category";
+        }
+    };
+
     if (isLoading) {
         return (
             <View style={{flex:1}}>
@@ -104,6 +126,14 @@ export default function ViewTaskScreen({navigation, route}:any) {
                             style={{margin:0,padding:0, width:20}}/>
                         <Text style={styles.dateStringText}>
                             {task.location}
+                        </Text>
+                    </View>
+                    <View style={styles.dateStringContainer}>
+                        <IconButton icon="map-marker-outline" size={20}
+                            iconColor="#49454F"
+                            style={{margin:0,padding:0, width:20}}/>
+                        <Text style={styles.dateStringText}>
+                            {getTaskTypeLabel(task.type)}
                         </Text>
                     </View>
                     <View style={styles.rewardContainer}>
