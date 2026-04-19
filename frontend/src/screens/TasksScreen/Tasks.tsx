@@ -29,6 +29,13 @@ export default function TasksScreen({navigation}:any) {
     // console.log("tasks data:", data);
     const fetchedTasks = Array.isArray(data?.tasks) ? data.tasks : [];
 
+    const [selectedCategory, setSelectedCategory] = useState("all");
+
+    // category filter toggle
+    const handleCategoryPress = (category: string) => {
+      setSelectedCategory((prev) => (prev === category ? "all" : category));
+    };
+
     // map tasks
     const mappedTasks = useMemo<DisplayTask[]>(() => {
       return fetchedTasks.map((task: any) => ({
@@ -42,10 +49,16 @@ export default function TasksScreen({navigation}:any) {
       }));
     }, [fetchedTasks]);
 
+    // apply filter to mapped task list
+    const filteredTasks = useMemo(() => {
+      if (selectedCategory === "all") return mappedTasks;
+      return mappedTasks.filter(task => task.category === selectedCategory);
+    }, [mappedTasks, selectedCategory]);
+
     // sectionlist
     const taskSections = [{
       title: "tasks",
-      data: mappedTasks,
+      data: filteredTasks,
     },];
 
     
@@ -153,23 +166,61 @@ export default function TasksScreen({navigation}:any) {
                     <View style={[styles.chip, {marginLeft:10}]}>
                         <Chip
                             mode="outlined"
-                            onPress={() => console.log('social pressed')}>
-                            Social
+                            selected={selectedCategory === "tutoring"}
+                            showSelectedCheck={false}
+                            style={{backgroundColor: selectedCategory === "tutoring" ? "#d0d0d0" : "#fffbff"}}
+                            onPress={() => handleCategoryPress("tutoring")}>
+                            Tutoring
                         </Chip>
                     </View>
                     <View style={styles.chip}>
-                        <Chip mode="outlined" onPress={() => console.log('misc pressed')}>
-                            Misc
+                        <Chip
+                            mode="outlined"
+                            selected={selectedCategory === "delivery"}
+                            showSelectedCheck={false}
+                            style={{backgroundColor: selectedCategory === "delivery" ? "#d0d0d0" : "#fffbff"}}
+                            onPress={() => handleCategoryPress("delivery")}>
+                            Delivery
                         </Chip>
                     </View>
                     <View style={styles.chip}>
-                        <Chip  mode="outlined" onPress={() => console.log('Shopping pressed')}>
-                            Shopping
+                        <Chip
+                            mode="outlined"
+                            selected={selectedCategory === "freelance"}
+                            showSelectedCheck={false}
+                            style={{backgroundColor: selectedCategory === "freelance" ? "#d0d0d0" : "#fffbff"}}
+                            onPress={() => handleCategoryPress("freelance")}>
+                            Freelance
                         </Chip>
                     </View>
                     <View style={styles.chip}>
-                        <Chip  mode="outlined" onPress={() => console.log('requesting pressed')}>
-                            Requesting
+                        <Chip
+                            mode="outlined"
+                            selected={selectedCategory === "tech_support"}
+                            showSelectedCheck={false}
+                            style={{backgroundColor: selectedCategory === "tech_support" ? "#d0d0d0" : "#fffbff"}}
+                            onPress={() => handleCategoryPress("tech_support")}>
+                            Tech support
+                        </Chip>
+                    </View>
+                    <View style={styles.chip}>
+                        <Chip
+                            mode="outlined"
+                            selected={selectedCategory === "general"}
+                            showSelectedCheck={false}
+                            style={{backgroundColor: selectedCategory === "general" ? "#d0d0d0" : "#fffbff"}}
+                            onPress={() => handleCategoryPress("general")}>
+                            General
+                        </Chip>
+                    </View>
+                    <View style={styles.chip}>
+                        <Chip
+                            mode="outlined"
+                            selected={selectedCategory === "other"}
+                            showSelectedCheck={false}
+                            style={{backgroundColor: selectedCategory === "other" ? "#d0d0d0" : "#fffbff"}}
+                            onPress={() => handleCategoryPress("other")}>
+                            Other
                         </Chip>
                     </View>
                   </ScrollView>
