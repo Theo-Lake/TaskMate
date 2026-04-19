@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import {  Text, useTheme, TextInput, Button, IconButton  } from "react-native-paper";
+import { View, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Text, TextInput, Button, IconButton } from "react-native-paper";
 import * as ImagePicker from 'expo-image-picker'
 //#TODO FIX SAVE CHANGES BUTTON. Optional - add delete user button
 import CustomHeader from "../../components/navBar/CustomHeader";
@@ -11,10 +11,11 @@ import {styles} from "./styles"
 import { useCurrentUser, useUpdateUser } from "../../hooks/useUsers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../context/AuthContext";
+import { uploadProfilePicture } from "../../lib/uploadImage";
 
 export default function SettingsScreen({navigation}:any) {
     const {data: user} = useCurrentUser()
-    const {mutate: UpdateProfile, isPending} = useUpdateUser();
+    const {mutate: UpdateProfile} = useUpdateUser();
 
     const [FirstNameText, setFirstNameText] = React.useState("");
     const [SecondNameText, setSecondNameText] = React.useState("");
@@ -22,8 +23,7 @@ export default function SettingsScreen({navigation}:any) {
     //image loading:
 
     const [imageUri, setImageUri] = useState<string | null>(null);
-        //image stored as string base64:
-    const [imageBse64, setImageBase64] = useState<string | null>(null);
+    const [pickedLocalUri, setPickedLocalUri] = useState<string | null>(null);
      
     useEffect(() =>{
         if (user) {
@@ -48,12 +48,11 @@ export default function SettingsScreen({navigation}:any) {
              allowsEditing: true,
              aspect:[1,1],
              quality:0.3,
-             base64:true,
          });
          if (!imagRes.canceled){
-            setImageUri(imagRes.assets[0].uri)// saves way(uri) to the image 
-             const formatedImgBase64 = `data:image/jpeg;base64, ${imagRes.assets[0].base64}`;
-             setImageBase64(formatedImgBase64);
+            const uri = imagRes.assets[0].uri;
+            setImageUri(uri);
+            setPickedLocalUri(uri);
          }
      }
      let imageContent;
@@ -62,7 +61,7 @@ export default function SettingsScreen({navigation}:any) {
          imageContent = (
              <View style={styles.imagePrevContain}>
                  <Image source={{uri: imageUri}} style={styles.img} resizeMode="cover"/>
-                 <Button mode="text"  onPress={() => {setImageUri(null);setImageBase64(null)}} textColor="red" icon="delete" >
+                 <Button mode="text"  onPress={() => {setImageUri(null);setPickedLocalUri(null)}} textColor="red" icon="delete" >
                      Delete image
                  </Button>
              </View>
@@ -79,23 +78,27 @@ export default function SettingsScreen({navigation}:any) {
          );
      }
 
-     const handleSaveChanges= () => {
-        const payload: any ={
-            firstName: FirstNameText.trim(),
-            lastName: SecondNameText.trim(),
-        }
-        if (imageBse64){
-            payload.profilePicture = imageBse64;
-        }
-        UpdateProfile(payload,{
-            onSuccess:()=>{
-                Alert.alert("Success. Profile updated!")
-            },
-            onError:(error: any)=>{
-                Alert.alert("Error. Profile not updated!", error.response?.data?.error)
-
+     const handleSaveChanges= async () => {
+        try {
+            const payload: any ={
+                firstName: FirstNameText.trim(),
+                lastName: SecondNameText.trim(),
             }
-        })
+            if (pickedLocalUri && user?.id){
+                payload.profilePicture = await uploadProfilePicture(pickedLocalUri, String(user.id));
+            }
+            UpdateProfile(payload,{
+                onSuccess:()=>{
+                    setPickedLocalUri(null);
+                    Alert.alert("Success. Profile updated!")
+                },
+                onError:(error: any)=>{
+                    Alert.alert("Error. Profile not updated!", error.response?.data?.error)
+                }
+            })
+        } catch (error: any) {
+            Alert.alert("Error uploading image", error.message)
+        }
      }
 
      const handleLogout= async () => {
