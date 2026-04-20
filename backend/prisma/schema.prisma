@@ -27,6 +27,8 @@ model User {
   profilePicture          String                   @default("null") //TODO default should be a default picture
   myPublishedReviews      Reviews[]                @relation("PublishedReviews")
   myReceivedReviews       Reviews[]                @relation("ReceivedReviews")
+  payerTransactions       Transactions[]           @relation("Payer")
+  receiverTransactions    Transactions[]           @relation("Receiver")
   emailVerified           Boolean                  @default(false)
   emailVerificationTokens EmailVerificationToken[]
   refreshTokens           RefreshToken[]
@@ -42,7 +44,8 @@ model Task {
   publisherID Int
 
   // A User(assignee) can be assigned many jobs, and a job can have many assignees m-m
-  assignments TaskAssignment[]
+  assignments     TaskAssignment[]
+  taskTransaction Transactions[]
 
   name           String
   type           TaskTypes
@@ -134,6 +137,24 @@ model Reviews {
   rating     Rating
 }
 
+model Transactions {
+  transactionID   Int      @id @default(autoincrement())
+  amount          Decimal
+  transactionType TransactionType
+  status          Status @default(pending)
+
+  payerID         Int
+  payer           User     @relation("Payer", fields: [payerID], references: [userID])
+  receiverID      Int
+  receiver        User     @relation("Receiver", fields: [receiverID], references: [userID])
+
+  taskID          Int
+  task            Task     @relation(fields: [taskID], references: [taskID])
+
+  processed_at    DateTime @default(now())
+  updated_at      DateTime @updatedAt
+}
+
 model EmailVerificationToken {
   emailTokenID Int      @id @default(autoincrement())
   token        String   @unique @default(uuid())
@@ -219,4 +240,10 @@ enum Rating {
   THREE
   FOUR
   FIVE
+}
+
+enum TransactionType {
+  ESCROW // Taking money when published
+  RELEASE // Giving money when completed
+  REFUND // Giving money back if task is cancelled
 }
