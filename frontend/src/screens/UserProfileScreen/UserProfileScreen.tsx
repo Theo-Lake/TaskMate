@@ -56,9 +56,9 @@ export default function UserProfileScreen({navigation}:any) {
     
 
     //getting user:
-    const { data: user, isLoading:profileLoading, isError, error } = useCurrentUser();
+    const { data: respdata, isLoading:profileLoading, isError, error } = useCurrentUser();
     const {data:reviews, isLoading: reviewsLoading} = useMyReceivedReviews();
-    
+    const user = respdata?.users.user 
 
     //loading indicatior while fetching the data for the server:
     if (profileLoading){
