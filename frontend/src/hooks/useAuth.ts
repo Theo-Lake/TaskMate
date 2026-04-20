@@ -7,6 +7,7 @@ import {
 	resetPassword,
 } from "../api/auth";
 import { signOut } from "../auth/authState";
+import client from "../api/client";
 
 export const useLogin = () => {
 	return useMutation({
@@ -31,13 +32,16 @@ export const useVerifyEmail = () => {
 
 export const useRequestPasswordReset = () => {
 	return useMutation({
-		mutationFn: (email: string) => requestPasswordReset(email),
+		mutationFn: async (email:string) => {
+			await requestPasswordReset(email);
+		}
 	});
 };
 
 export const useResetPassword = () => {
 	return useMutation({
-		mutationFn: ({ token, newPassword }: { token: string; newPassword: string }) =>
-			resetPassword(token, newPassword),
+		mutationFn: async (data: {token: string; newPassword: string})=> {
+			await resetPassword(data.token, data.newPassword);
+		}
 	});
 };
