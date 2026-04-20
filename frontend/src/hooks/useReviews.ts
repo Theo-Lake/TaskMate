@@ -28,3 +28,20 @@ export const useMyReceivedReviews = () => {
         },
     })
 }
+
+export const useUserReviews = (userId: string) => {
+    return useQuery({
+        queryKey:["userReviews"],
+        queryFn: async()=>{
+            if (!userId){
+                throw new Error('ID is null. Try again')
+            }
+            const res = await client.get(`/reviews/received/${userId}`);
+            const rawRew = res.data
+            return rawRew.map((review:any) =>({
+                ...review,
+                rating: ratingToNUm[review.rating] || Number(review.rating) || 0
+            }))
+        },
+    })
+}
