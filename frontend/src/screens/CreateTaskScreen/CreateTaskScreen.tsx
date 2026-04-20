@@ -24,7 +24,6 @@ export default function CreateTaskScreen({navigation}:any) {
     const [date, setDate] = useState("");
 
     //image loading:
-    const [image, setImage] = useState<string | null>(null);
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [imageBase64, setImageBase64] = useState<string | null>(null);
 
@@ -225,7 +224,8 @@ export default function CreateTaskScreen({navigation}:any) {
                         label="Number of People:" 
                         value={peopleRequired} 
                         onChangeText={text => setPeopleRequired(text)} 
-                        style={styles.textBox} 
+                        style={styles.textBox}
+                        left={<TextInput.Icon icon="account-outline"/>}
                         error={!!errors.peopleRequired}
                     />
                     {errors.peopleRequired && (<Text style={{ color: "red"}}>{errors.peopleRequired[0]}</Text>)}
@@ -241,16 +241,6 @@ export default function CreateTaskScreen({navigation}:any) {
                     </Menu>
                     {errors.type && <Text style={{color:"red"}}>{errors.type[0]}</Text>}
                     
-                    <TextInput 
-                        mode='outlined' 
-                        label="Assignees:" 
-                        value={assignees} 
-                        onChangeText={text => setAssignees(text)} 
-                        style={styles.textBox} 
-                        left={<TextInput.Icon icon="account-outline"/>} 
-                        error={!!errors.assignees}
-                    />
-                    {errors.assignees && (<Text style={{ color: "red"}}>{errors.assignees[0]}</Text>)}
                     <View style={{alignItems:"center"}}>
                         <Button icon="pencil" mode="contained" onPress={handlePostTask} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10, width:'100%'}} disabled={isPending} loading={isPending}>{isPending ? "Submitting..." : "Post Task"}</Button>
                     </View>

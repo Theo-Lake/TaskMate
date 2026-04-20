@@ -14,7 +14,8 @@ export const styles = StyleSheet.create({
         marginBottom:20,
         textAlign: 'left',
         fontSize:30,
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-start',
+        paddingBottom:10,
     },
     dateStringContainer:{
         flexDirection:'row',

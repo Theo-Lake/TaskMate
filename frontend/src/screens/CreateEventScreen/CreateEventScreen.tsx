@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import {  Text, useTheme, TextInput, Checkbox,  Button, IconButton } from "react-native-paper";
+import {  Text, useTheme, TextInput, Checkbox,  Button, IconButton, Menu } from "react-native-paper";
 import {styles} from "./styles"
 import * as ImagePicker from 'expo-image-picker'
 import CustomHeader from "../../components/navBar/CustomHeader";
@@ -15,11 +15,48 @@ export default function CreateEventScreen({navigation}:any) {
     const [eventTitle, setTaskTitleText] = React.useState("");
     const [eventDesc, setTaskDesc] = React.useState("");
     const [assignees, setAssignees] = useState("");
-    //u
+    const [peopleRequired, setPeopleRequired] = useState("");
     const [date, setDate] = useState("");
+    const [eventType, setEventType] = useState("");
+    const [eventTypeMenuVisible, setEventTypeMenuVisible] = useState(false);
+    const [location, setLocation] = useState("");
 
     //image loading:
-    const [image, setImage] = useState<string | null>(null);
+    const [imageUri, setImageUri] = useState<string | null>(null);
+    const [imageBase64, setImageBase64] = useState<string | null>(null);
+
+    // errors
+    const [errors, setErrors] = useState<any>({});
+
+    const { mutate: createEvent, isPending } = useCreateEvent();
+
+    const handleSelectEventType = (type: string) => {
+        setEventType(type);
+        setEventTypeMenuVisible(false);
+    }
+
+    // nicer looking text for category picker
+    // could also use touppercase since we don't have any underscores to worry about here
+    const getEventTypeLabel = (type: string) => {
+        switch (type) {
+            case "social":
+                return "Social";
+            case "sport":
+                return "Sport";
+            case "academic":
+                return "Academic";
+            case "career":
+                return "Career";
+            case "cultural":
+                return "Cultural";
+            case "volunteering":
+                return "Volunteering";
+            case "other":
+                return "Other";
+            default:
+                return "Category";
+        }
+    };
 
     //Images loading:
     const pickImageFromPhone = async() =>{
@@ -27,19 +64,22 @@ export default function CreateEventScreen({navigation}:any) {
             mediaTypes: ['images'],
             allowsEditing: true,
             aspect:[4,3],
-            quality:1
+            quality:0.3,
+            base64: true,
         });
         if (!imagRes.canceled){
-            setImage(imagRes.assets[0].uri)// saves way(uri) to the image 
+            setImageUri(imagRes.assets[0].uri)// saves way(uri) to the image
+            const formattedImgBase64 = `data:image/jpeg;base64,${imagRes.assets[0].base64}`;
+            setImageBase64(formattedImgBase64);
         }
     }
     let imageContent;
 
-    if (image) {
+    if (imageUri && imageUri?.trim() !== "") {
         imageContent = (
             <View style={styles.imagePrevContain}>
-                <Image source={{uri: image}} style={styles.img}/>
-                <Button mode="text"  onPress={() => setImage(null)} textColor="red" icon="delete" >
+                <Image source={{uri: imageUri}} style={styles.img}/>
+                <Button mode="text"  onPress={() => {setImageUri(null); setImageBase64(null);}} textColor="red" icon="delete" >
                     Delete image
                 </Button>
             </View>
@@ -55,13 +95,78 @@ export default function CreateEventScreen({navigation}:any) {
             </TouchableOpacity>
         );
     }
+
+    const parseDueDate = (value: string) => {
+        const [day,month,year] = value.split("/");
+        if (!day || !month || !year) return null;
+
+        const parsed = new Date(Number(year), Number(month) - 1, Number(day));
+        if (Number.isNaN(parsed.getTime())) return null;
+
+        return parsed.toISOString();
+    }
+
+    const getFallbackDate = () => {
+        const d = new Date();
+        d.setDate(d.getDate() + 7);
+        return d.toISOString();
+    }
+
+    const handlePostEvent = () => {
+
+        const parsedDueDate = timeLimit ? parseDueDate(date) : getFallbackDate();
+        const imagesArray = imageBase64 ? [imageBase64] : [];
+
+        const formData = {
+            name: eventTitle,
+            description: eventDesc,
+            dueDate: parsedDueDate,
+            type: eventType,
+            images: imagesArray,
+            location: location,
+            peopleRequired: Number(peopleRequired),
+        };
+
+        const result = validate(EventSchema, formData);
+
+        if (!result.success) {
+            console.log("validation failed:", result.errors.fieldErrors);
+            setErrors(result.errors.fieldErrors);
+            return;
+        }
+
+        setErrors({});
+
+        console.log("validated data:", result.data);
+        createEvent({
+            ...result.data,
+            peopleRequired: Number(peopleRequired),
+            location,
+            images: imagesArray,
+        },
+        {
+            onSuccess: () => {
+                navigation.navigate("EventsTab", { screen: "EventsScreen"});
+            },
+            onError: (error: any) => {
+                console.error("Error:", error);
+                console.log("status:", error?.response?.status);
+                console.log("data:", error?.response?.data);
+                console.log("url:", error?.config?.url);
+            }
+        })
+    };
+
     return (
+        <>
         <View>
             <CustomHeader title="Create Event" navigation={navigation} showBackArrow={true} showProfilePicture={false}/>
+        </View>
+        <View style={{flex:1}}>
             <ScrollView>
             <View style = {styles.content}>
-                <TextInput mode='outlined' label="Event title:" value={eventTitle} onChangeText={text => setTaskTitleText(text)} style={styles.textBox}/>
-                <TextInput mode='outlined'  label="Event description:" value={eventDesc} onChangeText={text => setTaskDesc(text)} style={styles.textBoxTall} multiline={true} textAlignVertical="top"/>
+                <TextInput mode='outlined' label="Event title:" value={eventTitle} onChangeText={text => setTaskTitleText(text)} style={styles.textBox} error={!!errors.name}/>{errors.name && <Text style={{ color: "red" }}>{errors.name[0]}</Text>}
+                <TextInput mode='outlined'  label="Event description:" value={eventDesc} onChangeText={text => setTaskDesc(text)} style={styles.textBoxTall} multiline={true} textAlignVertical="top" error={!!errors.description}/>{errors.description && <Text style={{ color: "red" }}>{errors.description[0]}</Text>}
 
                 <Checkbox.Item
                     label="Time limit"
@@ -89,18 +194,45 @@ export default function CreateEventScreen({navigation}:any) {
                             />
                         )}
                     />
-                )}
+                )}{errors.dueDate && (<Text style={{ color: "red" }}>{errors.dueDate[0]}</Text>)}
+
                 <Text variant="labelLarge" style={styles.title}>Upload event image:</Text>
                 
                 {imageContent}
-                <TextInput mode='outlined' label="Participants:" value={assignees} onChangeText={setAssignees} style={styles.textBox} left={<TextInput.Icon icon="account-outline"/>}/>
-                <View style={{marginHorizontal:100}}>
-                    <Button icon="pencil" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10, width:'100%'}}>Post Event</Button>
+                <TextInput
+                    mode="outlined"
+                    label="Location:"
+                    value={location}
+                    onChangeText={text => setLocation(text)}
+                    style={styles.textBox}
+                    error={!!errors.location}
+                />
+                {errors.location && (<Text style={{ color: "red"}}>{errors.location[0]}</Text>)}
+                <TextInput 
+                    mode='outlined' 
+                    label="Participants:" 
+                    value={peopleRequired} 
+                    onChangeText={setPeopleRequired} 
+                    style={styles.textBox} 
+                    left={<TextInput.Icon icon="account-outline"/>}
+                />
+
+                <Menu visible={eventTypeMenuVisible} onDismiss={() => setEventTypeMenuVisible(false)} anchor={<Button mode="outlined" onPress={() => setEventTypeMenuVisible(true)} icon="chevron-down" style={styles.categoryBox}>{getEventTypeLabel(eventType)}</Button>}>
+                    <Menu.Item title="Social" onPress={() => handleSelectEventType("social")}/>
+                    <Menu.Item title="Sport" onPress={() => handleSelectEventType("sport")}/>
+                    <Menu.Item title="Academic" onPress={() => handleSelectEventType("academic")}/>
+                    <Menu.Item title="Career" onPress={() => handleSelectEventType("career")}/>
+                    <Menu.Item title="Cultural" onPress={() => handleSelectEventType("cultural")}/>
+                    <Menu.Item title="Volunteering" onPress={() => handleSelectEventType("volunteering")}/>
+                    <Menu.Item title="Other" onPress={() => handleSelectEventType("other")}/>
+                </Menu>
+                <View style={{alignItems:"center"}}>
+                    <Button icon="pencil" mode="contained" onPress={handlePostEvent} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10, width:'100%'}} disabled={isPending} loading={isPending}>{isPending ? "Submitting..." : "Post Event"}</Button>
                 </View>
             </View>
         </ScrollView>
         </View>
-
+        </>
 
     );
 }

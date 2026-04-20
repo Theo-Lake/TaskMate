@@ -31,99 +31,6 @@ const formatTime = (isoString: string)=>{
     return date.toLocaleTimeString('en-GB', {hour: "2-digit", minute: "2-digit"});
 };
 
-// hardcoded tasks, in the future we'll grab from the server
-const events = [
-  {
-    id: '1',
-    title: 'Games night',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'board games night at barkers!',
-  },
-  {
-    id: '2',
-    title: 'Footy at sports centre',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'chill football match, all skill levels',
-  },
-  {
-    id: '3',
-    title: 'Jazzercise',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'jazzercise',
-  },
-  {
-    id: '4',
-    title: 'test',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'asdfasdf',
-  },
-  {
-    id: '5',
-    title: 'Games night',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'board games night at barkers!',
-  },
-  {
-    id: '6',
-    title: 'Footy at sports centre',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'chill football match, all skill levels',
-  },
-  {
-    id: '7',
-    title: 'Jazzercise',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'jazzercise',
-  },
-  {
-    id: '8',
-    title: 'test',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'asdfasdf',
-  },
-];
-
-// hardcoded noticeboard events
-const noticeEvents = [
-  {
-    id: '1',
-    title: 'Games night',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'board games night at barkers!',
-  },
-  {
-    id: '2',
-    title: 'Footy at sports centre',
-    time: '17:00',
-    date: '20/12/2026',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'chill football match, all skill levels',
-  },
-];
-
-const eventSections = [{
-    title: "events",
-    data: events,
-}];
-
 export default function EventsScreen({navigation}:any) {
     // fetch events
     const { data, isLoading, isError } = useAllEvents();
@@ -180,7 +87,7 @@ export default function EventsScreen({navigation}:any) {
     }, [mappedEvents]);
 
     const onEventPress = (event: DisplayEvent) => {
-      navigation.navigate("ViewTaskScreen", {eventId: Number(event.id), event: event.rawEvent});
+      navigation.navigate("ViewEventScreen", {eventId: Number(event.id), event: event.rawEvent});
     };
 
     // loading

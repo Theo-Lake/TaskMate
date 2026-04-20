@@ -51,9 +51,9 @@ export default function EventCard({
           
         </View>
         <View>
-            <Text variant="titleMedium" style={styles.time}>
+            {/* <Text variant="titleMedium" style={styles.time}>
                 {time}
-            </Text>
+            </Text> */}
             <Text variant="titleMedium" style={styles.date}>
                 {date}
             </Text>
