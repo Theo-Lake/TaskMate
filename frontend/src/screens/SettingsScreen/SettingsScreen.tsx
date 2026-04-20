@@ -14,8 +14,12 @@ import { useAuth } from "../../context/AuthContext";
 import { uploadProfilePicture } from "../../lib/uploadImage";
 
 export default function SettingsScreen({navigation}:any) {
-    const {data: user} = useCurrentUser()
-    const {mutate: UpdateProfile} = useUpdateUser();
+    const { data: respdata, isLoading:profileLoading, isError, error } = useCurrentUser();
+    const user = respdata?.users.user 
+    const {mutate: UpdateProfile, isPending} = useUpdateUser();
+
+
+    
 
     const [FirstNameText, setFirstNameText] = React.useState("");
     const [SecondNameText, setSecondNameText] = React.useState("");
@@ -152,7 +156,7 @@ export default function SettingsScreen({navigation}:any) {
                                 <Button icon="logout" mode="contained" onPress={handleLogout} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:16, lineHeight:25}} contentStyle={{marginVertical:10}}>Log out</Button>
                             </View>
                             <View style={{flex:1}}>
-                                <Button icon="lock-reset" mode="contained" onPress={() => console.log(" 423")} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:16, lineHeight:25}} contentStyle={{marginVertical:10}}>Reset password</Button>
+                                <Button icon="lock-reset" mode="contained" onPress={() => navigation.navigate('ResetPasswordScreen')} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:16, lineHeight:25}} contentStyle={{marginVertical:10}}>Reset password</Button>
                             </View>
                         </View>
                     </View>
