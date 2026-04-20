@@ -45,3 +45,21 @@ export const useUserReviews = (userId: string) => {
         },
     })
 }
+
+export const useReview = (reviewId: string) => {
+    return useQuery({
+        queryKey:["Review", reviewId],
+        queryFn: async()=>{
+            if (!reviewId){
+                throw new Error('ID is null. Try again')
+            }
+            const res = await client.get(`/reviews/${reviewId}`);
+            const rawRew = res.data
+            return {
+                ...rawRew,
+                rating: ratingToNUm[rawRew.rating] || 0
+            };
+
+        },
+    })
+}
