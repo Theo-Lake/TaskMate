@@ -4,25 +4,27 @@ import { Card, Text, useTheme, Avatar } from 'react-native-paper';
 import { ImageSourcePropType } from 'react-native';
 import StarRating from '../StarRatingGroup/StarRatingGroup';
 // could also add tags for filter?
-type ReviewCardProps = {
+type PosterCardProps = {
   // need avatar to link to user profile
   title: string;
   review: number;
+  onPress?: () => void;
 
   // uri image from server
   // imageUrl: string;
 
 };
 
-export default function ReviewCard({
+export default function PosterCard({
   title,
   review,
+  onPress,
 
-}: ReviewCardProps) {
+}: PosterCardProps) {
   const theme = useTheme();
 
   return (
-    <Card mode="outlined" style={styles.card} >
+    <Card mode="outlined" style={styles.card} onPress={onPress}>
       <View style={styles.row}>
 
         <Avatar.Icon size={50} icon="account" style={{backgroundColor:'#64A376', marginRight:10}} color="black"/>
