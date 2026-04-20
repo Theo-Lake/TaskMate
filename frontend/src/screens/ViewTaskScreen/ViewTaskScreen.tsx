@@ -129,7 +129,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
                         </Text>
                     </View>
                     <View style={styles.dateStringContainer}>
-                        <IconButton icon="map-marker-outline" size={20}
+                        <IconButton icon="tag-outline" size={20}
                             iconColor="#49454F"
                             style={{margin:0,padding:0, width:20}}/>
                         <Text style={styles.dateStringText}>

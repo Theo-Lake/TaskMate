@@ -55,8 +55,14 @@ export  const styles = StyleSheet.create({
     btn:{
         borderRadius:40, 
         backgroundColor:'#3D8252',
-        width:'100%',
+        width:200,
         justifyContent: 'center', 
         alignItems: 'center'
+    },
+    categoryBox:{
+        borderRadius:3,
+        marginBottom:10,
+        backgroundColor:"#fffbff",
+        color:"#464146",
     }
 });
