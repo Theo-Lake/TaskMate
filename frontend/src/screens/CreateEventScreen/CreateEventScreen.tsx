@@ -6,6 +6,10 @@ import * as ImagePicker from 'expo-image-picker'
 import CustomHeader from "../../components/navBar/CustomHeader";
 import {TextInputMask} from 'react-native-masked-text'
 
+import { useCreateEvent } from "../../hooks/useEvents";
+import { validate } from "../../validation/validate";
+import { EventSchema } from "../../validation/schemas/events";
+
 export default function CreateEventScreen({navigation}:any) {
     const [timeLimit, setTimeLimit] = React.useState(false);
     const [eventTitle, setTaskTitleText] = React.useState("");

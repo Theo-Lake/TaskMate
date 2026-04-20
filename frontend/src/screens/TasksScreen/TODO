@@ -1,2 +1,3 @@
 [/] Implement task category filter with correct categories
+[ ] Move to ViewOwnTaskScreen instead of ViewTaskScreen when tapping on a task you created
 [ ] Implement sort option
