@@ -25,7 +25,7 @@ import ViewEventScreen from '../screens/ViewEventScreen/ViewEventScreen';
 import CreateEventScreen from '../screens/CreateEventScreen/CreateEventScreen';
 
 import EditTaskScreen from "../screens/EditTask/EditTaskScreen";
-
+import OtherUserProfileScreen from "../screens/OtherUserProfileScreen/OtherUserProfileScreen";
 
 
 const Tab = createBottomTabNavigator();
@@ -61,6 +61,7 @@ function ChatsStackNavigator(){
         <ChatsStack.Navigator screenOptions={{headerShown: false}}>
             <ChatsStack.Screen name="ChatsScreen" component={ChatsScreen}/>
             <ChatsStack.Screen name="ChatScreen" component={ChatScreen}/>
+            <ChatsStack.Screen name="OtherUserProfileScreen" component={OtherUserProfileScreen}/>
         </ChatsStack.Navigator>
     );
 }
