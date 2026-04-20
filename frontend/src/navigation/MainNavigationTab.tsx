@@ -12,6 +12,7 @@ import ViewTaskScreen from '../screens/ViewTaskScreen/ViewTaskScreen';
 
 import UserProfileScreen from '../screens/UserProfileScreen/UserProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen/SettingsScreen';
+import ResetPasswordScreen from "../screens/ResetPasswordScreen/ResetPasswordScreen";
 
 import MyTasksScreen from '../screens/MyTasksScreen/MyTasksScreen';
 import ViewOwnTaskScreen from '../screens/ViewOwnTaskScreen/ViewOwnTaskScreen';
@@ -51,7 +52,7 @@ function MyTasksStackNavigator(){
             <MyTasksStack.Screen name="EditTaskScreen" component={EditTaskScreen}/>
             <MyTasksStack.Screen name="UserProfileScreen" component={UserProfileScreen}/>
             <MyTasksStack.Screen name="SettingsScreen" component={SettingsScreen}/>
-
+            <MyTasksStack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen}/>
         </MyTasksStack.Navigator>
     );
 }
