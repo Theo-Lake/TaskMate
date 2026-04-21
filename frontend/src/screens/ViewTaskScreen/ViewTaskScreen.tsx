@@ -7,7 +7,7 @@ import CustomHeader from "../../components/navBar/CustomHeader";
 import TaskCard from "../../components/cards/TaskCard";
 import NoticeCard from "../../components/cards/NoticeBoardCard";
 import { FAB } from 'react-native-paper';
-import PosterCard from "../../components/cards/PosterCard";
+import PosterCard from "../../components/cards/ProfileCard";
 
 import { useTask } from "../../hooks/useTasks";
 import { useUser } from "../../hooks/useUsers";

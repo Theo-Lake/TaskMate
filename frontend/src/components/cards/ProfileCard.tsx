@@ -1,13 +1,17 @@
 import * as React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import { Card, Text, useTheme, Avatar } from 'react-native-paper';
+import { Card, Text, useTheme, Avatar, ActivityIndicator } from 'react-native-paper';
 import { ImageSourcePropType } from 'react-native';
 import StarRating from '../StarRatingGroup/StarRatingGroup';
+
+import { useUser } from '../../hooks/useUsers';
+import { useUserReviews} from "../../hooks/useReviews";
+import CustomerAvatar from '../avatars/CustomerAvatars';
+
 // could also add tags for filter?
-type PosterCardProps = {
+type ProfileCardProps = {
   // need avatar to link to user profile
-  title: string;
-  review: number;
+  userId: number | string | undefined;
   onPress?: () => void;
 
   // uri image from server
@@ -15,27 +19,51 @@ type PosterCardProps = {
 
 };
 
-export default function PosterCard({
-  title,
-  review,
+export default function ProfileCard({
+  userId,
   onPress,
 
-}: PosterCardProps) {
+}: ProfileCardProps) {
   const theme = useTheme();
+
+  const {data: userResp, isLoading: userLoading} = useUser(userId);
+  const {data: reviews, isLoading: reviewsLoading} = useUserReviews(userId);
+  
+
+  if (userLoading || reviewsLoading) {
+    return (
+        <View style={{flex:1}}>
+            <View style={{marginTop:40, alignItems:"center"}}>
+                <Text>Loading...</Text>
+                <ActivityIndicator style={{marginTop:20}} size="large"/>
+            </View>
+        </View>
+    );
+}
+  if (!userId){
+    return null;
+  }
+
+  const user = userResp?.users?.user 
+  const reputation = reviews && reviews.length > 0
+  ? (reviews.reduce((acc: number, item: any) => acc + item.rating, 0) / reviews.length).toFixed(1)
+  : 0;
 
   return (
     <Card mode="outlined" style={styles.card} onPress={onPress}>
       <View style={styles.row}>
+        <View style={{marginRight:3}}>
+          <CustomerAvatar size={50} user={user}/>
 
-        <Avatar.Icon size={50} icon="account" style={{backgroundColor:'#64A376', marginRight:10}} color="black"/>
+        </View>
 
         <View style={styles.content}>
 
           <Text variant="titleSmall"  style={{fontWeight: 'bold',color:'black'}}>
-            {title}
+            {user?.username}
           </Text>
           <View  style={styles.review}>
-            <StarRating rating={review}/>
+            <StarRating rating={reputation}/>
           </View>
 
           

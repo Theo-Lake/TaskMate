@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, ScrollView } from 'react-native';
 import { Text, useTheme, Button, IconButton, ActivityIndicator } from "react-native-paper";
 import {styles} from "./styles"
 import CustomHeader from "../../components/navBar/CustomHeader";
-import PosterCard from "../../components/cards/PosterCard"
+import PosterCard from "../../components/cards/ProfileCard"
 
 import { useEvent } from "../../hooks/useEvents";
 import { useUser } from "../../hooks/useUsers";
