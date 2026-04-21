@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import client from "../api/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -29,7 +29,7 @@ export const useMyReceivedReviews = () => {
     })
 }
 
-export const useUserReviews = (userId: string) => {
+export const useUserReviews = (userId: string | number | undefined) => {
     return useQuery({
         queryKey:["userReviews"],
         queryFn: async()=>{
