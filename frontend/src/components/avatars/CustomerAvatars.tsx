@@ -18,7 +18,7 @@ export default function CustomerAvatar({user, size=40}){
         <Avatar.Icon
             size={size}
             icon="account"
-            style={{backgroundColor: theme.colors.primaryContainer}}
+            style={{backgroundColor:'#64A376'}}
             color={theme.colors.onPrimaryContainer}/>
     )
 }

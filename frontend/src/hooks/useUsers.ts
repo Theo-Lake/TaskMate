@@ -28,7 +28,7 @@ export const useAllUsers = () => {
 	});
 };
 //gets ONE user
-export const useUser = (userId: string) => {
+export const useUser = (userId: string | number | undefined) => {
 	return useQuery({
 		queryKey: ["users", userId],
 		queryFn: () => getUserById(userId),

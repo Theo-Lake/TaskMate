@@ -6,7 +6,7 @@ export const getAllUsers = async () => {
     return res.data
 }
 
-export const getUserById = async (userID:string) =>{
+export const getUserById = async (userID:string | number | undefined) =>{
     const res = await client.get(`/users/${userID}`)
     return res.data
 }
