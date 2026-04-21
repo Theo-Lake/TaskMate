@@ -1,8 +1,11 @@
 import { db } from "../db";
-import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
-import { ApplicationStatus, TransactionType, Status } from "../generated/prisma/enums";
+import {
+    ApplicationStatus,
+    TransactionType,
+    Status,
+} from "../generated/prisma/enums";
 
-const PLATFORM_USER_ID = 99771717 // This is the user that will be recognised as the TaskMate bank account that holds the money between tasks
+const PLATFORM_USER_ID = Number(process.env.PLATFORM_USER_ID);
 
 export async function getAllPayments() {
     return await db.transactions.findMany();
@@ -16,17 +19,16 @@ export async function getPaymentById(transactionId: Number) {
 
 export async function getAllPaymentsByUserId(userId: Number) {
     return await db.transactions.findMany({
-        where: { 
-            OR: [
-                { payerID: Number(userId) },
-                { receiverID: Number(userId) }
-            ]
+        where: {
+            OR: [{ payerID: Number(userId) }, { receiverID: Number(userId) }],
         },
     });
 }
 
 export async function processPayment(userID: Number, taskID: Number) {
-    const task = await db.task.findUnique({ where: { taskID: Number(taskID) }});
+    const task = await db.task.findUnique({
+        where: { taskID: Number(taskID) },
+    });
     if (!task) throw new Error("Task not found.");
 
     let type: TransactionType;
@@ -39,10 +41,10 @@ export async function processPayment(userID: Number, taskID: Number) {
         receiverID = PLATFORM_USER_ID;
     } else if (task.status === Status.complete) {
         const assignment = await db.taskAssignment.findFirst({
-            where: { 
+            where: {
                 taskID: Number(taskID),
-                status: ApplicationStatus.accepted
-            }
+                status: ApplicationStatus.accepted,
+            },
         });
         if (!assignment) throw new Error("No accepted assignment found.");
 
@@ -50,7 +52,7 @@ export async function processPayment(userID: Number, taskID: Number) {
         payerID = PLATFORM_USER_ID;
         receiverID = assignment.assigneeID;
     } else {
-        throw new Error("Invalid task status for payment.")
+        throw new Error("Invalid task status for payment.");
     }
 
     return await db.transactions.create({
@@ -60,8 +62,8 @@ export async function processPayment(userID: Number, taskID: Number) {
             receiverID: receiverID as number,
             amount: task.payment,
             transactionType: type as TransactionType,
-            status: Status.complete
-        }
+            status: Status.complete,
+        },
     });
 }
 
@@ -69,5 +71,5 @@ export const paymentServices = {
     getAllPayments,
     getPaymentById,
     getAllPaymentsByUserId,
-    processPayment
-}
+    processPayment,
+};
