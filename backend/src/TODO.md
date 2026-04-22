@@ -54,6 +54,7 @@ PRIORITY:
         ENVIRONMENT & CONFIG
         [/ ] - Add JWT_SECRET, NODE_ENV, CORS_ORIGIN to .env and .env.example
         [ ] - Add rate limiting on login and registration routes
+        [ ] - Add university email validation
 
     TESTING & DATA
         [ ] - creating a command that runs both npm & npx to run both backend and frontend at the same time
