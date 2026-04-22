@@ -25,8 +25,10 @@ import ViewEventScreen from '../screens/ViewEventScreen/ViewEventScreen';
 import CreateEventScreen from '../screens/CreateEventScreen/CreateEventScreen';
 
 import EditTaskScreen from "../screens/EditTask/EditTaskScreen";
-import OtherUserProfileScreen from "../screens/OtherUserProfileScreen/OtherUserProfileScreen";
+import PublicProfileScreen from "../screens/PublicProfileScreen/PublicProfileScreen";
 
+import ViewReviewScreen from "../screens/ViewReviewScreen/ViewReviewScreen";
+import LeaveReviewScreen from "../screens/LeaveReviewScreen/LeaveReviewScreen";
 
 const Tab = createBottomTabNavigator();
 const TasksStack = createNativeStackNavigator();
@@ -41,6 +43,9 @@ function TasksStackNavigator(){
             <TasksStack.Screen name="Tasks" component={TasksScreen}/>
             <TasksStack.Screen name="ViewTaskScreen" component={ViewTaskScreen}/>
             <TasksStack.Screen name="CreateTaskScreen" component={CreateTaskScreen}/>
+            <TasksStack.Screen name="ViewReviewScreen" component={ViewReviewScreen}/>
+            <MyTasksStack.Screen name="LeaveReviewScreen" component={LeaveReviewScreen}/>
+            <TasksStack.Screen name="PublicProfileScreen" component={PublicProfileScreen}/>
         </TasksStack.Navigator>
     );
 }
@@ -53,6 +58,9 @@ function MyTasksStackNavigator(){
             <MyTasksStack.Screen name="UserProfileScreen" component={UserProfileScreen}/>
             <MyTasksStack.Screen name="SettingsScreen" component={SettingsScreen}/>
             <MyTasksStack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen}/>
+            <MyTasksStack.Screen name="ViewReviewScreen" component={ViewReviewScreen}/>
+            <MyTasksStack.Screen name="LeaveReviewScreen" component={LeaveReviewScreen}/>
+            <MyTasksStack.Screen name="PublicProfileScreen" component={PublicProfileScreen}/>
         </MyTasksStack.Navigator>
     );
 }
@@ -61,7 +69,7 @@ function ChatsStackNavigator(){
         <ChatsStack.Navigator screenOptions={{headerShown: false}}>
             <ChatsStack.Screen name="ChatsScreen" component={ChatsScreen}/>
             <ChatsStack.Screen name="ChatScreen" component={ChatScreen}/>
-            <ChatsStack.Screen name="OtherUserProfileScreen" component={OtherUserProfileScreen}/>
+            
         </ChatsStack.Navigator>
     );
 }
@@ -74,6 +82,9 @@ function EventsStackNavigator(){
             <EventsStack.Screen name="EventsScreen" component={EventsScreen}/>
             <EventsStack.Screen name="ViewEventScreen" component={ViewEventScreen}/>
             <EventsStack.Screen name="CreateEventScreen" component={CreateEventScreen}/>
+            <EventsStack.Screen name="ViewReviewScreen" component={ViewReviewScreen}/>
+            <EventsStack.Screen name="PublicProfileScreen" component={PublicProfileScreen}/>
+            <MyTasksStack.Screen name="LeaveReviewScreen" component={LeaveReviewScreen}/>
         </EventsStack.Navigator>
     );
 }
