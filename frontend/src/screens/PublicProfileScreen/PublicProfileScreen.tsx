@@ -58,7 +58,7 @@ export default function PublicProfileScreen({route, navigation}:any) {
                 </View>
             </View>
             <View>
-              <Button icon="star" mode="contained" onPress={() => navigation.navigate('LeaveReviewScreen')} style={{borderRadius:40, backgroundColor:'#3D8252', marginHorizontal:20}} labelStyle={{fontSize:16, lineHeight:25}} contentStyle={{marginVertical:10}}>Leave review</Button>
+              <Button icon="star" mode="contained" onPress={() => {navigation.navigate('LeaveReviewScreen', {assigneeId: userId})}} style={{borderRadius:40, backgroundColor:'#3D8252', marginHorizontal:20}} labelStyle={{fontSize:18, lineHeight:25}} contentStyle={{marginVertical:10}}>Leave review</Button>
             </View>
             {/* Rewiews bellow: */}
             {reviewsLoading ? (
