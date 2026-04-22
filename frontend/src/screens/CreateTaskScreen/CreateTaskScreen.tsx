@@ -3,6 +3,7 @@ import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-nat
 import {  Text, useTheme, TextInput, Checkbox,  Button, IconButton, Menu } from "react-native-paper";
 import {styles} from "./styles"
 import * as ImagePicker from 'expo-image-picker'
+import { uploadTaskImage } from "../../lib/uploadImage";
 import CustomHeader from "../../components/navBar/CustomHeader";
 import {TextInputMask} from 'react-native-masked-text'
 
@@ -25,7 +26,7 @@ export default function CreateTaskScreen({navigation}:any) {
 
     //image loading:
     const [imageUri, setImageUri] = useState<string | null>(null);
-    const [imageBase64, setImageBase64] = useState<string | null>(null);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
 
     // errors
     const [errors, setErrors] = useState<any>({});
@@ -69,12 +70,16 @@ export default function CreateTaskScreen({navigation}:any) {
             allowsEditing: true,
             aspect:[4,3],
             quality:0.3,
-            base64: true,
         });
         if (!imagRes.canceled){
-            setImageUri(imagRes.assets[0].uri)// saves way(uri) to the image 
-            const formattedImgBase64 = `data:image/jpeg;base64,${imagRes.assets[0].base64}`;
-            setImageBase64(formattedImgBase64);
+            const uri = imagRes.assets[0].uri;
+            setImageUri(uri);
+            try {
+                const url = await uploadTaskImage(uri);
+                setImageUrl(url);
+            } catch (e: any) {
+                console.error("Image upload failed:", e.message);
+            }
         }
     }
     let imageContent;
@@ -83,7 +88,7 @@ export default function CreateTaskScreen({navigation}:any) {
         imageContent = (
             <View style={styles.imagePrevContain}>
                 <Image source={{uri: imageUri}} style={styles.img}/>
-                <Button mode="text"  onPress={() => {setImageUri(null); setImageBase64(null);}} textColor="red" icon="delete" >
+                <Button mode="text"  onPress={() => {setImageUri(null); setImageUrl(null);}} textColor="red" icon="delete" >
                     Delete image
                 </Button>
             </View>
@@ -121,7 +126,7 @@ export default function CreateTaskScreen({navigation}:any) {
 
         const parsedDueDate = timeLimit ? parseDueDate(date) : getFallbackDate();
 
-        const imagesArray = imageBase64 ? [imageBase64] : [];
+        const imagesArray = imageUrl ? [imageUrl] : [];
 
         const formData = {
             name: taskTitle,
