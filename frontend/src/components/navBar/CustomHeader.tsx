@@ -13,7 +13,8 @@ interface CustomHeaderProps{
 
 function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showProfilePicture=false}:CustomHeaderProps){
 
-    const {data:user} = useCurrentUser();
+    const {data:userResp, isLoading} = useCurrentUser();
+    const currentUSer = userResp?.users?.user
     return(
         
         <Appbar.Header elevated={true}  style={{backgroundColor:'#3D8252'}}>
@@ -33,9 +34,9 @@ function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showPr
 
         <Appbar.Content title={title} color="white"/>
 
-        {showProfilePicture && (
+        {showProfilePicture && currentUSer && !isLoading && (
             <TouchableOpacity onPress={() => navigation.navigate('MyTasksTab', { screen: 'UserProfileScreen' })}>
-                <CustomerAvatar size={40} user={user}/>
+                <CustomerAvatar size={40} user={currentUSer}/>
             </TouchableOpacity>
             
             
