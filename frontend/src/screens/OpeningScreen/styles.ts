@@ -30,5 +30,14 @@ export const styles = StyleSheet.create({
     subTitle:{
         fontSize:30,
         paddingTop:30,
+    },
+    btn:{
+        flex:1,
+        borderRadius:15,
+        marginTop:3, 
+        backgroundColor:'#3D8252',
+        justifyContent: 'center', 
+        alignItems: 'center'
     }
+
 });
