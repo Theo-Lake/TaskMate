@@ -115,7 +115,7 @@ export default function UserProfileScreen({navigation}:any) {
                           title={item.name}
                           review={item.rating}
                           description={item.comment}
-                          onPress={() => console.log('Opened rewiew', item.title)}
+                          onPress={() => {navigation.navigate('ViewReviewScreen', {reviewID: item?.reviewID})}}
                         />
                     )}
                     ListEmptyComponent={() => (

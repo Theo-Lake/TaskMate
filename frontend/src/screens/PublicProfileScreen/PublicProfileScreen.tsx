@@ -11,7 +11,7 @@ import ReviewCard from "../../components/cards/ReviewCard";
 import { useUser } from "../../hooks/useUsers";
 import { useUserReviews } from "../../hooks/useReviews";
 
-export default function OtherUserProfileScreen({route, navigation}:any) {
+export default function PublicProfileScreen({route, navigation}:any) {
   //gfetting userId 
     
     const {userId} = route.params;
@@ -43,7 +43,7 @@ export default function OtherUserProfileScreen({route, navigation}:any) {
     return (
         <View style={{flex:1}}>
             
-            <CustomHeader title="Your Profile" navigation={navigation} showBackArrow={true} showProfilePicture={true}/>
+            <CustomHeader title="Profile" navigation={navigation} showBackArrow={true} showProfilePicture={true}/>
             <View style={styles.topOfProfile}>
                 <View style={styles.profilePic}>
                     <CustomerAvatar size={150} user={user}/>
@@ -58,7 +58,7 @@ export default function OtherUserProfileScreen({route, navigation}:any) {
                 </View>
             </View>
             <View>
-              <Button icon="star" mode="contained" onPress={() => navigation.navigate('LeaveReviewScreen')} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:16, lineHeight:25}} contentStyle={{marginVertical:10}}>Leave review</Button>
+              <Button icon="star" mode="contained" onPress={() => {navigation.navigate('LeaveReviewScreen', {assigneeId: userId})}} style={{borderRadius:40, backgroundColor:'#3D8252', marginHorizontal:20}} labelStyle={{fontSize:18, lineHeight:25}} contentStyle={{marginVertical:10}}>Leave review</Button>
             </View>
             {/* Rewiews bellow: */}
             {reviewsLoading ? (
@@ -74,7 +74,7 @@ export default function OtherUserProfileScreen({route, navigation}:any) {
                           title={item.name}
                           review={item.rating}
                           description={item.comment}
-                          onPress={() => console.log('Opened rewiew', item.title)}
+                          onPress={() => {navigation.navigate('ViewReviewScreen', {reviewID: item?.reviewID})}}
                         />
                     )}
                     ListEmptyComponent={() => (
