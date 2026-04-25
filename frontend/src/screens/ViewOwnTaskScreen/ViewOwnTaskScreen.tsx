@@ -1,28 +1,13 @@
 import React, { useMemo } from "react";
 import { View, StyleSheet, Image, FlatList, ScrollView, SectionList } from 'react-native';
-import {  Text, useTheme,Appbar, Avatar, Chip,Button, IconButton, ActivityIndicator } from "react-native-paper";
+import {  Text, Button, IconButton, ActivityIndicator } from "react-native-paper";
 import {styles} from "./styles"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
-import TaskCard from "../../components/cards/TaskCard";
-import NoticeCard from "../../components/cards/NoticeBoardCard";
-import { FAB } from 'react-native-paper';
-import PosterCard from "../../components/cards/ProfileCard"
+import ProfileCard from "../../components/cards/ProfileCard"
 
 import { useTask, useDeleteTask, useAcceptApplication, useRejectApplication, useTaskAssignmentsByTask } from "../../hooks/useTasks";
-import { useUser, useCurrentUser, useAllUsers } from "../../hooks/useUsers";
-
-const task = {
-    id: '1',
-    title: 'Study buddy',
-    price: '10',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'need study buddy for 2 hours example example example example example example example example example example example example example',
-    poster: 'Joe Doe',
-    posterReputation:3.5,
-    date: '2020-12-11T14:30:00.000Z',
-    amountOfAssignees: 6
-  }
+import { useUser, useAllUsers } from "../../hooks/useUsers";
 
 const formatDate = (isoString: string)=>{
     const date = new Date(isoString);
@@ -39,16 +24,12 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
     const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
     const { mutate: acceptApplication, isPending: isAccepting } = useAcceptApplication();
     const { mutate: rejectApplication, isPending: isRejecting } = useRejectApplication();
-    const { data: currentUserResponse } = useCurrentUser();
     const { data: allUsersResponse, isLoading: usersLoading } = useAllUsers();
 
     const fetchedTask = data?.tasks ?? data?.task ?? data;
     const task = passedTask ?? fetchedTask;
 
-    const publisherId = task?.publisherID ? String(task.publisherID) : "";
-    const { data: publisherResponse } = useUser(publisherId);
-    const publisher = publisherResponse?.users?.user ?? publisherResponse?.user ?? publisherResponse;
-
+    // applicants
     const assignmentRows = Array.isArray(assignmentsData?.taskAssignment)
         ? assignmentsData.taskAssignment
         : Array.isArray(assignmentsData)
@@ -166,10 +147,7 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
 
                     <Text variant="bodyLarge" style={{ marginTop:7, marginBottom:7, textAlign:"left", alignSelf: 'flex-start'}}>Posted by:</Text>
                     <View style={{alignItems:'flex-start',width:'100%'}}>
-                        <PosterCard 
-                            title={publisher?.username ?? "Unknown user"}
-                            review={publisher?.rating ?? 0}
-                            />
+                        <ProfileCard userId={task?.publisherID}/>
                     </View>
                     <View style={styles.dateStringContainer}>
                         <IconButton icon="calendar-outline" size={20}
@@ -211,7 +189,7 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
 
                                     return (
                                         <View key={String(person.userID)} style={{ width: "100%", marginBottom: 14}}>
-                                            <PosterCard title={person.username ?? "Unknown user"} review={person.rating ?? 0}/>
+                                            <ProfileCard userId={person.userID}/>
                                             
                                             <View style={{flexDirection: "row", gap:8, marginTop:8}}>
                                                 <Button
