@@ -14,7 +14,8 @@ export const styles = StyleSheet.create({
         marginBottom:20,
         textAlign: 'left',
         fontSize:30,
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-start',
+        paddingBottom:10,
     },
     dateStringContainer:{
         flexDirection:'row',
@@ -81,6 +82,12 @@ export const styles = StyleSheet.create({
         backgroundColor:'#3D8252',
         justifyContent: 'center', 
         alignItems: 'center'
+    },
+    rejectBtn:{
+        borderRadius:15,
+        marginTop:3, 
+        backgroundColor:'#ffffff',
+        justifyContent: 'center', 
+        alignItems: 'center'
     }
-
 });

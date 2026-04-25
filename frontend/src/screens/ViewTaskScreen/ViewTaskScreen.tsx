@@ -9,8 +9,8 @@ import NoticeCard from "../../components/cards/NoticeBoardCard";
 import { FAB } from 'react-native-paper';
 import PosterCard from "../../components/cards/PosterCard";
 
-import { useTask } from "../../hooks/useTasks";
-import { useUser } from "../../hooks/useUsers";
+import { useTask, useApplyForTask } from "../../hooks/useTasks";
+import { useUser, useCurrentUser } from "../../hooks/useUsers";
 
 const assignees=[
     {
@@ -39,6 +39,8 @@ export default function ViewTaskScreen({navigation, route}:any) {
     const passedTask = route.params?.task;
 
     const { data, isLoading, isError } = useTask(taskId);
+    const { mutate: applyForTask, isPending: isApplying } = useApplyForTask();
+    const { data: currentUserResponse } = useCurrentUser();
 
     const fetchedTask = data?.task ?? data;
     const task = passedTask ?? fetchedTask;
@@ -46,6 +48,25 @@ export default function ViewTaskScreen({navigation, route}:any) {
     const publisherId = task?.publisherID ?? null;
     const { data: publisherProfile } = useUser(publisherId);
     const publisher = publisherProfile?.users.user;
+
+    const currentUser = currentUserResponse?.users?.user;
+    const isOwnTask = Number(currentUser?.userID) === Number(task?.publisherID);
+
+    const handleAcceptTask = () => {
+        if (!taskId || isOwnTask) return;
+
+        applyForTask(taskId, {
+            onSuccess: () => {
+                navigation.navigate("TasksTab", { screen: "Tasks"});
+            },
+            onError: (error: any) => {
+                console.error("Error:", error);
+                console.log("status:", error?.response?.status);
+                console.log("data:", error?.response?.data);
+                console.log("url:", error?.config?.url);
+            }
+        })
+    }
 
     // nicer looking text for category
     const getTaskTypeLabel = (type: string) => {
@@ -167,7 +188,16 @@ export default function ViewTaskScreen({navigation, route}:any) {
 
                     </View>
                     <View style={{flexDirection:'row',gap:5}}>
-                        <Button icon="check" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Accept</Button>
+                        <Button 
+                            icon="check" 
+                            mode="contained" 
+                            onPress={handleAcceptTask} 
+                            style={styles.btn} 
+                            labelStyle={{fontSize:20, lineHeight:25}} 
+                            contentStyle={{marginVertical:10}}
+                            loading={isApplying}
+                            disabled={isApplying || isOwnTask}
+                            >{isOwnTask ? "Your Task" : "Accept"}</Button>
                         <Button icon="message-text-outline" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Message</Button>
                     </View>
 

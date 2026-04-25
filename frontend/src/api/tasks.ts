@@ -45,11 +45,21 @@ export async function applyForTask(taskId: number) {
 }
 
 export async function acceptApplication(taskId: number, userId: number) {
-	const res = await client.put(`/tasks/${taskId}/apply/${userId}/accept`);
+	const res = await client.put(`/tasks/${taskId}/accept/${userId}`);
 	return res.data;
 }
 
 export async function rejectApplication(taskId: number, userId: number) {
-	const res = await client.put(`/tasks/${taskId}/apply/${userId}/reject`);
+	const res = await client.put(`/tasks/${taskId}/reject/${userId}`);
 	return res.data;
+}
+
+export async function getTaskAssignmentsByTaskId(taskId: number) {
+  const res = await client.get(`/tasks/assignments/byTaskId/${taskId}`);
+  return res.data;
+}
+
+export async function getTaskAssignmentsByUserId(userId: number) {
+  const res = await client.get(`/tasks/assignments/byUserId/${userId}`);
+  return res.data;
 }
