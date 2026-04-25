@@ -11,6 +11,7 @@ import { FAB } from 'react-native-paper';
 // Logic Imports
 // fetches all at once, can't fetch tasks one at a time for infinite scroll
 import { useAllTasks } from "../../hooks/useTasks"
+import { useCurrentUser } from "../../hooks/useUsers";
 
 // used for memo
 type DisplayTask = {
@@ -30,6 +31,9 @@ export default function TasksScreen({navigation}:any) {
     const fetchedTasks = Array.isArray(data?.tasks) ? data.tasks : [];
 
     const [selectedCategory, setSelectedCategory] = useState("all");
+
+    const { data: currentUserResponse } = useCurrentUser();
+    const currentUser = currentUserResponse?.users?.user ?? currentUserResponse?.user ?? currentUserResponse;
 
     // category filter toggle
     const handleCategoryPress = (category: string) => {
@@ -80,7 +84,22 @@ export default function TasksScreen({navigation}:any) {
     }, [mappedTasks]);
 
     const onTaskPress = (task: DisplayTask) => {
-      navigation.navigate("ViewTaskScreen", {taskId: Number(task.id), task: task.rawTask});
+      if(!currentUser?.userID) return;
+      const isOwnTask = Number(task.rawTask?.publisherID) === Number(currentUser?.userID);
+
+
+      if (isOwnTask) {
+        navigation.navigate("MyTasksTab", {screen: "ViewOwnTask", params: {taskId: Number(task.id), task: task.rawTask}
+        });
+      }
+
+      else {
+        navigation.navigate("ViewTaskScreen", {taskId: Number(task.id), task: task.rawTask});
+      }
+
+
+      // navigation.navigate(
+      //   isOwnTask ? "ViewOwnTask" : "ViewTaskScreen", {taskId: Number(task.id), task: task.rawTask});
     };
 
     // loading
