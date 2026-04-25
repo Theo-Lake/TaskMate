@@ -1,34 +1,13 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View, StyleSheet, Image, FlatList, ScrollView, SectionList } from 'react-native';
-import {  Text, useTheme,Appbar, Avatar, Chip,Button, IconButton, ActivityIndicator } from "react-native-paper";
+import {  Text, Button, IconButton, ActivityIndicator } from "react-native-paper";
 import {styles} from "./styles"
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
-import TaskCard from "../../components/cards/TaskCard";
-import NoticeCard from "../../components/cards/NoticeBoardCard";
-import { FAB } from 'react-native-paper';
-import PosterCard from "../../components/cards/ProfileCard";
+import ProfileCard from "../../components/cards/ProfileCard";
 
-import { useTask, useApplyForTask } from "../../hooks/useTasks";
-import { useUser, useCurrentUser } from "../../hooks/useUsers";
+import { useTask, useApplyForTask, useTaskAssignmentsByTask } from "../../hooks/useTasks";
+import { useUser, useAllUsers } from "../../hooks/useUsers";
 
-const assignees=[
-    {
-        id:'1',
-        name:'Joe Doe',
-        reputation:2,
-    },
-    {
-        id:'2',
-        name:'Doe Joe',
-        reputation:4,
-    },
-    {
-        id:'3',
-        name:'Moe Moe',
-        reputation:3.5,
-    }
-]
 const formatDate = (isoString: string)=>{
     const date = new Date(isoString);
     return date.toLocaleDateString('gb-GB')
@@ -40,20 +19,47 @@ export default function ViewTaskScreen({navigation, route}:any) {
 
     const { data, isLoading, isError } = useTask(taskId);
     const { mutate: applyForTask, isPending: isApplying } = useApplyForTask();
-    const { data: currentUserResponse } = useCurrentUser();
 
     const fetchedTask = data?.task ?? data;
     const task = passedTask ?? fetchedTask;
 
-    const publisherId = task?.publisherID ?? null;
-    const { data: publisherProfile } = useUser(publisherId);
-    const publisher = publisherProfile?.users.user;
+    // applicants
+    const { data: assignmentsData, isLoading: assignmentsLoading, isError: assignmentsError } = useTaskAssignmentsByTask(taskId);
+    const { data: allUsersResponse, isLoading: usersLoading } = useAllUsers();
 
-    const currentUser = currentUserResponse?.users?.user;
-    const isOwnTask = Number(currentUser?.userID) === Number(task?.publisherID);
+    const assignmentRows = Array.isArray(assignmentsData?.taskAssignment)
+        ? assignmentsData.taskAssignment
+        : Array.isArray(assignmentsData)
+        ? assignmentsData
+        : [];
+
+    const allUsers = Array.isArray(allUsersResponse?.users)
+        ? allUsersResponse.users
+        : Array.isArray(allUsersResponse)
+        ? allUsersResponse
+        : [];
+
+    const assignees = useMemo(() => {
+        return assignmentRows.map((assignment: any) => {
+            const userId = Number(assignment.assigneeID ?? assignment.userID ?? assignment.id);
+            const user = allUsers.find((u: any) => Number(u.userID) === userId);
+
+            return {
+                userID: userId,
+                username: user?.username ?? `User ${userId}`,
+                rating: user?.rating ?? 0,
+                status: assignment.status ?? "pending",
+            };
+        })
+        .filter((applicant: any) => applicant.userID);
+    }, [assignmentRows, allUsers]);
+
+    const visibleApplicants = assignees.filter(
+        (applicant: any) => applicant.status !== "accepted"
+    );
 
     const handleAcceptTask = () => {
-        if (!taskId || isOwnTask) return;
+        if (!taskId) return;
 
         applyForTask(taskId, {
             onSuccess: () => {
@@ -90,7 +96,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
         }
     };
 
-    if (isLoading) {
+    if (isLoading || assignmentsLoading || usersLoading) {
         return (
             <View style={{flex:1}}>
                 <CustomHeader title="View Task" navigation={navigation} showBackArrow={true} showProfilePicture={true} />
@@ -102,7 +108,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
         );
     }
 
-    if (isError || !task) {
+    if (isError || assignmentsError || !task) {
         return (
             <View style={{flex:1}}>
                 <CustomHeader title="View Task" navigation={navigation} showBackArrow={true} showProfilePicture={true} />
@@ -128,10 +134,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
 
                     <Text variant="bodyLarge" style={{ marginTop:7, marginBottom:7, textAlign:"left", alignSelf: 'flex-start'}}>Posted by:</Text>
                     <View style={{alignItems:'flex-start',width:'100%'}}>
-                        <PosterCard 
-                            title={publisher?.username ?? "Unknown user"}
-                            review={publisher?.rating ?? 0}
-                            />
+                        <ProfileCard userId={task?.publisherID}/>
                     </View>
                     <View style={styles.dateStringContainer}>
                         <IconButton icon="calendar-outline" size={20}
@@ -175,15 +178,18 @@ export default function ViewTaskScreen({navigation, route}:any) {
                             </Text>
                         </View>
                         <View style={styles.assigneesRankField}>
-                            {assignees.map((person) => (
-                                <View key={person.id} >
-                                    <PosterCard 
-                                    title={person.name}
-                                    review={person.reputation}
-                                    />
-                                </View>
+                            {visibleApplicants.length > 0 ? (
+                                visibleApplicants.map((person: any) => {
+                                    const assigneeId = Number(person.userID ?? person.assigneeID ?? person.id);
 
-                            ))}
+                                    return (
+                                        <View key={String(person.userID)} style={{ width: "100%", marginBottom: 14}}>
+                                            <ProfileCard userId={person.userID}/>
+                                        </View>
+                                    );
+                                })
+                            ) : (<Text>No applicants yet.</Text>)}
+                            
                         </View>
 
                     </View>
@@ -196,8 +202,8 @@ export default function ViewTaskScreen({navigation, route}:any) {
                             labelStyle={{fontSize:20, lineHeight:25}} 
                             contentStyle={{marginVertical:10}}
                             loading={isApplying}
-                            disabled={isApplying || isOwnTask}
-                            >{isOwnTask ? "Your Task" : "Accept"}</Button>
+                            disabled={isApplying}
+                            >Accept</Button>
                         <Button icon="message-text-outline" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Message</Button>
                     </View>
 
