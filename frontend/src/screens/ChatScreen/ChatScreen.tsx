@@ -1,86 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { View, StyleSheet, Image, FlatList, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import {  Text, useTheme,Appbar, Avatar, IconButton } from "react-native-paper";
+import {  Text, useTheme,Appbar, Avatar, IconButton, ActivityIndicator } from "react-native-paper";
 import {styles} from "../ChatsScreen/styles"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
 
-const messages = [
-    {
-        id: "1",
-        text: "hello",
-        mine: false,
-    },
-    {
-        id: "2",
-        text: "hallo",
-        mine: true,
-    },
-    {
-        id: "3",
-        text: "hello",
-        mine: false,
-    },
-    {
-        id: "4",
-        text: "hallo",
-        mine: true,
-    },
-    {
-        id: "5",
-        text: "hello",
-        mine: false,
-    },
-    {
-        id: "6",
-        text: "hallo",
-        mine: true,
-    },
-    {
-        id: "7",
-        text: "hello",
-        mine: false,
-    },
-    {
-        id: "8",
-        text: "hallo",
-        mine: true,
-    },
-    {
-        id: "9",
-        text: "hello",
-        mine: false,
-    },
-    {
-        id: "10",
-        text: "hullo",
-        mine: true,
-    },
-    {
-        id: "11",
-        text: "hello",
-        mine: false,
-    },
-    {
-        id: "12",
-        text: "hullo",
-        mine: true,
-    },
-    {
-        id: "13",
-        text: "hello",
-        mine: false,
-    },
-    {
-        id: "14",
-        text: "hullo",
-        mine: true,
-    },
-];
+import { useConversationMessages, useCreateMessage } from "../../hooks/useConversations";
+import { useCurrentUser } from "../../hooks/useUsers";
+
+type DisplayMessage = {
+    id: string;
+    text: string;
+    mine: boolean;
+    rawMessage: any;
+};
 
 export default function ChatScreen({navigation, route}:any) {
-    const { name } = route.params || {};
+    const { convoId, name } = route.params || {};
     const [message, setMessage] = useState("");
+
+    const { data, isLoading, isError } = useConversationMessages(Number(convoId));
+    const { data: currentUserResponse } = useCurrentUser();
+    const { mutate: createMessage, isPending } = useCreateMessage(Number(convoId));
+
+    const currentUser = currentUserResponse?.users?.user;
+
+    const fetchedMessages = Array.isArray(data?.message) ? data.messages : Array.isArray(data) ? data : [];
+
+    const messages = useMemo<DisplayMessage[]>(() => {
+        return fetchedMessages.map((msg: any) => ({
+            id: String(msg.messageID ?? msg.id),
+            text: msg.content,
+            mine: Number(msg.senderID) === Number(currentUser?.userID),
+            rawMessage: msg,
+        }));
+    }, [fetchedMessages, currentUser]);
+
+    const handleSend = () => {
+        if (!message.trim()) return;
+
+        createMessage(
+            { content: message.trim() },
+            {
+                onSuccess: () => {
+                    setMessage("");
+                },
+                onError: (error: any) => {
+                    console.error("Error:", error);
+                    console.log("Status:", error?.response?.status);
+                    console.log("Data:", error?.response?.data);
+                    console.log("Url:", error?.config?.url);
+                },
+            }
+        );
+    };
+
+    if (isLoading) {
+        return (
+            <>
+            <View>
+                <CustomHeader title={name ?? "Chat"} navigation={navigation} showBackArrow={true} showProfilePicture={true} />
+            </View>
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <ActivityIndicator size="large" />
+                <Text style={{ marginTop: 20 }}>Loading messages...</Text>
+            </View>
+            </>
+        );
+    }
+
+    if (isError) {
+        return (
+            <>
+            <View>
+                <CustomHeader title={name ?? "Chat"} navigation={navigation} showBackArrow={true} showProfilePicture={true} />
+            </View>
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <ActivityIndicator size="large" />
+                <Text style={{ marginTop: 20 }}>Something went wrong loading the chat!</Text>
+            </View>
+            </>
+        );
+    }
 
     return (
         <>
@@ -91,7 +92,7 @@ export default function ChatScreen({navigation, route}:any) {
         <KeyboardAvoidingView style={{flex:1}} behavior={"padding"}>
                 <View style={{flex:1}}>
                     <FlatList
-                        data={messages}
+                        data={[...messages].reverse()}
                         inverted
                         keyExtractor={(item) => item.id}
                         contentContainerStyle={{ padding: 8 }}
@@ -128,10 +129,8 @@ export default function ChatScreen({navigation, route}:any) {
                             mode="contained"
                             icon="send"
                             iconColor="white"
-                            onPress={() => {
-                                console.log("sent message", message);
-                                setMessage("");
-                            }}
+                            disabled={isPending}
+                            onPress={handleSend}
                         />
                     </View>
                 </View>
