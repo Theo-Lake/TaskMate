@@ -53,13 +53,16 @@ export default function ViewReviewScreen({navigation, route}:any) {
             <ScrollView>
                 <View style={styles.container}>
                     <Text variant="titleLarge" style={styles.title}>{name}</Text>
-                    <View style={{alignItems:'flex-start',width:'100%'}}>
+                    <StarRating rating={rating}/>
+
+                    {/*<View style={{alignItems:'flex-start',width:'100%'}}>
                         <ProfileCard 
                             userId={reviewAssigneeID}
                             onPress={() => navigation.navigate('PublicProfileScreen', {userId: reviewAssigneeID})}
                             />
-                    </View>
-                    <StarRating rating={rating}/>
+                    </View>*/}
+
+                    
                     
                     <Text style={{fontSize:20}}>{comment}</Text>
 

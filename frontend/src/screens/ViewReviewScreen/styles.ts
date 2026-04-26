@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     title:{
         color: '#000000',
         marginTop:10,
-        marginBottom:20,
+        marginBottom:5,
         textAlign: 'left',
         fontSize:30,
         alignSelf: 'flex-start'
