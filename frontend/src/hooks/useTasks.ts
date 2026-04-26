@@ -10,6 +10,8 @@ import {
     applyForTask,
     acceptApplication,
     rejectApplication,
+    getTaskAssignmentsByTaskId,
+    getTaskAssignmentsByUserId,
 } from "../api/tasks";
 
 // ─── How to use these hooks in a screen ───────────────────────────────────────
@@ -120,4 +122,20 @@ export function useRejectApplication() {
             rejectApplication(taskId, userId),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
     });
+}
+
+export function useTaskAssignmentsByTask(taskId: number) {
+  return useQuery({
+    queryKey: ["tasks", taskId, "assignments"],
+    queryFn: () => getTaskAssignmentsByTaskId(taskId),
+    enabled: !!taskId,
+  });
+}
+
+export function useTaskAssignmentsByUser(userId: number) {
+  return useQuery({
+    queryKey: ["tasks", "assignments", "user", userId],
+    queryFn: () => getTaskAssignmentsByUserId(userId),
+    enabled: !!userId,
+  });
 }
