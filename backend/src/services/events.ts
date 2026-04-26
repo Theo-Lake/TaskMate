@@ -34,7 +34,11 @@ async function getEventAssignmentsByUserID(userID: Number) {
     });
 }
 
-async function getEventAssignmentsByEventID(eventID: Number) {
+async function getEventAssignmentsByEventID(eventID: number) {
+    const parseId = Number(eventID);
+    if (isNaN(parseId)){
+        throw new Error('Error in getEventAssignmentsByEventID. Trying again')
+    }
     return await db.eventAssignment.findMany({
         where: {
             eventID: Number(eventID),

@@ -11,6 +11,9 @@ import {
   acceptEventApplication,
   rejectEventApplication,
   unassignEvent,
+  getAllEventAssignments,
+  getEventAssignmentByEventId,
+  getEventAssignmentByUserId,
 } from "../api/events";
 
 // ─── How to use these hooks in a screen ───────────────────────────────────────
@@ -130,4 +133,26 @@ export function useUnassignEvent() {
       unassignEvent(eventId, userId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["events"] }),
   });
+}
+
+export function useAllEventAssignments(){
+  return useQuery({
+    queryKey:['eventAssignments'],
+    queryFn: getAllEventAssignments,
+  })
+}
+
+export function useEventAssignmentsByEvent(eventId: number){
+  return useQuery({
+    queryKey:['eventAssignments','event', eventId],
+    queryFn: () => getEventAssignmentByEventId(eventId),
+    enabled: !!eventId,
+  })
+}
+export function useEventAssignmentsByUser(userId: number){
+  return useQuery({
+    queryKey:['eventAssignments','user', userId],
+    queryFn: () => getEventAssignmentByUserId(userId),
+    enabled: !!userId,
+  })
 }
