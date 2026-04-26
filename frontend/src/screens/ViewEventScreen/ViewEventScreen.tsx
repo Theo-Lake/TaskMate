@@ -3,57 +3,45 @@ import { View, StyleSheet, Image, ScrollView } from 'react-native';
 import { Text, useTheme, Button, IconButton, ActivityIndicator } from "react-native-paper";
 import {styles} from "./styles"
 import CustomHeader from "../../components/navBar/CustomHeader";
-import PosterCard from "../../components/cards/ProfileCard"
+import ProfileCard from "../../components/cards/ProfileCard";
 
-import { useEvent } from "../../hooks/useEvents";
-import { useUser } from "../../hooks/useUsers";
+import { useEvent, useEventAssignmentsByEvent, useApplyForEvent } from "../../hooks/useEvents";
 
-const task = {
-    id: '1',
-    title: 'Study buddy',
-    price: '10',
-    imageUrl: require('../../../assets/img/img.png'),
-    description: 'need study buddy for 2 hours example example example example example example example example example example example example example',
-    poster: 'Joe Doe',
-    posterReputation:3.5,
-    date: '2020-12-11T14:30:00.000Z',
-    amountOfAssignees: 6
-  }
-const assignees=[
-    {
-        id:'1',
-        name:'Joe Doe',
-        reputation:2,
-    },
-    {
-        id:'2',
-        name:'Doe Joe',
-        reputation:4,
-    },
-    {
-        id:'3',
-        name:'Moe Moe',
-        reputation:3.5,
-    }
-]
+
 const formatDate = (isoString: string)=>{
     const date = new Date(isoString);
     return date.toLocaleDateString('gb-GB')
 }
 
 export default function ViewEventScreen({navigation, route}:any) {
-    const eventId = Number(route.params?.eventId);
+    const eventID = Number(route.params?.eventID || route.params?.eventId);
     const passedEvent = route.params?.event;
 
-    const { data, isLoading, isError } = useEvent(eventId);
+    const { data, isLoading, isError } = useEvent(eventID);
 
+    const {data:assignmentsData, isLoading: assignmentsLoading} = useEventAssignmentsByEvent(eventID);
+    const {mutate: applyForEvent, isPending:isApplying}=useApplyForEvent();
     const fetchedEvent = data?.event ?? data;
     const event = passedEvent ?? fetchedEvent;
 
-    const publisherId = event?.publisherID ?? null;
-    const { data: publisherProfile } = useUser(publisherId);
-    const publisher = publisherProfile?.users.user;
+    const assignees = Array.isArray(assignmentsData?.eventAssignment)
+    ? assignmentsData.eventAssignment
+    : Array.isArray(assignmentsData)
+    ? assignmentsData
+    : [];
 
+    const handleAcceptEvent=()=>{
+        if (!eventID) return;
+    
+        applyForEvent(eventID,{
+            onSuccess: () => {
+                navigation.navigate('TasksTab', {screen:'Tasks'})
+            },
+            onError: (error:any) =>{
+                console.error("Error:", error)
+            }
+        })
+    }
     // nicer looking text for category
     const getEventTypeLabel = (type: string) => {
         switch (type) {
@@ -76,7 +64,7 @@ export default function ViewEventScreen({navigation, route}:any) {
         }
     };
 
-    if (isLoading) {
+    if (isLoading || assignmentsLoading) {
         return (
             <View style={{flex:1}}>
                 <CustomHeader title="View Event" navigation={navigation} showBackArrow={true} showProfilePicture={true} />
@@ -99,14 +87,21 @@ export default function ViewEventScreen({navigation, route}:any) {
         );
     }
 
-    const imageSource = event.images ? { uri: Array.isArray(event.images) ? event.images[0] : event.images} : require("../../../assets/img/img.png");
+    const hasImage = event.images && (Array.isArray(event.images) ? event.images.length >0: true);
+    const imageSource = Array.isArray(event.images) ? event.images[0] : event.images
 
     return (
         <View style={{flex:1}}>
             <CustomHeader title="View Event" navigation={navigation} showBackArrow={true} showProfilePicture={true} />
             <ScrollView>
                 <View style={styles.container}>
-                    <Image source={imageSource} style={styles.taskImage} resizeMode="cover"/>
+                    {hasImage && (
+                        <Image
+                            source={{uri: imageSource}}
+                            style={styles.taskImage}
+                            resizeMode="cover"
+                        />
+                    )}
                     {/*<TextInput mode="flat" underlineColor="tran" value="use" editable={false} style={styles.textBox}/>*/}
                     <Text variant="titleLarge" style={styles.title}>{event.name}</Text>
                     
@@ -114,10 +109,7 @@ export default function ViewEventScreen({navigation, route}:any) {
 
                     <Text variant="bodyLarge" style={{ marginTop:7, marginBottom:7, textAlign:"left", alignSelf: 'flex-start'}}>Posted by:</Text>
                     <View style={{alignItems:'flex-start',width:'100%'}}>
-                        <PosterCard 
-                            title={publisher?.username ?? "Unknown user"}
-                            review={publisher?.rating ?? 0}
-                            />
+                        <ProfileCard userId={event.publisherID}/>
                     </View>
                     <View style={styles.dateStringContainer}>
                         <IconButton icon="calendar-outline" size={20}
@@ -153,20 +145,23 @@ export default function ViewEventScreen({navigation, route}:any) {
                             </Text>
                         </View>
                         <View style={styles.assigneesRankField}>
-                            {assignees.map((person) => (
-                                <View key={person.id} >
-                                    <PosterCard 
-                                    title={person.name}
-                                    review={person.reputation}
-                                    />
-                                </View>
-
-                            ))}
+                            {assignees.length >0 ?(
+                                assignees.map((person:any)=>{
+                                    const assigneeId = Number(person.userID ?? person.assigneeID ?? person.id);
+                                    return(
+                                        <View key={String(assigneeId)} style={{ width: "100%", marginBottom: 10 }}>
+                                            <ProfileCard userId={assigneeId}/>
+                                        </View>
+                                    )
+                                })
+                            ) : (
+                                <Text>No attendees yet</Text>
+                            )}
                         </View>
 
                     </View>
                     <View style={{flexDirection:'row',gap:5}}>
-                        <Button icon="check" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Accept</Button>
+                        <Button icon="check" mode="contained" onPress={handleAcceptEvent} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Accept</Button>
                         <Button icon="message-text-outline" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Message</Button>
                     </View>
 
