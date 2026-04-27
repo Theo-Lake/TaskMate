@@ -56,6 +56,7 @@ export function useAllTasksByUser(userId: number) {
     return useQuery({
         queryKey: ["tasks", "user", userId],
         queryFn: () => getAllTasksByUser(userId),
+        enabled: !!userId && !isNaN(userId),
     });
 }
 
