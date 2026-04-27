@@ -5,7 +5,6 @@ import {styles} from './styles';
 import Logo from '../../../assets/img/logoNoText.png';
 import CustomHeader from '../../components/navBar/CustomHeader';
 import { useVerifyEmail } from '../../hooks/useAuth';
-import { useAuth } from '../../context/AuthContext';
 import { EmailVerificcationSchema } from '../../validation/schemas/emailCode';
 //Don't forget to change keyboard type
 const EmailConfirmationScreen = ({navigation,route}:any) => {
@@ -13,7 +12,7 @@ const EmailConfirmationScreen = ({navigation,route}:any) => {
   const [isTickboxChecked, setIsTickboxChecked] = useState<boolean>(false);
   const {userID} = route.params || {};
   const {mutate:verifyEmailMutation, isPending} = useVerifyEmail();
-  const { login } = useAuth();
+  //MIght be used for saving error:
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const deleteOldError=(text:string)=>{
     setCode(text);
@@ -34,14 +33,15 @@ const EmailConfirmationScreen = ({navigation,route}:any) => {
 
 
     if (!validationPassed.success){
-      setErrorMsg(validationPassed.error.issues[0].message);
+      setErrorMsg(validationPassed.error.errors[0].message);
       return;
     }
     verifyEmailMutation(
       {userId:Number(userID), token:trimmedCode},
       {
-        onSuccess: (data: any) => {
-          login(data.accessToken, data.refreshToken, Number(userID));
+        onSuccess: () => {
+          navigation.navigate('MainApp');
+
         },
         onError:(error:any)=>{
           const backendError = error.response?.data?.error || "Invalid  code.";
