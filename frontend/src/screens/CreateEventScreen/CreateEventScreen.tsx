@@ -140,9 +140,7 @@ export default function CreateEventScreen({ navigation }: any) {
 	};
 
 	const handlePostEvent = () => {
-		const parsedDueDate = timeLimit
-			? parseDueDate(date)
-			: getFallbackDate();
+		const parsedDueDate = parseDueDate(date);
 		const imagesArray = imageUrl ? [imageUrl] : [];
 
 		const formData = {
@@ -231,15 +229,7 @@ export default function CreateEventScreen({ navigation }: any) {
 							</Text>
 						)}
 
-						<Checkbox.Item
-							label="Time limit"
-							status={timeLimit ? "checked" : "unchecked"}
-							onPress={() => setTimeLimit(!timeLimit)}
-							position="leading"
-							mode="android"
-							labelStyle={{ textAlign: "left", color: "#333" }}
-						/>
-						{timeLimit && (
+						
 							<TextInput
 								mode="flat"
 								label={"Due Date (DD/MM/YYYY)"}
@@ -255,12 +245,7 @@ export default function CreateEventScreen({ navigation }: any) {
 										options={{ format: "DD/MM/YYYY" }}
 									/>
 								)}
-							/>
-						)}
-						{errors.dueDate && (
-							<Text style={{ color: "red" }}>
-								{errors.dueDate[0]}
-							</Text>
+							/>{errors.dueDate && (<Text style={{ color: "red" }}>{errors.dueDate[0]}</Text>
 						)}
 
 						<Text variant="labelLarge" style={styles.title}>
