@@ -15,6 +15,4 @@ router.get("/allByUserId", auth.withAuth, transactionController.getAllTransactio
 // Process a transaction
 router.post("/:taskId", auth.withAuth, transactionController.processTransaction);
 
-// Update transaction
-
 export default router;
