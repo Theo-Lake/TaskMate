@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 import { getRefreshToken, storeTokens, clearTokens } from "../auth/auth";
 import { registerSignOut } from "../auth/authState";
 type AuthContextType = {
@@ -33,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		setIsAuthenticated(false);
 	}
 
-	if (loading) return null;
+	if (loading) return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><ActivityIndicator size="large" /></View>;
 
 	return (
 		<AuthContext.Provider value={{ isAuthenticated, login, logout }}>
