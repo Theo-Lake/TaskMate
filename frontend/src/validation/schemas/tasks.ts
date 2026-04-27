@@ -23,7 +23,7 @@ export const TaskSchema = z.object({
 		.max(100, "Too many people Required.")
 		.min(1, "A person is required."),
 	dueDate: z.coerce.date().refine((d) => d > new Date(), {
-		message: "Due date must be in the future",
+		message: "Due date required",
 	}),
 	description: z
 		.string()

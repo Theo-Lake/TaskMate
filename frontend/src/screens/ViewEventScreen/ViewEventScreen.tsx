@@ -161,7 +161,7 @@ export default function ViewEventScreen({navigation, route}:any) {
 
                     </View>
                     <View style={{flexDirection:'row',gap:5}}>
-                        <Button icon="check" mode="contained" onPress={handleAcceptEvent} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Accept</Button>
+                        <Button icon="check" mode="contained" onPress={handleAcceptEvent} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Apply</Button>
                         <Button icon="message-text-outline" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Message</Button>
                     </View>
 
