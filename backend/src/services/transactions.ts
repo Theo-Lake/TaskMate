@@ -7,17 +7,17 @@ import {
 
 const PLATFORM_USER_ID = Number(process.env.PLATFORM_USER_ID);
 
-export async function getAllPayments() {
+export async function getAllTransactions() {
     return await db.transactions.findMany();
 }
 
-export async function getPaymentById(transactionId: Number) {
+export async function getTransactionById(transactionId: Number) {
     return await db.transactions.findUnique({
         where: { transactionID: Number(transactionId) },
     });
 }
 
-export async function getAllPaymentsByUserId(userId: Number) {
+export async function getAllTransactionsByUserId(userId: Number) {
     return await db.transactions.findMany({
         where: {
             OR: [{ payerID: Number(userId) }, { receiverID: Number(userId) }],
@@ -25,7 +25,7 @@ export async function getAllPaymentsByUserId(userId: Number) {
     });
 }
 
-export async function processPayment(userID: Number, taskID: Number) {
+export async function processTransaction(userID: Number, taskID: Number) {
     const task = await db.task.findUnique({
         where: { taskID: Number(taskID) },
     });
@@ -39,6 +39,7 @@ export async function processPayment(userID: Number, taskID: Number) {
         type = "ESCROW";
         payerID = userID;
         receiverID = PLATFORM_USER_ID;
+        console.log("Taking money");
     } else if (task.status === Status.complete) {
         const assignment = await db.taskAssignment.findFirst({
             where: {
@@ -51,8 +52,9 @@ export async function processPayment(userID: Number, taskID: Number) {
         type = "RELEASE";
         payerID = PLATFORM_USER_ID;
         receiverID = assignment.assigneeID;
+        console.log("Giving money");
     } else {
-        throw new Error("Invalid task status for payment.");
+        throw new Error("Invalid task status for Transaction.");
     }
 
     return await db.transactions.create({
@@ -67,9 +69,9 @@ export async function processPayment(userID: Number, taskID: Number) {
     });
 }
 
-export const paymentServices = {
-    getAllPayments,
-    getPaymentById,
-    getAllPaymentsByUserId,
-    processPayment,
+export const transactionServices = {
+    getAllTransactions,
+    getTransactionById,
+    getAllTransactionsByUserId,
+    processTransaction,
 };

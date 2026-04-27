@@ -23,7 +23,7 @@ router.use("/events", eventRoutes);
 import authRoutes from "./auth";
 router.use("/auth", authRoutes);
 
-import paymentRoutes from "./payments";
+import paymentRoutes from "./transactions";
 router.use("/transaction", paymentRoutes)
 
 export default router;
