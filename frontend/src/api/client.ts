@@ -1,15 +1,8 @@
 import axios from "axios";
-import Constants from "expo-constants";
 import { getAccessToken, getRefreshToken, storeTokens, clearTokens } from "../auth/auth";
 import { signOut } from "../auth/authState";
 
-const getApiUrl = () => {
-    const debugHost = Constants.expoConfig?.hostUri?.split(':')[0];
-    if (debugHost) return `http://${debugHost}:4000/api`;
-    return process.env.EXPO_PUBLIC_API_URL!;
-};
-
-export const API_URL = getApiUrl();
+export const API_URL = process.env.EXPO_PUBLIC_API_URL!;
 
 const client = axios.create({ baseURL: API_URL });
 
