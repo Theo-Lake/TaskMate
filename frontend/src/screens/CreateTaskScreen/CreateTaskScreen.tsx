@@ -124,7 +124,7 @@ export default function CreateTaskScreen({navigation}:any) {
     const handlePostTask = () => {
         console.log("post pressed");
 
-        const parsedDueDate = timeLimit ? parseDueDate(date) : getFallbackDate();
+        const parsedDueDate = parseDueDate(date);
 
         const imagesArray = imageUrl ? [imageUrl] : [];
 
@@ -183,33 +183,23 @@ export default function CreateTaskScreen({navigation}:any) {
                     <TextInput mode='outlined'  label="Task description:" value={taskDesc} onChangeText={text => setTaskDesc(text)} style={styles.textBoxTall} multiline={true} textAlignVertical="top" error={!!errors.description}/>{errors.description && <Text style={{ color: "red" }}>{errors.description[0]}</Text>}
                     <TextInput mode='outlined' label="Enter reward value:" value={price} onChangeText={setPrice} style={styles.textBox} left={<TextInput.Icon icon="currency-gbp"/>} error={!!errors.payment}/>{errors.payment && <Text style={{ color: "red" }}>{errors.payment[0]}</Text>}
 
-                    <Checkbox.Item
-                        label="Time limit"
-                        status={timeLimit ? 'checked' : 'unchecked'}
-                        onPress={() => setTimeLimit(!timeLimit)}
-                        position="leading"
-                        mode= "android"
-                        labelStyle={{ textAlign: 'left', color: '#333' }}
-                        />
-                    {timeLimit && (
-                        <TextInput
-                            mode="flat"
-                            label={"Due Date (DD/MM/YYYY)"}
-                            style={styles.textBox}
-                            left={<TextInput.Icon icon="calendar" />}
-                            keyboardType="numeric"
-                            value={date}
-                            onChangeText={setDate}
-                            render={props => (
-                                <TextInputMask
-                                    {...props}
-                                    type={'datetime'}
-                                    options={{format:'DD/MM/YYYY'}}
-                                    
-                                />
-                            )}
-                        />
-                    )}{errors.dueDate && (<Text style={{ color: "red" }}>{errors.dueDate[0]}</Text>)}
+                    <TextInput
+                        mode="flat"
+                        label={"Due Date (DD/MM/YYYY)"}
+                        style={styles.textBox}
+                        left={<TextInput.Icon icon="calendar" />}
+                        keyboardType="numeric"
+                        value={date}
+                        onChangeText={setDate}
+                        render={props => (
+                            <TextInputMask
+                                {...props as any}
+                                type={'datetime'}
+                                options={{format:'DD/MM/YYYY'}}
+                                
+                            /> 
+                        )}
+                    />{errors.dueDate && (<Text style={{ color: "red" }}>{errors.dueDate[0]}</Text>)}
 
 
                     <Text variant="labelLarge" style={styles.title}>Upload task image:</Text>

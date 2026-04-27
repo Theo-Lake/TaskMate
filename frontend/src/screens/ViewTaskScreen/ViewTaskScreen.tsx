@@ -210,7 +210,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
                             contentStyle={{marginVertical:10}}
                             loading={isApplying}
                             disabled={isApplying}
-                            >Accept</Button>
+                            >Apply</Button>
                         <Button icon="message-text-outline" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Message</Button>
                     </View>
 

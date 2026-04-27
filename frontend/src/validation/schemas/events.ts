@@ -14,7 +14,7 @@ export const EventSchema = z.object({
 		.max(500, "Too many people.")
 		.min(1, "At least one person is required"),
 	dueDate: z.coerce.date().refine((d) => d > new Date(), {
-		message: "Due date must be in the future!",
+		message: "Due date required",
 	}),
 	description: z
 		.string()
