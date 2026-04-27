@@ -34,13 +34,10 @@ function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showPr
 
         <Appbar.Content title={title} color="white"/>
 
-        {showProfilePicture && currentUSer && !isLoading && (
-            <TouchableOpacity onPress={() => navigation.navigate('MyTasksTab', { screen: 'UserProfileScreen' })}>
-                <CustomerAvatar size={40} user={currentUSer}/>
-            </TouchableOpacity>
-            
-            
-        )}
+
+        <TouchableOpacity onPress={() => navigation.navigate('MyTasksTab', { screen: 'UserProfileScreen' })}>
+            <CustomerAvatar size={40} user={currentUSer}/>
+        </TouchableOpacity>
 
         </Appbar.Header>
     )
