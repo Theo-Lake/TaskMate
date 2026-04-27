@@ -47,7 +47,7 @@ export default function TasksScreen({navigation}:any) {
         title: task.name,
         price: task.payment,
         description: task.description,
-        imageUrl: task.imageUrl,
+        imageUrl: task.images ? (Array.isArray(task.images) ? task.images[0] : task.images) : require("../../../assets/img/img.png"),
         category: task.type,
         rawTask: task,
       }));
@@ -89,8 +89,7 @@ export default function TasksScreen({navigation}:any) {
 
 
       if (isOwnTask) {
-        navigation.navigate("MyTasksTab", {screen: "ViewOwnTask", params: {taskId: Number(task.id), task: task.rawTask}
-        });
+        navigation.navigate("MyTasksTab", {screen: "ViewOwnTask", params: {taskId: Number(task.id), task: task.rawTask}});
       }
 
       else {
