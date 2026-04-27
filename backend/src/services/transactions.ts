@@ -40,19 +40,6 @@ export async function processTransaction(userID: Number, taskID: Number) {
         payerID = userID;
         receiverID = PLATFORM_USER_ID;
         console.log("Taking money");
-    } else if (task.status === Status.complete) {
-        const assignment = await db.taskAssignment.findFirst({
-            where: {
-                taskID: Number(taskID),
-                status: ApplicationStatus.accepted,
-            },
-        });
-        if (!assignment) throw new Error("No accepted assignment found.");
-
-        type = "RELEASE";
-        payerID = PLATFORM_USER_ID;
-        receiverID = assignment.assigneeID;
-        console.log("Giving money");
     } else {
         throw new Error("Invalid task status for Transaction.");
     }
