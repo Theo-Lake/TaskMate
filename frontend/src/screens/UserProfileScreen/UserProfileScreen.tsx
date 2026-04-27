@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Image,FlatList } from 'react-native';
-import {  Icon, IconButton, Text, TextInput, useTheme, Chip, ActivityIndicator } from "react-native-paper";
+import { View, StyleSheet, Image,FlatList, Alert } from 'react-native';
+import {  Icon, IconButton, Text, Button,  ActivityIndicator } from "react-native-paper";
 import {styles} from "./styles"
 import CustomHeader from "../../components/navBar/CustomHeader";
 import CustomerAvatar from "../../components/avatars/CustomerAvatars";
 import StarRatingGroup from "../../components/StarRatingGroup/StarRatingGroup"
 import { ScrollView } from "react-native";
 import ReviewCard from "../../components/cards/ReviewCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 import { useCurrentUser } from "../../hooks/useUsers";
+import { useAuth } from "../../context/AuthContext";
+
 import { useMyReceivedReviews } from "../../hooks/useReviews";
+import { logout } from "../../api/auth";
 // hardcoded rewiews. Use for testing. in the future we'll grab from the server
 /*
 const reviews = [
@@ -52,8 +57,29 @@ const reviews = [
 ]*/
 
 export default function UserProfileScreen({navigation}:any) {
-  //gfetting userId 
-    
+
+  
+  const handleLogout= async () => {
+    Alert.alert(
+        "Log out",
+        "Do you want to log out?",
+        [
+            {text: "Cancel", style:'cancel'},
+            {
+                text:'Log Out', 
+                style: "destructive",
+                onPress: async()=>{
+                    try{
+                        await AsyncStorage.removeItem('myID')
+                        await logout();
+                    } catch (error){
+                        Alert.alert("Errorr", "Failed to log out")
+                    }
+                }
+            }
+        ]
+    )
+ }
 
     //getting user:
     const { data: respdata, isLoading:profileLoading, isError, error } = useCurrentUser();
@@ -72,6 +98,8 @@ export default function UserProfileScreen({navigation}:any) {
       return(
         <View style={styles.activityIndicator}>
           <Text style={{ color: 'red' }}>Error loading profile: {error?.message}. Try to restart</Text>
+          <Button icon="logout" mode="contained" onPress={handleLogout} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:16, lineHeight:25}} contentStyle={{marginVertical:10}}>Log out</Button>
+
         </View>
       )
     }
