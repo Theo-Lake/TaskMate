@@ -141,7 +141,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
 
                     <Text variant="bodyLarge" style={{ marginTop:7, marginBottom:7, textAlign:"left", alignSelf: 'flex-start'}}>Posted by:</Text>
                     <View style={{alignItems:'flex-start',width:'100%'}}>
-                        <ProfileCard userId={task?.publisherID}/>
+                        <ProfileCard userId={task?.publisherID} onPress={() => navigation.navigate('PublicProfileScreen', {userId: task?.publisherID})}/>
                     </View>
                     <View style={styles.dateStringContainer}>
                         <IconButton icon="calendar-outline" size={20}
@@ -191,7 +191,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
 
                                     return (
                                         <View key={String(person.userID)} style={{ width: "100%", marginBottom: 14}}>
-                                            <ProfileCard userId={person.userID}/>
+                                            <ProfileCard userId={person.userID} onPress={() => navigation.navigate('PublicProfileScreen', {userId: person.userID})}/>
                                         </View>
                                     );
                                 })

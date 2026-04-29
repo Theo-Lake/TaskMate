@@ -109,7 +109,7 @@ export default function ViewEventScreen({navigation, route}:any) {
 
                     <Text variant="bodyLarge" style={{ marginTop:7, marginBottom:7, textAlign:"left", alignSelf: 'flex-start'}}>Posted by:</Text>
                     <View style={{alignItems:'flex-start',width:'100%'}}>
-                        <ProfileCard userId={event.publisherID}/>
+                        <ProfileCard userId={event.publisherID} onPress={() => navigation.navigate('PublicProfileScreen', {userId: event.publisherID})}/>
                     </View>
                     <View style={styles.dateStringContainer}>
                         <IconButton icon="calendar-outline" size={20}
@@ -150,7 +150,7 @@ export default function ViewEventScreen({navigation, route}:any) {
                                     const assigneeId = Number(person.userID ?? person.assigneeID ?? person.id);
                                     return(
                                         <View key={String(assigneeId)} style={{ width: "100%", marginBottom: 10 }}>
-                                            <ProfileCard userId={assigneeId}/>
+                                            <ProfileCard userId={assigneeId} onPress={() => navigation.navigate('PublicProfileScreen', {userId: assigneeId})}/>
                                         </View>
                                     )
                                 })
