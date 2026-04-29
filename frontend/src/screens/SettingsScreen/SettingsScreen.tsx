@@ -11,7 +11,6 @@ import {styles} from "./styles"
 import { useCurrentUser, useUpdateUser } from "../../hooks/useUsers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../context/AuthContext";
-import { uploadProfilePicture } from "../../lib/uploadImage";
 
 export default function SettingsScreen({navigation}:any) {
     const { data: respdata, isLoading:profileLoading, isError, error } = useCurrentUser();
@@ -52,11 +51,12 @@ export default function SettingsScreen({navigation}:any) {
              allowsEditing: true,
              aspect:[1,1],
              quality:0.3,
+             base64: true,
          });
          if (!imagRes.canceled){
-            const uri = imagRes.assets[0].uri;
-            setImageUri(uri);
-            setPickedLocalUri(uri);
+            const dataUri = `data:image/jpeg;base64,${imagRes.assets[0].base64}`;
+            setImageUri(dataUri);
+            setPickedLocalUri(dataUri);
          }
      }
      let imageContent;
@@ -88,8 +88,8 @@ export default function SettingsScreen({navigation}:any) {
                 firstName: FirstNameText.trim(),
                 lastName: SecondNameText.trim(),
             }
-            if (pickedLocalUri && user?.userID){
-                payload.profilePicture = await uploadProfilePicture(pickedLocalUri, String(user.userID));
+            if (pickedLocalUri){
+                payload.profilePicture = pickedLocalUri;
             }
             UpdateProfile(payload,{
                 onSuccess:()=>{
