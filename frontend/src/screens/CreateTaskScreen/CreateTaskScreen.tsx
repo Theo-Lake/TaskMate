@@ -181,7 +181,7 @@ export default function CreateTaskScreen({navigation}:any) {
                 <View style = {styles.content}>
                     <TextInput mode='outlined' label="Task title:" value={taskTitle} onChangeText={text => setTaskTitleText(text)} style={styles.textBox} error={!!errors.name}/>{errors.name && <Text style={{ color: "red" }}>{errors.name[0]}</Text>}
                     <TextInput mode='outlined'  label="Task description:" value={taskDesc} onChangeText={text => setTaskDesc(text)} style={styles.textBoxTall} multiline={true} textAlignVertical="top" error={!!errors.description}/>{errors.description && <Text style={{ color: "red" }}>{errors.description[0]}</Text>}
-                    <TextInput mode='outlined' label="Enter reward value:" value={price} onChangeText={setPrice} style={styles.textBox} left={<TextInput.Icon icon="currency-gbp"/>} error={!!errors.payment}/>{errors.payment && <Text style={{ color: "red" }}>{errors.payment[0]}</Text>}
+                    <TextInput mode='outlined' label="Enter reward value:" value={price} keyboardType="numeric" onChangeText={setPrice} style={styles.textBox} left={<TextInput.Icon icon="currency-gbp"/>} error={!!errors.payment}/>{errors.payment && <Text style={{ color: "red" }}>{errors.payment[0]}</Text>}
 
                     <TextInput
                         mode="flat"
@@ -207,7 +207,7 @@ export default function CreateTaskScreen({navigation}:any) {
                     {imageContent}
                     <TextInput 
                         mode="outlined" 
-                        label="Location:" 
+                        label="Location:"
                         value={location} 
                         onChangeText={text => setLocation(text)} 
                         style={styles.textBox} 
@@ -218,6 +218,7 @@ export default function CreateTaskScreen({navigation}:any) {
                         mode="outlined" 
                         label="Number of People:" 
                         value={peopleRequired} 
+                        keyboardType="numeric"
                         onChangeText={text => setPeopleRequired(text)} 
                         style={styles.textBox}
                         left={<TextInput.Icon icon="account-outline"/>}
