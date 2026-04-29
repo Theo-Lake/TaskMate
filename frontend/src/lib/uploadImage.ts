@@ -1,49 +1,39 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { supabase } from "./supabase";
 
-function buildFormData(uri: string, fileName: string): FormData {
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+
+async function uploadToSupabase(bucket: string, filePath: string, uri: string): Promise<string> {
     const formData = new FormData();
-    formData.append("file", { uri, name: fileName, type: "image/jpeg" } as any);
-    return formData;
+    formData.append("file", { uri, name: "photo.jpg", type: "image/jpeg" } as any);
+
+    const response = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/${bucket}/${filePath}`,
+        {
+            method: "POST",
+            headers: { Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+            body: formData,
+        }
+    );
+
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.message ?? `Upload failed (${response.status})`);
+    }
+
+    return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${filePath}`;
 }
 
 export async function uploadProfilePicture(uri: string, userId: string): Promise<string> {
-    const filePath = `avatars/${userId}-${Date.now()}.jpg`;
-
-    const { error } = await supabase.storage
-        .from("profile-pictures")
-        .upload(filePath, buildFormData(uri, filePath), { contentType: "image/jpeg", upsert: true });
-
-    if (error) throw new Error(error.message);
-
-    const { data } = supabase.storage.from("profile-pictures").getPublicUrl(filePath);
-    return data.publicUrl;
+    return uploadToSupabase("profile-pictures", `avatars/${userId}-${Date.now()}.jpg`, uri);
 }
 
 export async function uploadTaskImage(uri: string): Promise<string> {
     const userId = await AsyncStorage.getItem("userId") ?? "unknown";
-    const filePath = `tasks/${userId}-${Date.now()}.jpg`;
-
-    const { error } = await supabase.storage
-        .from("task-images")
-        .upload(filePath, buildFormData(uri, filePath), { contentType: "image/jpeg", upsert: true });
-
-    if (error) throw new Error(error.message);
-
-    const { data } = supabase.storage.from("task-images").getPublicUrl(filePath);
-    return data.publicUrl;
+    return uploadToSupabase("task-images", `tasks/${userId}-${Date.now()}.jpg`, uri);
 }
 
 export async function uploadEventImage(uri: string): Promise<string> {
     const userId = await AsyncStorage.getItem("userId") ?? "unknown";
-    const filePath = `events/${userId}-${Date.now()}.jpg`;
-
-    const { error } = await supabase.storage
-        .from("event-images")
-        .upload(filePath, buildFormData(uri, filePath), { contentType: "image/jpeg", upsert: true });
-
-    if (error) throw new Error(error.message);
-
-    const { data } = supabase.storage.from("event-images").getPublicUrl(filePath);
-    return data.publicUrl;
+    return uploadToSupabase("event-images", `events/${userId}-${Date.now()}.jpg`, uri);
 }
