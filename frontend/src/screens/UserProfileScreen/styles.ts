@@ -26,11 +26,13 @@ export const styles = StyleSheet.create({
 
     },
     profileInfo:{
+        flex: 1,
         marginLeft:10,
         justifyContent:"center",
     },
     settingsButton:{
-
+        paddingRight:10,
+        justifyContent: 'center'
     },
     textBox:{
         marginBottom:1,
