@@ -169,13 +169,7 @@ export default function EventsScreen({navigation}:any) {
                     }
     
                     renderSectionHeader={() => 
-                    <View style={{flexDirection: 'row', marginLeft:10, backgroundColor:'#f2f2f2'}}>
-                        <View style={styles.chip}>
-                        <Chip mode="outlined" onPress={() => console.log('sort pressed')}>Sort</Chip>
-                        </View>
-    
-                        <View style={{borderRightWidth:2, borderRightColor:'#969696', marginTop:8, marginBottom:8}}></View>
-    
+                    <View style={{flexDirection: 'row', backgroundColor:'#f2f2f2'}}>
                         {/* could turn into a component for reuse in events screen */}
                         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{flexDirection: 'row'}} stickyHeaderIndices={[1]}>
                         <View style={[styles.chip, {marginLeft:10}]}>

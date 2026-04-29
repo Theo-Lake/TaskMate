@@ -184,6 +184,18 @@ export default function CreateEventScreen({ navigation }: any) {
 		);
 	};
 
+	const handleTextNum = (text: string) => {
+        const cleanVal = text.replace(/[^0-9]/g, '');
+        const parseVal = parseInt(cleanVal, 10);
+
+        if (!isNaN(parseVal)) {
+            return parseVal.toString();
+        }
+        else {
+            return '';
+        }
+    };
+
 	return (
 		<>
 			<View>
@@ -269,7 +281,7 @@ export default function CreateEventScreen({ navigation }: any) {
 							label="Participants:"
                         	keyboardType="numeric"
 							value={peopleRequired}
-							onChangeText={setPeopleRequired}
+							onChangeText={text => setPeopleRequired(handleTextNum(text))}
 							style={styles.textBox}
 							left={<TextInput.Icon icon="account-outline" />}
 						/>
