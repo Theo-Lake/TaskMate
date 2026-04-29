@@ -11,6 +11,7 @@ import {
     acceptApplication,
     rejectApplication,
 } from "../api/tasks";
+import { processTransaction } from "../api/transactions";
 
 // ─── How to use these hooks in a screen ───────────────────────────────────────
 //
@@ -68,7 +69,10 @@ export function useCreateTask() {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (data: unknown) => createTask(data),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+        onSuccess: (createdTask) => {
+            processTransaction(createdTask.taskID)
+            queryClient.invalidateQueries({ queryKey: ["tasks"] });
+        }
     });
 }
 
