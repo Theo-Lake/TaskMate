@@ -269,6 +269,7 @@ export default function CreateEventScreen({ navigation }: any) {
 						<TextInput
 							mode="outlined"
 							label="Participants:"
+                        	keyboardType="numeric"
 							value={peopleRequired}
 							onChangeText={setPeopleRequired}
 							style={styles.textBox}
