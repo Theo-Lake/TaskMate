@@ -42,15 +42,18 @@ export default function TasksScreen({navigation}:any) {
 
     // map tasks
     const mappedTasks = useMemo<DisplayTask[]>(() => {
-      return fetchedTasks.map((task: any) => ({
-        id: String(task.taskID),
-        title: task.name,
-        price: task.payment,
-        description: task.description,
-        imageUrl: task.images ? (Array.isArray(task.images) ? task.images[0] : task.images) : require("../../../assets/img/img.png"),
-        category: task.type,
-        rawTask: task,
-      }));
+      return fetchedTasks
+        // filters out tasks the current user published from the list
+        .filter((task: any) => Number(task.publisherID) !== Number(currentUser?.userID))  
+        .map((task: any) => ({
+          id: String(task.taskID),
+          title: task.name,
+          price: task.payment,
+          description: task.description,
+          imageUrl: task.images ? (Array.isArray(task.images) ? task.images[0] : task.images) : require("../../../assets/img/img.png"),
+          category: task.type,
+          rawTask: task,
+        }));
     }, [fetchedTasks]);
 
     // apply filter to mapped task list
