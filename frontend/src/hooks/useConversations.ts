@@ -12,10 +12,7 @@ export function useAllConversations() {
   return useQuery({
     queryKey: ["conversations"],
     queryFn: getAllConversations,
-    refetchInterval: 3000,
-    refetchIntervalInBackground: true,
     refetchOnWindowFocus: true,
-    staleTime: 0,
   });
 }
 
@@ -24,10 +21,7 @@ export function useConversation(convoId: number) {
     queryKey: ["conversations", convoId],
     queryFn: () => getConversationById(convoId),
     enabled: !!convoId,
-    refetchInterval: 3000,
-    refetchIntervalInBackground: true,
     refetchOnWindowFocus: true,
-    staleTime: 0,
   });
 }
 
@@ -36,10 +30,6 @@ export function useConversationMessages(convoId: number) {
     queryKey: ["conversations", convoId, "messages"],
     queryFn: () => getAllMessages(convoId),
     enabled: !!convoId,
-    refetchInterval: 1500,
-    refetchIntervalInBackground: true,
-    refetchOnWindowFocus: true,
-    staleTime: 0,
   });
 }
 
@@ -49,7 +39,6 @@ export function useMessage(convoId: number, messageId: number) {
     queryFn: () => getMessageById(convoId, messageId),
     enabled: !!convoId && !!messageId,
     refetchOnWindowFocus: true,
-    staleTime: 0,
   });
 }
 
