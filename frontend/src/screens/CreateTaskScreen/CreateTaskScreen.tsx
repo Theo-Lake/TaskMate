@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import {  Text, useTheme, TextInput, Checkbox,  Button, IconButton, Menu } from "react-native-paper";
 import {styles} from "./styles"
 import * as ImagePicker from 'expo-image-picker'
@@ -177,6 +177,7 @@ export default function CreateTaskScreen({navigation}:any) {
             <CustomHeader title="Create Task" navigation={navigation} showBackArrow={true} showProfilePicture={false}/>
         </View>
         <View style={{flex:1}}>
+            <KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'ios' ? 64 :0 }>
             <ScrollView>
                 <View style = {styles.content}>
                     <TextInput mode='outlined' label="Task title:" value={taskTitle} onChangeText={text => setTaskTitleText(text)} style={styles.textBox} error={!!errors.name}/>{errors.name && <Text style={{ color: "red" }}>{errors.name[0]}</Text>}
@@ -242,6 +243,7 @@ export default function CreateTaskScreen({navigation}:any) {
                     </View>
                 </View>
             </ScrollView>
+            </KeyboardAvoidingView>
         </View>
         </>
 

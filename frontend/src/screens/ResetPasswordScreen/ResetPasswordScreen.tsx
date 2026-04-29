@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import { View, StyleSheet, Image, Text, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, Text, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { Appbar, TextInput, Button } from "react-native-paper";
 import {styles} from "./styles"
 
@@ -95,6 +95,7 @@ export default function ResetPasswordScreen({ navigation }: any) {
     return (
         <View style={styles.container}>
             <CustomHeader title="Reset password" navigation={navigation} showBackArrow={true} />
+            <KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'ios' ? 64 :0 }>            
             <ScrollView contentContainerStyle={{flexGrow:1}}>
                 <View style={styles.content}>
                         {resState ===1 ? (
@@ -127,6 +128,7 @@ export default function ResetPasswordScreen({ navigation }: any) {
                     
                 </View>
                 </ScrollView>
+            </KeyboardAvoidingView>
             
         </View>
     );
