@@ -1,6 +1,6 @@
 /*#TODO add placeholders/pre-filed text into text fields */ 
 import React, { useState } from "react";
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import {  Text, useTheme, TextInput, Checkbox,  Button, IconButton } from "react-native-paper";
 import {styles} from "./styles"
 import * as ImagePicker from 'expo-image-picker'
@@ -56,6 +56,7 @@ export default function EditTaskScreen({navigation}:any) {
     return (
         <View>
             <CustomHeader title="Edit Task" navigation={navigation} showBackArrow={true} showProfilePicture={false}/>
+        <KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'ios' ? 64 :0 }>
         <ScrollView>
             <View style = {styles.content}>
                 <TextInput mode='outlined' label="Task title:" value={taskTitle} onChangeText={text => setTaskTitleText(text)} style={styles.textBox}/>
@@ -98,6 +99,7 @@ export default function EditTaskScreen({navigation}:any) {
                 </View>
             </View>
         </ScrollView>
+        </KeyboardAvoidingView>
         </View>
         
 

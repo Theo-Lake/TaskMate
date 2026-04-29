@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { Appbar, TextInput, Button } from "react-native-paper";
 import {styles} from "./styles"
 
@@ -61,29 +61,34 @@ export default function LoginScreen({ navigation }: any) {
     return (
         <View style={styles.container}>
             <CustomHeader title="Log In" navigation={navigation} showBackArrow={true}/>
-            
-            <View style={styles.content}>
-                <View style={styles.img}>
-                    <Image source={Logo} style={{width:200, resizeMode:"contain"}}></Image>
-                </View>
+            <KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'ios' ? 64 :0 }>
+                <ScrollView>
+                    <View style={styles.content}>
+                        <View style={styles.img}>
+                            <Image source={Logo} style={{width:200, resizeMode:"contain"}}></Image>
+                        </View>
 
-                <View style={{padding:20}}>
-                    <TextInput mode='outlined' label="Email" value={emailText} onChangeText={text => setEmailText(text)} style={styles.textBox} error={!!errors.email}/>
-                    <TextInput mode='outlined' label="Password" value={passText} onChangeText={text => setPassText(text)} secureTextEntry style={styles.textBox} error={!!errors.password}/>
-                </View>
-                <View style={{ height: 24, marginBottom: 10, alignItems: 'center' }}>
-                    {errorMsg && 
-                        <Text style={{ color: '#d32f2f' }}>
-                            {errorMsg}
-                        </Text>
-                    }
-                </View>
-                <View style={{marginHorizontal:100}}>
-                    <Button icon="account-outline" mode="contained" onPress={handleLogin} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}
-                    loading={isPending} disabled={isPending}
-                    >Log In</Button>
-                </View>
-            </View>
+                        <View style={{padding:20}}>
+                            <TextInput mode='outlined' label="Email" value={emailText} onChangeText={text => setEmailText(text)} style={styles.textBox} error={!!errors.email}/>
+                            <TextInput mode='outlined' label="Password" value={passText} onChangeText={text => setPassText(text)} secureTextEntry style={styles.textBox} error={!!errors.password}/>
+                        </View>
+                        <View style={{ height: 24, marginBottom: 10, alignItems: 'center' }}>
+                            {errorMsg && 
+                                <Text style={{ color: '#d32f2f' }}>
+                                    {errorMsg}
+                                </Text>
+                            }
+                        </View>
+                        <View style={{marginHorizontal:100}}>
+                            <Button icon="account-outline" mode="contained" onPress={handleLogin} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}
+                            loading={isPending} disabled={isPending}
+                            >Log In</Button>
+                        </View>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+
+
             
         </View>
     );

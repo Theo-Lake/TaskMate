@@ -5,6 +5,8 @@ import {
 	Image,
 	TouchableOpacity,
 	ScrollView,
+	KeyboardAvoidingView,
+	Platform,
 } from "react-native";
 import {
 	Text,
@@ -198,6 +200,7 @@ export default function CreateEventScreen({ navigation }: any) {
 				/>
 			</View>
 			<View style={{ flex: 1 }}>
+				<KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'ios' ? 64 :0 }>
 				<ScrollView>
 					<View style={styles.content}>
 						<TextInput
@@ -346,6 +349,7 @@ export default function CreateEventScreen({ navigation }: any) {
 						</View>
 					</View>
 				</ScrollView>
+				</KeyboardAvoidingView>
 			</View>
 		</>
 	);
