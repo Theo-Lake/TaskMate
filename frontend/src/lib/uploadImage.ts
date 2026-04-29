@@ -1,4 +1,4 @@
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 
 async function uriToBase64DataUri(uri: string): Promise<string> {
     const base64 = await FileSystem.readAsStringAsync(uri, { encoding: "base64" });
