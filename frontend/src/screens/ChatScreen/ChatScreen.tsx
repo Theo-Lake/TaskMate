@@ -12,6 +12,7 @@ type DisplayMessage = {
     id: string;
     text: string;
     mine: boolean;
+    created_at: string;
     rawMessage: any;
 };
 
@@ -32,6 +33,7 @@ export default function ChatScreen({navigation, route}:any) {
             id: String(msg.messageID ?? msg.id),
             text: msg.content,
             mine: Number(msg.senderID) === Number(currentUser?.userID),
+            created_at: msg.created_at,
             rawMessage: msg,
         }));
     }, [fetchedMessages, currentUser]);
@@ -53,6 +55,19 @@ export default function ChatScreen({navigation, route}:any) {
                 },
             }
         );
+    };
+
+    const formatMessageTimestamp = (isoString?: string) => {
+        if (!isoString) return "";
+
+        const date = new Date(isoString);
+        const day = date.toLocaleDateString("en-GB", { weekday: "short" });
+        const time = date.toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+
+        return `${day} ${time}`;
     };
 
     if (isLoading) {
@@ -108,6 +123,7 @@ export default function ChatScreen({navigation, route}:any) {
                                 maxWidth: "80%",
                             }}>
                                 <Text style={{ color: item.mine ? "white" : "black" }}>{item.text}</Text>
+                                <Text style={{color: item.mine ? "rgba(255,255,255,0.75)" : "#666", fontSize: 11, marginTop: 4, textAlign: "right"}}>{formatMessageTimestamp(item.created_at)}</Text>
                             </View>
                         )}
                     />
