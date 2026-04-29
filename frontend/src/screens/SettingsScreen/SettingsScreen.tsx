@@ -88,8 +88,8 @@ export default function SettingsScreen({navigation}:any) {
                 firstName: FirstNameText.trim(),
                 lastName: SecondNameText.trim(),
             }
-            if (pickedLocalUri && user?.id){
-                payload.profilePicture = await uploadProfilePicture(pickedLocalUri, String(user.id));
+            if (pickedLocalUri && user?.userID){
+                payload.profilePicture = await uploadProfilePicture(pickedLocalUri, String(user.userID));
             }
             UpdateProfile(payload,{
                 onSuccess:()=>{

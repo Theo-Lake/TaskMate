@@ -24,6 +24,7 @@ export const styles = StyleSheet.create({
 
     },
     profileInfo:{
+        flex:1,
         justifyContent:"center",
     },
     textBox: {
