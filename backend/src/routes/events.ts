@@ -25,7 +25,7 @@ router.get("/assignments", eventController.getAllEventAssignments);
 
 // Get applications by eventID
 router.get(
-    "/assignments/byEventId/:EventId",
+    "/assignments/byEventId/:eventId",
     eventController.getEventAssignmentByEventID
 );
 
