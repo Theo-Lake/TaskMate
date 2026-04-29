@@ -19,7 +19,6 @@ import {
 } from "react-native-paper";
 import { styles } from "./styles";
 import * as ImagePicker from "expo-image-picker";
-import { uploadEventImage } from "../../lib/uploadImage";
 import CustomHeader from "../../components/navBar/CustomHeader";
 import { TextInputMask } from "react-native-masked-text";
 
@@ -82,16 +81,12 @@ export default function CreateEventScreen({ navigation }: any) {
 			allowsEditing: true,
 			aspect: [4, 3],
 			quality: 0.3,
+			base64: true,
 		});
 		if (!imagRes.canceled) {
-			const uri = imagRes.assets[0].uri;
-			setImageUri(uri);
-			try {
-				const url = await uploadEventImage(uri);
-				setImageUrl(url);
-			} catch (e: any) {
-				console.error("Image upload failed:", e.message);
-			}
+			const dataUri = `data:image/jpeg;base64,${imagRes.assets[0].base64}`;
+			setImageUri(dataUri);
+			setImageUrl(dataUri);
 		}
 	};
 	let imageContent;
