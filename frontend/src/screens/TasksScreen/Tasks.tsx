@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { View, StyleSheet, Image, FlatList, ScrollView, SectionList } from 'react-native';
-import {  Text, useTheme,Appbar, Avatar, Chip, ActivityIndicator } from "react-native-paper";
+import {  Text, useTheme,Appbar, Avatar, Chip, ActivityIndicator, Menu } from "react-native-paper";
 import {styles} from "../TasksScreen/styles"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
@@ -31,6 +31,8 @@ export default function TasksScreen({navigation}:any) {
     const fetchedTasks = Array.isArray(data?.tasks) ? data.tasks : [];
 
     const [selectedCategory, setSelectedCategory] = useState("all");
+    const [sortOrder, setSortOrder] = useState<"newest" | "payment_low" | "payment_high">("newest");
+    const [sortMenuVisible, setSortMenuVisible] = useState(false);
 
     const { data: currentUserResponse } = useCurrentUser();
     const currentUser = currentUserResponse?.users?.user ?? currentUserResponse?.user ?? currentUserResponse;
@@ -38,6 +40,21 @@ export default function TasksScreen({navigation}:any) {
     // category filter toggle
     const handleCategoryPress = (category: string) => {
       setSelectedCategory((prev) => (prev === category ? "all" : category));
+    };
+
+    // sort press
+    const handleSortPress = () => {
+      setSortOrder((prev) => {
+        if (prev === "newest") return "payment_low";
+        if (prev === "payment_low") return "payment_high";
+        return "newest";
+      });
+    };
+
+    const getSortLabel = () => {
+      if (sortOrder === "newest") return "Newest";
+      if (sortOrder === "payment_low") return "Lowest reward";
+      return "Highest reward";
     };
 
     // map tasks
@@ -57,10 +74,32 @@ export default function TasksScreen({navigation}:any) {
     }, [fetchedTasks]);
 
     // apply filter to mapped task list
+    // const filteredTasks = useMemo(() => {
+    //   if (selectedCategory === "all") return mappedTasks;
+    //   return mappedTasks.filter(task => task.category === selectedCategory);
+    // }, [mappedTasks, selectedCategory]);
+
+    // apply sort and filter to mapped task list
     const filteredTasks = useMemo(() => {
-      if (selectedCategory === "all") return mappedTasks;
-      return mappedTasks.filter(task => task.category === selectedCategory);
-    }, [mappedTasks, selectedCategory]);
+      let result = selectedCategory === "all" ? [...mappedTasks] : mappedTasks.filter((task) => task.category === selectedCategory);
+
+      if (sortOrder === "payment_low") {
+        result.sort((a, b) => Number(a.price) - Number(b.price));
+      } 
+      else if (sortOrder === "payment_high") {
+        result.sort((a, b) => Number(b.price) - Number(a.price));
+      } 
+      else {
+        result.sort(
+          (a, b) =>
+            new Date(b.rawTask?.created_at ?? 0).getTime() -
+            new Date(a.rawTask?.created_at ?? 0).getTime()
+        );
+      }
+
+      return result;
+
+    }, [mappedTasks, selectedCategory, sortOrder]);
 
     // sectionlist
     const taskSections = [{
@@ -177,7 +216,36 @@ export default function TasksScreen({navigation}:any) {
               renderSectionHeader={() => 
                 <View style={{flexDirection: 'row', marginLeft:10, backgroundColor:'#f2f2f2'}}>
                   <View style={styles.chip}>
-                    <Chip mode="outlined" onPress={() => console.log('sort pressed')}>Sort</Chip>
+                    <Menu
+                      visible={sortMenuVisible}
+                      onDismiss={() => setSortMenuVisible(false)}
+                      anchor={
+                        <Chip mode="outlined" onPress={() => setSortMenuVisible(true)}>
+                          Sort: {getSortLabel()}
+                        </Chip>
+                      }>
+                      <Menu.Item
+                        title="Newest"
+                        onPress={() => {
+                          setSortOrder("newest");
+                          setSortMenuVisible(false);
+                        }}
+                      />
+                      <Menu.Item
+                        title="Reward low to high"
+                        onPress={() => {
+                          setSortOrder("payment_low");
+                          setSortMenuVisible(false);
+                        }}
+                      />
+                      <Menu.Item
+                        title="Reward high to low"
+                        onPress={() => {
+                          setSortOrder("payment_high");
+                          setSortMenuVisible(false);
+                        }}
+                      />
+                    </Menu>
                   </View>
 
                   <View style={{borderRightWidth:2, borderRightColor:'#969696', marginTop:8, marginBottom:8}}></View>
