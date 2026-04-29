@@ -7,12 +7,12 @@ const app = express();
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    limit: 100,
+    limit: 500,
     message: { error: "Too many requests, please try again later." },
 });
 
 app.use(cors({ origin: process.env.FRONTEND_URL }));
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(limiter);
 
 // Getting health check
