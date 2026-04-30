@@ -184,15 +184,11 @@ async function rejectApplication(req: Request, res: Response) {
 async function unAssignTask(req: Request, res: Response) {
     try {
         const taskID = Number(req.params.taskId);
-        const userID = Number(req.params.userId);
+        const userID = req.user!.userID;
 
         const task = await taskServices.getTaskByID(taskID);
         if (!task) {
             res.status(404).json({ error: "Task not found" });
-            return;
-        }
-        if (task.publisherID !== req.user!.userID && userID !== req.user!.userID) {
-            res.status(403).json({ error: "Not authorized to unassign from this task" });
             return;
         }
 
