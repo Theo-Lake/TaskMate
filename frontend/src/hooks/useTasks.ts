@@ -10,6 +10,7 @@ import {
     applyForTask,
     acceptApplication,
     rejectApplication,
+    cancelApplication,
     getTaskAssignmentsByTaskId,
     getTaskAssignmentsByUserId,
 } from "../api/tasks";
@@ -121,6 +122,14 @@ export function useRejectApplication() {
     return useMutation({
         mutationFn: ({ taskId, userId }: { taskId: number; userId: number }) =>
             rejectApplication(taskId, userId),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
+    });
+}
+
+export function useCancelApplication() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (taskId: number) => cancelApplication(taskId),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["tasks"] }),
     });
 }

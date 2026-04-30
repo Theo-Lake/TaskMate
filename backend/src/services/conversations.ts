@@ -3,8 +3,11 @@ import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
 // CONVERSATIONS SHOULD NOT BE CREATED OR DELETED SINCE TASK AUTO CREATES AND DELETES!
 
 export async function getAllConversations() {
-    //This will get all conversations
-    return await db.conversation.findMany();
+    return await db.conversation.findMany({
+        include: {
+            task: { select: { name: true, publisherID: true } },
+        },
+    });
 }
 
 export async function getConversationByID(conversationID: Number) {

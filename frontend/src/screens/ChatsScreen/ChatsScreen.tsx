@@ -5,6 +5,7 @@ import {styles} from "../ChatsScreen/styles"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
 import ChatCard from "../../components/cards/ChatCard";
+import { useIsFocused } from "@react-navigation/native";
 
 import { useAllConversations } from "../../hooks/useConversations";
 import { useCurrentUser, useAllUsers } from "../../hooks/useUsers";
@@ -13,11 +14,14 @@ type DisplayChat = {
     id: string;
     name: string;
     message: string;
+    taskName?: string;
+    role?: "Publisher" | "Assignee";
     rawConversation: any;
 }
 
 export default function ChatsScreen({navigation}:any) {
-    const { data, isLoading, isError } = useAllConversations();
+    const isFocused = useIsFocused();
+    const { data, isLoading, isError } = useAllConversations(isFocused);
     const { data: currentUserResponse } = useCurrentUser();
     const { data: usersResponse } = useAllUsers();
 
@@ -38,10 +42,14 @@ export default function ChatsScreen({navigation}:any) {
             const otherUserId = Number(conversation.user1ID) === Number(currentUser?.userID) ? conversation.user2ID : conversation.user1ID;
             const otherUser = allUsers.find((u: any) => Number(u.userID) === Number(otherUserId));
 
+            const isPublisher = Number(conversation.task?.publisherID) === Number(currentUser?.userID);
+
             return {
                 id: String(conversation.conversationID ?? conversation.id),
                 name: otherUser?.username ?? "Unknown user",
                 message: conversation.lastMessage?.content ?? conversation.lastMessage?.text,
+                taskName: conversation.task?.name,
+                role: conversation.task ? (isPublisher ? "Assignee" : "Publisher") : undefined,
                 rawConversation: conversation,
             };
         });
@@ -88,6 +96,8 @@ export default function ChatsScreen({navigation}:any) {
                 <ChatCard
                     name={item.name}
                     message={item.message}
+                    taskName={item.taskName}
+                    role={item.role}
                     onPress={() => navigation.navigate("ChatScreen", {convoId: Number(item.id), name: item.name, conversation: item.rawConversation})}
                 />
             )}

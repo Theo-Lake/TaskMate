@@ -10,7 +10,7 @@ import { FAB } from 'react-native-paper';
 
 // Logic Imports
 // fetches all at once, can't fetch tasks one at a time for infinite scroll
-import { useAllTasks } from "../../hooks/useTasks"
+import { useAllTasks, useTaskAssignmentsByUser } from "../../hooks/useTasks"
 import { useCurrentUser } from "../../hooks/useUsers";
 
 // used for memo
@@ -37,6 +37,12 @@ export default function TasksScreen({navigation}:any) {
     const { data: currentUserResponse } = useCurrentUser();
     const currentUser = currentUserResponse?.users?.user ?? currentUserResponse?.user ?? currentUserResponse;
 
+    const { data: assignmentsResponse } = useTaskAssignmentsByUser(Number(currentUser?.userID));
+    const appliedTaskIds = useMemo(() => {
+        const rows = Array.isArray(assignmentsResponse?.taskAssignment) ? assignmentsResponse.taskAssignment : Array.isArray(assignmentsResponse) ? assignmentsResponse : [];
+        return new Set(rows.map((a: any) => Number(a.taskID)));
+    }, [assignmentsResponse]);
+
     // category filter toggle
     const handleCategoryPress = (category: string) => {
       setSelectedCategory((prev) => (prev === category ? "all" : category));
@@ -61,7 +67,8 @@ export default function TasksScreen({navigation}:any) {
     const mappedTasks = useMemo<DisplayTask[]>(() => {
       return fetchedTasks
         // filters out tasks the current user published from the list
-        .filter((task: any) => Number(task.publisherID) !== Number(currentUser?.userID))  
+        .filter((task: any) => Number(task.publisherID) !== Number(currentUser?.userID))
+        .filter((task: any) => !appliedTaskIds.has(Number(task.taskID)))  
         .map((task: any) => ({
           id: String(task.taskID),
           title: task.name,

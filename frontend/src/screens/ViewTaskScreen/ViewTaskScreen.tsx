@@ -5,8 +5,8 @@ import {styles} from "./styles"
 import CustomHeader from "../../components/navBar/CustomHeader";
 import ProfileCard from "../../components/cards/ProfileCard";
 
-import { useTask, useApplyForTask, useTaskAssignmentsByTask } from "../../hooks/useTasks";
-import { useUser, useAllUsers } from "../../hooks/useUsers";
+import { useTask, useApplyForTask, useCancelApplication, useTaskAssignmentsByTask } from "../../hooks/useTasks";
+import { useUser, useAllUsers, useCurrentUser } from "../../hooks/useUsers";
 
 const formatDate = (isoString: string)=>{
     const date = new Date(isoString);
@@ -20,6 +20,10 @@ export default function ViewTaskScreen({navigation, route}:any) {
 
     const { data, isLoading, isError } = useTask(taskId);
     const { mutate: applyForTask, isPending: isApplying } = useApplyForTask();
+    const { mutate: cancelApplication, isPending: isCancelling } = useCancelApplication();
+
+    const { data: currentUserResponse } = useCurrentUser();
+    const currentUser = currentUserResponse?.users?.user ?? currentUserResponse?.user ?? currentUserResponse;
 
     const fetchedTask = data?.task ?? data;
     const task = passedTask ?? fetchedTask;
@@ -58,6 +62,18 @@ export default function ViewTaskScreen({navigation, route}:any) {
     const visibleApplicants = assignees.filter(
         (applicant: any) => applicant.status !== "accepted"
     );
+
+    const myAssignment = assignmentRows.find(
+        (a: any) => Number(a.assigneeID ?? a.userID) === Number(currentUser?.userID)
+    );
+    const myStatus = myAssignment?.status ?? null;
+
+    const handleCancelOrQuit = () => {
+        cancelApplication(taskId, {
+            onSuccess: () => navigation.navigate("MyTasksTab", { screen: "MyTasks" }),
+            onError: (error: any) => console.error("Cancel error:", error),
+        });
+    };
 
     const handleAcceptTask = () => {
         if (!taskId) return;
@@ -205,16 +221,16 @@ export default function ViewTaskScreen({navigation, route}:any) {
 
                     </View>
                     <View style={{flexDirection:'row',gap:5}}>
-                        <Button 
-                            icon="check" 
-                            mode="contained" 
-                            onPress={handleAcceptTask} 
-                            style={styles.btn} 
-                            labelStyle={{fontSize:20, lineHeight:25}} 
+                        <Button
+                            icon="check"
+                            mode="contained"
+                            onPress={myStatus ? handleCancelOrQuit : handleAcceptTask}
+                            style={styles.btn}
+                            labelStyle={{fontSize:20, lineHeight:25}}
                             contentStyle={{marginVertical:10}}
-                            loading={isApplying}
-                            disabled={isApplying}
-                            >Apply</Button>
+                            loading={myStatus ? isCancelling : isApplying}
+                            disabled={myStatus ? isCancelling : isApplying}
+                            >{myStatus ? "Quit task" : "Apply"}</Button>
                     </View>
 
                 </View>
