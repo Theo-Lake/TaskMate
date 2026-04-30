@@ -54,6 +54,11 @@ export async function rejectApplication(taskId: number, userId: number) {
 	return res.data;
 }
 
+export async function cancelApplication(taskId: number) {
+	const res = await client.delete(`/tasks/${taskId}/apply`);
+	return res.data;
+}
+
 export async function getTaskAssignmentsByTaskId(taskId: number) {
   const res = await client.get(`/tasks/assignments/byTaskId/${taskId}`);
   return res.data;
