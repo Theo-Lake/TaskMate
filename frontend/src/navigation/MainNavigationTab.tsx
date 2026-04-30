@@ -13,6 +13,7 @@ import ViewTaskScreen from '../screens/ViewTaskScreen/ViewTaskScreen';
 import UserProfileScreen from '../screens/UserProfileScreen/UserProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen/SettingsScreen';
 import ResetPasswordScreen from "../screens/ResetPasswordScreen/ResetPasswordScreen";
+import CardDetailsScreen from "../screens/CardDetailsScreen/CardDetailsScreen";
 
 import MyTasksScreen from '../screens/MyTasksScreen/MyTasksScreen';
 import ViewOwnTaskScreen from '../screens/ViewOwnTaskScreen/ViewOwnTaskScreen';
@@ -61,6 +62,8 @@ function MyTasksStackNavigator(){
             <MyTasksStack.Screen name="ViewReviewScreen" component={ViewReviewScreen}/>
             <MyTasksStack.Screen name="LeaveReviewScreen" component={LeaveReviewScreen}/>
             <MyTasksStack.Screen name="PublicProfileScreen" component={PublicProfileScreen}/>
+            <MyTasksStack.Screen name="CardDetailsScreen" component={CardDetailsScreen}/>
+
         </MyTasksStack.Navigator>
     );
 }
