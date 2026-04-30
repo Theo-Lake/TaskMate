@@ -5,6 +5,7 @@ import {styles} from "../ChatsScreen/styles"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
 import ChatCard from "../../components/cards/ChatCard";
+import { useIsFocused } from "@react-navigation/native";
 
 import { useAllConversations } from "../../hooks/useConversations";
 import { useCurrentUser, useAllUsers } from "../../hooks/useUsers";
@@ -17,7 +18,8 @@ type DisplayChat = {
 }
 
 export default function ChatsScreen({navigation}:any) {
-    const { data, isLoading, isError } = useAllConversations();
+    const isFocused = useIsFocused();
+    const { data, isLoading, isError } = useAllConversations(isFocused);
     const { data: currentUserResponse } = useCurrentUser();
     const { data: usersResponse } = useAllUsers();
 
