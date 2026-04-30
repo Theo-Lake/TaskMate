@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Image,FlatList, Alert } from 'react-native';
-import {  Icon, IconButton, Text, Button,  ActivityIndicator } from "react-native-paper";
+import {  Icon, IconButton, Text, Button,  ActivityIndicator, Menu } from "react-native-paper";
 import {styles} from "./styles"
 import CustomHeader from "../../components/navBar/CustomHeader";
 import CustomerAvatar from "../../components/avatars/CustomerAvatars";
@@ -81,6 +81,12 @@ export default function UserProfileScreen({navigation}:any) {
     )
  }
 
+  const [menuVisible, setMenuVisible] = useState(false)
+
+  const openMenu = () => setMenuVisible(true)
+  const closeMenu = () => setMenuVisible(false) 
+
+
     //getting user:
     const { data: respdata, isLoading:profileLoading, isError, error } = useCurrentUser();
     const {data:reviews, isLoading: reviewsLoading} = useMyReceivedReviews();
@@ -117,15 +123,40 @@ export default function UserProfileScreen({navigation}:any) {
                     <CustomerAvatar size={150} user={user}/>
                 </View>
                 <View style={styles.profileInfo}>
-                    {/*<TextInput mode="flat" underlineColor="tran" value="use" editable={false} style={styles.textBox}/>*/}
+                    {/*<TextInput mode="flat" underlineColor="tran" value="use" editable={false} style={styles.textBox}/> () => navigation.navigate('MyTasksTab', { screen: 'SettingsScreen' })  */}
                     <Text style={{fontSize:25,marginBottom:10}}>{name}</Text>
                     <Text style={{fontSize:15,marginBottom:10}}>@{user?.username}</Text>
 
                     <Text style={{fontSize:20}}>Reputation:</Text>
                     <StarRatingGroup rating={reputation}/>
                 </View>
-                <View style={styles.settingsButton}>
-                    <IconButton size={34} icon='cog-outline' onPress={() => navigation.navigate('MyTasksTab', { screen: 'SettingsScreen' })}/>
+                <View style={styles.settingsButton}> //
+                    <Menu
+                      visible={menuVisible}
+                      onDismiss={closeMenu}
+                      anchorPosition='bottom'
+                      anchor={
+                        <IconButton size={34} icon='cog-outline' onPress={openMenu}/>
+                      }
+                    >
+                      <Menu.Item
+                        leadingIcon='cog'
+                        onPress={() => {
+                          closeMenu();
+                          navigation.navigate('MyTasksTab', { screen: 'SettingsScreen' })
+                        }}
+                        title='Settings'
+                      />
+                      <Menu.Item
+                        leadingIcon='currency-gbp'
+                        onPress={() => {
+                          closeMenu();
+                          navigation.navigate('MyTasksTab', { screen: 'CardDetailsScreen' })
+                        }}
+                        title='Card details and payments'
+                      />
+                      </Menu>
+
                 </View>
             </View>
 
