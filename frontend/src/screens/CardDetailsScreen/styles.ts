@@ -28,7 +28,8 @@ export const styles = StyleSheet.create({
         justifyContent:"center",
     },
     textBox: {
-        marginBottom:10
+        marginBottom:10,
+        flex:1
     },
     editingSection:{
         flexDirection:"column",
