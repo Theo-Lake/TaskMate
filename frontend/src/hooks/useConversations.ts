@@ -13,6 +13,7 @@ export function useAllConversations() {
     queryKey: ["conversations"],
     queryFn: getAllConversations,
     refetchOnWindowFocus: true,
+    refetchInterval: 1000,
   });
 }
 
@@ -30,6 +31,7 @@ export function useConversationMessages(convoId: number) {
     queryKey: ["conversations", convoId, "messages"],
     queryFn: () => getAllMessages(convoId),
     enabled: !!convoId,
+    refetchInterval: 1000,
   });
 }
 

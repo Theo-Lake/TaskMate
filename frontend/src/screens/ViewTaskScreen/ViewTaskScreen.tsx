@@ -16,6 +16,7 @@ const formatDate = (isoString: string)=>{
 export default function ViewTaskScreen({navigation, route}:any) {
     const taskId = Number(route.params?.taskId);
     const passedTask = route.params?.task;
+    const fromMyTasks = route.params?.fromMyTasks;
 
     const { data, isLoading, isError } = useTask(taskId);
     const { mutate: applyForTask, isPending: isApplying } = useApplyForTask();
@@ -124,7 +125,7 @@ export default function ViewTaskScreen({navigation, route}:any) {
 
     return (
         <View style={{flex:1}}>
-            <CustomHeader title="View Task" navigation={navigation} showBackArrow={true} showProfilePicture={true} />
+            <CustomHeader title="View Task" navigation={navigation} showBackArrow={true} showProfilePicture={true} onBackPress={fromMyTasks ? () => navigation.navigate("MyTasksTab", { screen: "MyTasks" }) : undefined} />
             <ScrollView>
                 <View style={styles.container}>
                     {hasImage && (

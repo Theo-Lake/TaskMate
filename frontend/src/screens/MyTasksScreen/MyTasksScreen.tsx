@@ -87,7 +87,7 @@ export default function MyTasksScreen({navigation}:any) {
             navigation.navigate("ViewOwnTask", {taskId: Number(task.id), task: task.rawTask});
         }
         else {
-            navigation.navigate("TasksTab", {screen: "ViewTaskScreen", params: {taskId: Number(task.id), task: task.rawTask}});
+            navigation.navigate("TasksTab", {screen: "ViewTaskScreen", params: {taskId: Number(task.id), task: task.rawTask, fromMyTasks: true}});
         }
     };
 
