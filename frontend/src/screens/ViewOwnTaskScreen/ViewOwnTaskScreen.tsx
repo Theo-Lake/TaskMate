@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
 import ProfileCard from "../../components/cards/ProfileCard"
 
-import { useTask, useDeleteTask, useAcceptApplication, useRejectApplication, useTaskAssignmentsByTask } from "../../hooks/useTasks";
+import { useTask, useDeleteTask, useAcceptApplication, useRejectApplication, useTaskAssignmentsByTask, useUpdateTaskStatus } from "../../hooks/useTasks";
 import { useUser, useAllUsers } from "../../hooks/useUsers";
 
 const formatDate = (isoString: string)=>{
@@ -24,6 +24,7 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
     const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
     const { mutate: acceptApplication, isPending: isAccepting } = useAcceptApplication();
     const { mutate: rejectApplication, isPending: isRejecting } = useRejectApplication();
+    const { mutate: updateStatus, isPending: isCompleting } = useUpdateTaskStatus(taskId);
     const { data: allUsersResponse, isLoading: usersLoading } = useAllUsers();
 
     const fetchedTask = data?.tasks ?? data?.task ?? data;
@@ -60,6 +61,16 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
     const pendingApplicants = assignees.filter(
         (applicant: any) => applicant.status !== "accepted"
     );
+
+    const acceptedCount = assignees.filter((a: any) => a.status === "accepted").length;
+    const isCompletable = task && acceptedCount >= Number(task.peopleRequired) && new Date() >= new Date(task.dueDate);
+
+    const handleCompleteTask = () => {
+        updateStatus("complete", {
+            onSuccess: () => navigation.navigate("MyTasksTab", { screen: "MyTasks" }),
+            onError: (error: any) => console.error("Complete error:", error),
+        });
+    };
 
     const handleDeleteTask = () => {
         if (!taskId) return;
@@ -218,19 +229,31 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
 
                     </View>
                     <View style={{flexDirection:'row',gap:5}}>
-                        <Button 
-                            icon="pencil-outline" 
-                            mode="contained" 
-                            onPress={() => navigation.navigate('MyTasksTab', { screen: 'EditTaskScreen', params: { taskId: task?.taskID, task } })} 
-                            style={styles.btn} 
-                            labelStyle={{fontSize:20, lineHeight:25}} 
-                            contentStyle={{marginVertical:10}}>Edit</Button>
-                        <Button 
-                            icon="close" 
-                            mode="contained" 
-                            onPress={handleDeleteTask} 
-                            style={styles.btn} 
-                            labelStyle={{fontSize:20, lineHeight:25}} 
+                        {isCompletable ? (
+                            <Button
+                                icon="check-circle"
+                                mode="contained"
+                                onPress={handleCompleteTask}
+                                style={styles.btn}
+                                labelStyle={{fontSize:20, lineHeight:25}}
+                                contentStyle={{marginVertical:10}}
+                                loading={isCompleting}
+                                disabled={isCompleting}>Complete</Button>
+                        ) : (
+                            <Button
+                                icon="pencil-outline"
+                                mode="contained"
+                                onPress={() => navigation.navigate('MyTasksTab', { screen: 'EditTaskScreen', params: { taskId: task?.taskID, task } })}
+                                style={styles.btn}
+                                labelStyle={{fontSize:20, lineHeight:25}}
+                                contentStyle={{marginVertical:10}}>Edit</Button>
+                        )}
+                        <Button
+                            icon="close"
+                            mode="contained"
+                            onPress={handleDeleteTask}
+                            style={styles.btn}
+                            labelStyle={{fontSize:20, lineHeight:25}}
                             contentStyle={{marginVertical:10}}
                             loading={isDeleting}
                             disabled={isDeleting}>Remove</Button>
