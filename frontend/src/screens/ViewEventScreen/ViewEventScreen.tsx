@@ -146,14 +146,17 @@ export default function ViewEventScreen({navigation, route}:any) {
                         </View>
                         <View style={styles.assigneesRankField}>
                             {assignees.length >0 ?(
-                                assignees.map((person:any)=>{
-                                    const assigneeId = Number(person.userID ?? person.assigneeID ?? person.id);
-                                    return(
-                                        <View key={String(assigneeId)} style={{ width: "100%", marginBottom: 10 }}>
-                                            <ProfileCard userId={assigneeId} onPress={() => navigation.navigate('PublicProfileScreen', {userId: assigneeId})}/>
-                                        </View>
-                                    )
-                                })
+                                <View>
+                                    <Text>Applicants list:</Text>
+                                    {assignees.map((person:any)=>{
+                                        const assigneeId = Number(person.userID ?? person.assigneeID ?? person.id);
+                                        return(
+                                            <View key={String(assigneeId)} style={{ width: "100%", marginBottom: 10 }}>
+                                                <ProfileCard userId={assigneeId} onPress={() => navigation.navigate('PublicProfileScreen', {userId: assigneeId})}/>
+                                            </View>
+                                        )
+                                    })}
+                                </View>
                             ) : (
                                 <Text>No attendees yet</Text>
                             )}
@@ -162,7 +165,6 @@ export default function ViewEventScreen({navigation, route}:any) {
                     </View>
                     <View style={{flexDirection:'row',gap:5}}>
                         <Button icon="check" mode="contained" onPress={handleAcceptEvent} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Apply</Button>
-                        <Button icon="message-text-outline" mode="contained" onPress={() => navigation.navigate('TasksTab', { screen: 'Tasks' })} style={styles.btn} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Message</Button>
                     </View>
 
                 </View>
