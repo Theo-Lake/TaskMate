@@ -25,6 +25,3 @@ build/
 
 # Generated prisma
 /src/generated/prisma
-
-# Prettier config
-.prettierrc
