@@ -15,12 +15,10 @@ import { useAuth } from "../../context/AuthContext";
 export default function CardDetailsScreen({navigation}:any) {
     const { data: respdata, isLoading:profileLoading, isError, error } = useCurrentUser();
     const user = respdata?.users.user 
-    const {mutate: UpdateProfile, isPending} = useUpdateUser();
 
 
     
 
-    const [HolderNameText, setHolderNameText] = React.useState("");
 
 
 
@@ -28,12 +26,7 @@ export default function CardDetailsScreen({navigation}:any) {
     //image loading:
 
      
-    useEffect(() =>{
-        if (user) {
-            setHolderNameText(user.firstName || "");
 
-        }
-    }, [user])
     
 
     const name = user ? `${user.firstName} ${user.lastName}` : "LOading..."
@@ -41,24 +34,8 @@ export default function CardDetailsScreen({navigation}:any) {
 
 
      const handleSaveChanges= async () => {
-        try {
-            const payload: any ={
-                HolderName: HolderNameText.trim(),
-            }
-
-            UpdateProfile(payload,{
-                onSuccess:()=>{
-                    Alert.alert("Success. Profile updated!")
-                },
-                onError:(error: any)=>{
-                    Alert.alert("Error. Profile not updated!", error.response?.data?.error)
-                }
-            })
-        } catch (error: any) {
-            Alert.alert("Error uploading image", error.message)
-        }
+        Alert.alert("Success. Profile updated!")
      }
-
     return (
         <View style={{flex:1}}>
             <CustomHeader title="Card details" navigation={navigation} showBackArrow={true} showProfilePicture={false} />
@@ -75,12 +52,17 @@ export default function CardDetailsScreen({navigation}:any) {
             <ScrollView  showsHorizontalScrollIndicator={false}  stickyHeaderIndices={[1]} style={{marginLeft:20, marginRight:20}}>
                 <View style={styles.editingSection}>
                     <View style={{padding:20}}>
-                        <TextInput mode='outlined' label="Card holder name:" value={HolderNameText} onChangeText={text => setHolderNameText(text)} style={styles.textBox} />
-                        <TextInput mode='outlined' label="Second Name" value={SecondNameText} onChangeText={text => setSecondNameText(text)}  style={styles.textBox} />
-                    
+                        <TextInput mode='outlined' label="Card holder name:" value={name} style={styles.textBox} />
+                        <TextInput mode='outlined' label="Card number:" keyboardType="number-pad" maxLength={16} style={styles.textBox} />
+                        <View style={{flexDirection: 'row', gap:10}}>
+                           <TextInput mode='outlined' label="Expiry date:" keyboardType="number-pad" style={styles.textBox} />
+                           <TextInput mode='outlined' label="CVC:" keyboardType="number-pad" maxLength={3} style={styles.textBox} />
+                        </View>
+
+
                     </View>
 
-                    <View style={{marginTop:'auto', marginBottom:30}}>
+                    <View style={{marginTop:'auto', marginBottom:30, paddingHorizontal: 20}}>
                         <Button icon="content-save-outline" mode="contained" onPress={handleSaveChanges} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}>Save changes</Button>
 
                     </View>
