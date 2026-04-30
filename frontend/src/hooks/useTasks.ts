@@ -11,6 +11,7 @@ import {
     acceptApplication,
     rejectApplication,
     cancelApplication,
+    getAllTaskAssignments,
     getTaskAssignmentsByTaskId,
     getTaskAssignmentsByUserId,
 } from "../api/tasks";
@@ -50,6 +51,13 @@ export function useAllTasks() {
     return useQuery({
         queryKey: ["tasks"],
         queryFn: getAllTasks,
+    });
+}
+
+export function useAllTaskAssignments() {
+    return useQuery({
+        queryKey: ["tasks", "assignments"],
+        queryFn: getAllTaskAssignments,
     });
 }
 
