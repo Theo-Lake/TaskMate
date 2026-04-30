@@ -52,23 +52,23 @@ async function getAllTransactionsByUserId(req: Request, res: Response) {
     }
 }
 
-async function processTransaction(req: Request, res: Response) {
-    try {
-        const taskId = Number(req.params.taskId);
-        const userId = req.user!.userID;
-        await transactionServices.processTransaction(userId, taskId);
-        console.log("Tansaction Processed!");
-        res.status(200).json({ message: "Transaction successfully processed!"});
-    } catch (error) {
-        console.log(`An error occured whilst trying to process a transaction: ${error}`);
-        res.status(500).json({ error: error instanceof Error ? error.message : error, });
-    }
-}
+// async function processTransaction(req: Request, res: Response) {
+//     try {
+//         const taskId = Number(req.params.taskId);
+//         const userId = req.user!.userID;
+//         await transactionServices.processTransaction(userId, taskId);
+//         console.log("Tansaction Processed!");
+//         res.status(200).json({ message: "Transaction successfully processed!"});
+//     } catch (error) {
+//         console.log(`An error occured whilst trying to process a transaction: ${error}`);
+//         res.status(500).json({ error: error instanceof Error ? error.message : error, });
+//     }
+// }
 
 
 export const transactionController = {
     getAllTransactions,
     getTransactionById,
     getAllTransactionsByUserId,
-    processTransaction,
+    // processTransaction,
 }

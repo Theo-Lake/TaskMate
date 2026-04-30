@@ -30,27 +30,15 @@ export async function processTransaction(userID: Number, taskID: Number) {
         where: { taskID: Number(taskID) },
     });
     if (!task) throw new Error("Task not found.");
-
-    let type: TransactionType;
-    let payerID: Number;
-    let receiverID: Number;
-
-    if (task.status === Status.not_Complete) {
-        type = "ESCROW";
-        payerID = userID;
-        receiverID = PLATFORM_USER_ID;
-        console.log("Taking money");
-    } else {
-        throw new Error("Invalid task status for Transaction.");
-    }
+    if (task.status !== Status.not_Complete) throw new Error("Invalid task status for Transaction.");
 
     return await db.transactions.create({
         data: {
             taskID: taskID as number,
-            payerID: payerID as number,
-            receiverID: receiverID as number,
+            payerID: userID as number,
+            receiverID: PLATFORM_USER_ID as number,
             amount: task.payment,
-            transactionType: type as TransactionType,
+            transactionType: TransactionType.ESCROW,
             status: Status.pending,
         },
     });

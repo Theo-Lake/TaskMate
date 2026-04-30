@@ -13,6 +13,6 @@ router.get("/byTransactionId/:transactionId", auth.withAuth, transactionControll
 router.get("/allByUserId", auth.withAuth, transactionController.getAllTransactionsByUserId);
 
 // Process a transaction
-router.post("/:taskId", auth.withAuth, transactionController.processTransaction);
+// router.post("/:taskId", auth.withAuth, transactionController.processTransaction);
 
 export default router;

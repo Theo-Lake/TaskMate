@@ -15,7 +15,7 @@ export async function getALlTransactionsByUser() {
     return res.data;
 }
 
-export async function processTransaction(taskId: number) {
-    const res = await client.post(`/transaction/${taskId}`);
-    return res.data;
-}
+// export async function processTransaction(taskId: number) {
+//     const res = await client.post(`/transaction/${taskId}`);
+//     return res.data;
+// }

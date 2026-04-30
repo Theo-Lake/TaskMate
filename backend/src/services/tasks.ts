@@ -5,7 +5,7 @@ import {
     TaskTypes,
 } from "../generated/prisma/enums";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
-import { refundPayment, releasePayment } from "./transactions";
+import { processTransaction, refundPayment, releasePayment } from "./transactions";
 
 async function getAllTasks() {
     return await db.task.findMany();
@@ -60,7 +60,9 @@ async function createTask(publisherID: Number, body: JsonObject) {
         hashtags,
     } = body;
 
-    return await db.task.create({
+    // TODO: Validate payment here
+
+    const task = await db.task.create({
         data: {
             publisherID: Number(publisherID),
             name: name as string,
@@ -81,6 +83,10 @@ async function createTask(publisherID: Number, body: JsonObject) {
                 : undefined,
         },
     });
+
+    await processTransaction(Number(publisherID), task.taskID);
+
+    return task;
 }
 
 async function applyForTask(taskID: Number, userID: Number) {
