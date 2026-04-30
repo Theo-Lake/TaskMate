@@ -8,7 +8,7 @@ import TaskCard from "../../components/cards/TaskCard";
 import { FAB } from 'react-native-paper';
 
 // import logic
-import { useAllTasks, useAllTasksByUser, useTaskAssignmentsByUser } from "../../hooks/useTasks";
+import { useAllTasks, useAllTasksByUser, useTaskAssignmentsByUser, useDeleteTask } from "../../hooks/useTasks";
 import { useCurrentUser } from "../../hooks/useUsers";
 
 // used for memo
@@ -28,6 +28,8 @@ export default function MyTasksScreen({navigation}:any) {
 
     const [selectedStatus, setSelectedStatus] = useState<TaskStatus>("published");
     const [selectedCategory, setSelectedCategory] = useState("all");
+
+    const { mutate: deleteTask } = useDeleteTask();
 
     // grab current user
     const { data: currentUserResponse, isLoading: currentUserLoading, isError: currentUserError } = useCurrentUser();
@@ -227,12 +229,16 @@ export default function MyTasksScreen({navigation}:any) {
                 {selectedStatus === "published" ? (
                     <FlatList
                         data={(() => {
-                            const active = visibleTasks.filter(t => new Date(t.rawTask.dueDate) > oneDayAgo);
-                            const pastDue = visibleTasks.filter(t => new Date(t.rawTask.dueDate) <= oneDayAgo);
+                            const completed = visibleTasks.filter(t => t.rawTask.status === "complete");
+                            const notCompleted = visibleTasks.filter(t => t.rawTask.status !== "complete");
+                            const active = notCompleted.filter(t => new Date(t.rawTask.dueDate) > oneDayAgo);
+                            const pastDue = notCompleted.filter(t => new Date(t.rawTask.dueDate) <= oneDayAgo);
                             return [
                                 ...active,
-                                ...(pastDue.length > 0 ? [{ id: "__divider__", isDivider: true, label: "Past due date" } as any] : []),
+                                ...(pastDue.length > 0 ? [{ id: "__divider_past__", isDivider: true, label: "Past due date" } as any] : []),
                                 ...pastDue,
+                                ...(completed.length > 0 ? [{ id: "__divider_complete__", isDivider: true, label: "Completed" } as any] : []),
+                                ...completed.map(t => ({ ...t, isCompleted: true })),
                             ];
                         })()}
                         keyExtractor={(item) => item.id}
@@ -252,7 +258,8 @@ export default function MyTasksScreen({navigation}:any) {
                                     price={item.price}
                                     imageUrl={item.imageUrl}
                                     description={item.description}
-                                    onPress={() => onTaskPress(item)}
+                                    onPress={item.isCompleted ? undefined : () => onTaskPress(item)}
+                                    onRemove={item.isCompleted ? () => deleteTask(Number(item.id)) : undefined}
                                 />
                             );
                         }}
