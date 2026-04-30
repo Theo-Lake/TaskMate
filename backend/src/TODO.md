@@ -53,14 +53,11 @@ PRIORITY:
     LAST : [
         ENVIRONMENT & CONFIG
         [/ ] - Add JWT_SECRET, NODE_ENV, CORS_ORIGIN to .env and .env.example
-        [ ] - Add rate limiting on login and registration routes
+        [/] - Add rate limiting on login and registration routes
         [ ] - Add university email validation
 
     TESTING & DATA
-        [ ] - creating a command that runs both npm & npx to run both backend and frontend at the same time
         [ ] - Write integration tests
-        [ ] - Expand seed data in prisma/seed.ts
-        [ ] - Add database trigger constraints to prevent past due dates
 
     POLISH
         [ ] - Replace console.log with a proper logger
