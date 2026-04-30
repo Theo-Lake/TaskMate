@@ -9,7 +9,6 @@ import NoticeCard from "../../components/cards/NoticeBoardCard";
 import { FAB } from 'react-native-paper';
 
 import { useAllEvents } from "../../hooks/useEvents";
-import { useCurrentUser } from "../../hooks/useUsers";
 
 type DisplayEvent = {
     id: string;
@@ -39,10 +38,6 @@ export default function EventsScreen({navigation}:any) {
 
     const [selectedCategory, setSelectedCategory] = useState("all");
 
-    const { data: currentUserResponse } = useCurrentUser();
-    const currentUser = currentUserResponse?.users?.user ?? currentUserResponse?.user ?? currentUserResponse;
-    
-
     // category filter toggle
     const handleCategoryPress = (category: string) => {
       setSelectedCategory((prev) => (prev === category ? "all" : category));
@@ -51,8 +46,6 @@ export default function EventsScreen({navigation}:any) {
     // map events
         const mappedEvents = useMemo<DisplayEvent[]>(() => {
           return fetchedEvents
-            // filters out events the current user published from the list
-            .filter((event: any) => Number(event.publisherID) !== Number(currentUser?.userID))
             .map((event: any) => ({
             id: String(event.eventID),
             title: event.name,

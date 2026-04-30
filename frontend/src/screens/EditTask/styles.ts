@@ -53,10 +53,17 @@ export  const styles = StyleSheet.create({
         gap:20
     },
     btn:{
-        borderRadius:40, 
+        borderRadius:40,
         backgroundColor:'#3D8252',
         width:'100%',
-        justifyContent: 'center', 
+        justifyContent: 'center',
         alignItems: 'center'
-    }
+    },
+    imagePrevContain: {
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    categoryBox: {
+        marginBottom: 10,
+    },
 });

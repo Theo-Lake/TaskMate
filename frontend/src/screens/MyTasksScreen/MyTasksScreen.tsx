@@ -8,7 +8,7 @@ import TaskCard from "../../components/cards/TaskCard";
 import { FAB } from 'react-native-paper';
 
 // import logic
-import { useAllTasks, useAllTasksByUser, useTaskAssignmentsByUser } from "../../hooks/useTasks";
+import { useAllTasks, useAllTasksByUser, useTaskAssignmentsByUser, useDeleteTask } from "../../hooks/useTasks";
 import { useCurrentUser } from "../../hooks/useUsers";
 
 // used for memo
@@ -28,6 +28,8 @@ export default function MyTasksScreen({navigation}:any) {
 
     const [selectedStatus, setSelectedStatus] = useState<TaskStatus>("published");
     const [selectedCategory, setSelectedCategory] = useState("all");
+
+    const { mutate: deleteTask } = useDeleteTask();
 
     // grab current user
     const { data: currentUserResponse, isLoading: currentUserLoading, isError: currentUserError } = useCurrentUser();
@@ -70,6 +72,8 @@ export default function MyTasksScreen({navigation}:any) {
 
     const publishedTasks = useMemo(() => mappedTasks(publishedTasksRaw), [publishedTasksRaw]);
     const assignedTasks = useMemo(() => mappedTasks(assignedTasksRaw), [assignedTasksRaw]);
+
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
     const visibleTasks = useMemo(() => {
         const baseTasks = selectedStatus === "published" ? publishedTasks : assignedTasks;
@@ -224,18 +228,41 @@ export default function MyTasksScreen({navigation}:any) {
                 <View style={{flex:1}}>
                 {selectedStatus === "published" ? (
                     <FlatList
-                        data={visibleTasks}
+                        data={(() => {
+                            const completed = visibleTasks.filter(t => t.rawTask.status === "complete");
+                            const notCompleted = visibleTasks.filter(t => t.rawTask.status !== "complete");
+                            const active = notCompleted.filter(t => new Date(t.rawTask.dueDate) > oneDayAgo);
+                            const pastDue = notCompleted.filter(t => new Date(t.rawTask.dueDate) <= oneDayAgo);
+                            return [
+                                ...active,
+                                ...(pastDue.length > 0 ? [{ id: "__divider_past__", isDivider: true, label: "Past due date" } as any] : []),
+                                ...pastDue,
+                                ...(completed.length > 0 ? [{ id: "__divider_complete__", isDivider: true, label: "Completed" } as any] : []),
+                                ...completed.map(t => ({ ...t, isCompleted: true })),
+                            ];
+                        })()}
                         keyExtractor={(item) => item.id}
                         showsVerticalScrollIndicator={false}
-                        renderItem={({ item }) => (
-                            <TaskCard
-                                title={item.title}
-                                price={item.price}
-                                imageUrl={item.imageUrl}
-                                description={item.description}
-                                onPress={() => onTaskPress(item)}
-                            />
-                        )}
+                        renderItem={({ item }) => {
+                            if (item.isDivider) {
+                                return (
+                                    <View style={{marginVertical: 12, alignItems: "center"}}>
+                                        <Text style={{color: "black", marginBottom: 8}}>{item.label}</Text>
+                                        <View style={{height: 1, backgroundColor: "#c0c0c0", width: "100%"}} />
+                                    </View>
+                                );
+                            }
+                            return (
+                                <TaskCard
+                                    title={item.title}
+                                    price={item.price}
+                                    imageUrl={item.imageUrl}
+                                    description={item.description}
+                                    onPress={item.isCompleted ? undefined : () => onTaskPress(item)}
+                                    onRemove={item.isCompleted ? () => deleteTask(Number(item.id)) : undefined}
+                                />
+                            );
+                        }}
                         ListEmptyComponent={
                             <View style={{alignItems: "center", marginTop: 20}}>
                                 <Text>You haven't published any tasks yet.</Text>
