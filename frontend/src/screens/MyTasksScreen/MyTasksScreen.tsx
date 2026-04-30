@@ -231,10 +231,14 @@ export default function MyTasksScreen({navigation}:any) {
                         data={(() => {
                             const completed = visibleTasks.filter(t => t.rawTask.status === "complete");
                             const notCompleted = visibleTasks.filter(t => t.rawTask.status !== "complete");
-                            const active = notCompleted.filter(t => new Date(t.rawTask.dueDate) > oneDayAgo);
-                            const pastDue = notCompleted.filter(t => new Date(t.rawTask.dueDate) <= oneDayAgo);
+                            const inProgress = notCompleted.filter(t => t.rawTask.status === "in_Progress");
+                            const notInProgress = notCompleted.filter(t => t.rawTask.status !== "in_Progress");
+                            const active = notInProgress.filter(t => new Date(t.rawTask.dueDate) > oneDayAgo);
+                            const pastDue = notInProgress.filter(t => new Date(t.rawTask.dueDate) <= oneDayAgo);
                             return [
                                 ...active,
+                                ...(inProgress.length > 0 ? [{ id: "__divider_inprogress__", isDivider: true, label: "In progress" } as any] : []),
+                                ...inProgress,
                                 ...(pastDue.length > 0 ? [{ id: "__divider_past__", isDivider: true, label: "Past due date" } as any] : []),
                                 ...pastDue,
                                 ...(completed.length > 0 ? [{ id: "__divider_complete__", isDivider: true, label: "Completed" } as any] : []),

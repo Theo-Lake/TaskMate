@@ -18,7 +18,7 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
     const taskId = Number(route.params?.taskId);
     const passedTask = route.params?.task;
 
-    const { data, isLoading, isError } = useTask(taskId);
+    const { data, isLoading, isError, refetch } = useTask(taskId);
     const { data: assignmentsData, isLoading: assignmentsLoading, isError: assignmentsError} = useTaskAssignmentsByTask(taskId);
 
     const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
@@ -28,7 +28,7 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
     const { data: allUsersResponse, isLoading: usersLoading } = useAllUsers();
 
     const fetchedTask = data?.tasks ?? data?.task ?? data;
-    const task = passedTask ?? fetchedTask;
+    const task = fetchedTask ?? passedTask;
 
     // applicants
     const assignmentRows = Array.isArray(assignmentsData?.taskAssignment)
@@ -63,12 +63,49 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
     );
 
     const acceptedCount = assignees.filter((a: any) => a.status === "accepted").length;
-    const isCompletable = task && acceptedCount >= Number(task.peopleRequired) && new Date() >= new Date(task.dueDate);
+
+    const now = new Date();
+    const dueDate = task ? new Date(task.dueDate) : null;
+
+    // Compare by calendar day so "today == due date" counts as on-time
+    const today       = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dueDateDay  = dueDate ? new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
+    const isDueDateReached = !!dueDateDay && today >= dueDateDay;
+    const isPastDueDate    = !!dueDateDay && today > dueDateDay; // strictly after due date day
+
+    const hasEnoughPeople   = !!task && acceptedCount >= Number(task.peopleRequired);
+    const isComplete        = task?.status === "complete";
+    const isInProgress      = task?.status === "in_Progress";
+    const isNotStarted      = !!task && !isInProgress && !isComplete;
+
+    // Enough people + on or before due date + not started → Start task
+    const canStart                 = isNotStarted && hasEnoughPeople && !isPastDueDate;
+    // Past due date day, never started → only Remove
+    const isPastDeadlineNotStarted = isNotStarted && isPastDueDate;
+    // In progress AND due date reached (on the day or later) → can complete
+    const isCompletable            = isInProgress && isDueDateReached;
+
+    const handleStartTask = () => {
+        updateStatus("in_Progress", {
+            onSuccess: () => refetch(),
+            onError: (error: any) => console.error("Start error:", error),
+        });
+    };
 
     const handleCompleteTask = () => {
         updateStatus("complete", {
-            onSuccess: () => navigation.navigate("MyTasksTab", { screen: "MyTasks" }),
+            onSuccess: () => {
+                refetch();
+                navigation.navigate("MyTasksTab", { screen: "MyTasks" });
+            },
             onError: (error: any) => console.error("Complete error:", error),
+        });
+    };
+
+    const handleCancelTask = () => {
+        deleteTask(taskId, {
+            onSuccess: () => navigation.navigate("MyTasksTab", { screen: "MyTasks" }),
+            onError: (error: any) => console.error("Cancel error:", error),
         });
     };
 
@@ -228,35 +265,74 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
                         </View>
 
                     </View>
-                    <View style={{flexDirection:'row',gap:5}}>
-                        {isCompletable ? (
-                            <Button
-                                icon="check-circle"
-                                mode="contained"
-                                onPress={handleCompleteTask}
-                                style={styles.btn}
-                                labelStyle={{fontSize:20, lineHeight:25}}
-                                contentStyle={{marginVertical:10}}
-                                loading={isCompleting}
-                                disabled={isCompleting}>Complete</Button>
-                        ) : (
-                            <Button
-                                icon="pencil-outline"
-                                mode="contained"
-                                onPress={() => navigation.navigate('MyTasksTab', { screen: 'EditTaskScreen', params: { taskId: task?.taskID, task } })}
-                                style={styles.btn}
-                                labelStyle={{fontSize:20, lineHeight:25}}
-                                contentStyle={{marginVertical:10}}>Edit</Button>
+                    <View style={{gap:5, alignSelf:'stretch'}}>
+                        {canStart && (
+                            <View style={{flexDirection:'row', justifyContent:'center'}}>
+                                <Button
+                                    icon="play-circle"
+                                    mode="contained"
+                                    onPress={handleStartTask}
+                                    style={[styles.btn, {flex:0, paddingHorizontal:20}]}
+                                    loading={isCompleting}
+                                    disabled={isCompleting}>Start task</Button>
+                            </View>
                         )}
-                        <Button
-                            icon="close"
-                            mode="contained"
-                            onPress={handleDeleteTask}
-                            style={styles.btn}
-                            labelStyle={{fontSize:20, lineHeight:25}}
-                            contentStyle={{marginVertical:10}}
-                            loading={isDeleting}
-                            disabled={isDeleting}>Remove</Button>
+
+                        <View style={{flexDirection:'row', gap:5}}>
+                            {isInProgress ? (
+                                <>
+                                    {isCompletable && (
+                                        <Button
+                                            icon="check-circle"
+                                            mode="contained"
+                                            onPress={handleCompleteTask}
+                                            style={styles.btn}
+                                            labelStyle={{fontSize:20, lineHeight:25}}
+                                            contentStyle={{marginVertical:10}}
+                                            loading={isCompleting}
+                                            disabled={isCompleting}>Complete</Button>
+                                    )}
+                                    <Button
+                                        icon="close"
+                                        mode="contained"
+                                        onPress={handleCancelTask}
+                                        style={styles.btn}
+                                        labelStyle={{fontSize:20, lineHeight:25}}
+                                        contentStyle={{marginVertical:10}}
+                                        loading={isDeleting}
+                                        disabled={isDeleting}>Cancel task</Button>
+                                </>
+                            ) : isComplete || isPastDeadlineNotStarted ? (
+                                <Button
+                                    icon="close"
+                                    mode="contained"
+                                    onPress={handleDeleteTask}
+                                    style={styles.btn}
+                                    labelStyle={{fontSize:20, lineHeight:25}}
+                                    contentStyle={{marginVertical:10}}
+                                    loading={isDeleting}
+                                    disabled={isDeleting}>Remove</Button>
+                            ) : (
+                                <>
+                                    <Button
+                                        icon="pencil-outline"
+                                        mode="contained"
+                                        onPress={() => navigation.navigate('MyTasksTab', { screen: 'EditTaskScreen', params: { taskId: task?.taskID, task } })}
+                                        style={styles.btn}
+                                        labelStyle={{fontSize:20, lineHeight:25}}
+                                        contentStyle={{marginVertical:10}}>Edit</Button>
+                                    <Button
+                                        icon="close"
+                                        mode="contained"
+                                        onPress={handleDeleteTask}
+                                        style={styles.btn}
+                                        labelStyle={{fontSize:20, lineHeight:25}}
+                                        contentStyle={{marginVertical:10}}
+                                        loading={isDeleting}
+                                        disabled={isDeleting}>Remove</Button>
+                                </>
+                            )}
+                        </View>
                     </View>
 
                 </View>
