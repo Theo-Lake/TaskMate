@@ -221,7 +221,7 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
                         <Button 
                             icon="pencil-outline" 
                             mode="contained" 
-                            onPress={() => navigation.navigate('MyTasksTab', { screen: 'EditTaskScreen' })} 
+                            onPress={() => navigation.navigate('MyTasksTab', { screen: 'EditTaskScreen', params: { taskId: task?.taskID, task } })} 
                             style={styles.btn} 
                             labelStyle={{fontSize:20, lineHeight:25}} 
                             contentStyle={{marginVertical:10}}>Edit</Button>
