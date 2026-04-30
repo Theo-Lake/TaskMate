@@ -130,7 +130,7 @@ export default function UserProfileScreen({navigation}:any) {
                     <Text style={{fontSize:20}}>Reputation:</Text>
                     <StarRatingGroup rating={reputation}/>
                 </View>
-                <View style={styles.settingsButton}> //
+                <View style={styles.settingsButton}> 
                     <Menu
                       visible={menuVisible}
                       onDismiss={closeMenu}
