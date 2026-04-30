@@ -31,7 +31,7 @@ function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showPr
                 />
             )}
 
-        <Appbar.Content title={title} color="white" style={{alignItems: showProfilePicture&&!showBackArrow ? 'flex-start' : 'center' }}/>
+        <Appbar.Content title={title} color="white" style={{alignItems: 'center' }}/>
 
         {showProfilePicture && (
             <TouchableOpacity onPress={() => navigation.navigate('MyTasksTab', { screen: 'UserProfileScreen' })}>
