@@ -203,15 +203,18 @@ export default function ViewTaskScreen({navigation, route}:any) {
                         </View>
                         <View style={styles.assigneesRankField}>
                             {visibleApplicants.length > 0 ? (
-                                visibleApplicants.map((person: any) => {
-                                    const assigneeId = Number(person.userID ?? person.assigneeID ?? person.id);
+                                <View>
+                                    <Text>Applicants list:</Text>
+                                    {visibleApplicants.map((person: any) => {
+                                        const assigneeId = Number(person.userID ?? person.assigneeID ?? person.id);
 
-                                    return (
-                                        <View key={String(person.userID)} style={{ width: "100%", marginBottom: 14}}>
-                                            <ProfileCard userId={person.userID} onPress={() => navigation.navigate('PublicProfileScreen', {userId: person.userID})}/>
-                                        </View>
-                                    );
-                                })
+                                        return (
+                                            <View key={String(person.userID)} style={{ width: "100%", marginBottom: 14}}>
+                                                <ProfileCard userId={person.userID} onPress={() => navigation.navigate('PublicProfileScreen', {userId: person.userID})}/>
+                                            </View>
+                                        );
+                                    })}
+                                </View>
                             ) : (<Text>No applicants yet.</Text>)}
                             
                         </View>

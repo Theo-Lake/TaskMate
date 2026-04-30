@@ -146,14 +146,17 @@ export default function ViewEventScreen({navigation, route}:any) {
                         </View>
                         <View style={styles.assigneesRankField}>
                             {assignees.length >0 ?(
-                                assignees.map((person:any)=>{
-                                    const assigneeId = Number(person.userID ?? person.assigneeID ?? person.id);
-                                    return(
-                                        <View key={String(assigneeId)} style={{ width: "100%", marginBottom: 10 }}>
-                                            <ProfileCard userId={assigneeId} onPress={() => navigation.navigate('PublicProfileScreen', {userId: assigneeId})}/>
-                                        </View>
-                                    )
-                                })
+                                <View>
+                                    <Text>Applicants list:</Text>
+                                    {assignees.map((person:any)=>{
+                                        const assigneeId = Number(person.userID ?? person.assigneeID ?? person.id);
+                                        return(
+                                            <View key={String(assigneeId)} style={{ width: "100%", marginBottom: 10 }}>
+                                                <ProfileCard userId={assigneeId} onPress={() => navigation.navigate('PublicProfileScreen', {userId: assigneeId})}/>
+                                            </View>
+                                        )
+                                    })}
+                                </View>
                             ) : (
                                 <Text>No attendees yet</Text>
                             )}
