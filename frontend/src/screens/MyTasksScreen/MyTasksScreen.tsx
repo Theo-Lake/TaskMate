@@ -45,13 +45,15 @@ export default function MyTasksScreen({navigation}:any) {
     const assignmentRows = Array.isArray(assignmentsData?.taskAssignment) ? assignmentsData.taskAssignment : Array.isArray(assignmentsData) ? assignmentsData : [];
     const allTasksRaw = Array.isArray(allTasksData?.tasks) ? allTasksData.tasks : Array.isArray(allTasksData) ? allTasksData : [];
 
-    const assignedTaskIds = useMemo(() => {
-        return assignmentRows.map((assignment: any) => Number(assignment.taskID)).filter((taskId: number) => !!taskId);
+    const assignmentStatusMap = useMemo(() => {
+        const map = new Map<number, string>();
+        assignmentRows.forEach((a: any) => map.set(Number(a.taskID), a.status ?? "pending"));
+        return map;
     }, [assignmentRows]);
 
     const assignedTasksRaw = useMemo(() => {
-        return allTasksRaw.filter((task: any) => assignedTaskIds.includes(Number(task.taskID)));
-    }, [allTasksRaw, assignedTaskIds]);
+        return allTasksRaw.filter((task: any) => assignmentStatusMap.has(Number(task.taskID)));
+    }, [allTasksRaw, assignmentStatusMap]);
 
     // map tasks
     const mappedTasks = (tasks: any[]): DisplayTask[] => {
@@ -71,11 +73,17 @@ export default function MyTasksScreen({navigation}:any) {
 
     const visibleTasks = useMemo(() => {
         const baseTasks = selectedStatus === "published" ? publishedTasks : assignedTasks;
-
         if (selectedCategory === "all") return baseTasks;
-
         return baseTasks.filter((task) => task.category === selectedCategory);
     }, [selectedStatus, selectedCategory, publishedTasks, assignedTasks]);
+
+    const acceptedTasks = useMemo(() => {
+        return visibleTasks.filter((task) => assignmentStatusMap.get(Number(task.id)) === "accepted");
+    }, [visibleTasks, assignmentStatusMap]);
+
+    const pendingTasks = useMemo(() => {
+        return visibleTasks.filter((task) => assignmentStatusMap.get(Number(task.id)) !== "accepted");
+    }, [visibleTasks, assignmentStatusMap]);
 
     // category filter toggle
     const handleCategoryPress = (category: string) => {
@@ -214,25 +222,61 @@ export default function MyTasksScreen({navigation}:any) {
             </ScrollView>
             </View>
                 <View style={{flex:1}}>
-                <FlatList
-                    data={visibleTasks}
-                    keyExtractor={(item) => item.id}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({ item }) => (
-                    <TaskCard
-                        title={item.title}
-                        price={item.price}
-                        imageUrl={item.imageUrl}
-                        description={item.description}
-                        onPress={() => onTaskPress(item)}
+                {selectedStatus === "published" ? (
+                    <FlatList
+                        data={visibleTasks}
+                        keyExtractor={(item) => item.id}
+                        showsVerticalScrollIndicator={false}
+                        renderItem={({ item }) => (
+                            <TaskCard
+                                title={item.title}
+                                price={item.price}
+                                imageUrl={item.imageUrl}
+                                description={item.description}
+                                onPress={() => onTaskPress(item)}
+                            />
+                        )}
+                        ListEmptyComponent={
+                            <View style={{alignItems: "center", marginTop: 20}}>
+                                <Text>You haven't published any tasks yet.</Text>
+                            </View>
+                        }
                     />
-                    )}
-                    ListEmptyComponent={
-                        <View style={{alignItems: "center", marginTop: 20}}>
-                            <Text>{selectedStatus === "published" ? "You haven't published any tasks yet." : "You haven't been assigned to any tasks yet."}</Text>
-                        </View>
-                    }   
-                />
+                ) : (
+                    <FlatList
+                        data={[
+                            ...acceptedTasks,
+                            ...(pendingTasks.length > 0 ? [{ id: "__divider__", isDivider: true } as any] : []),
+                            ...pendingTasks,
+                        ]}
+                        keyExtractor={(item) => item.id}
+                        showsVerticalScrollIndicator={false}
+                        renderItem={({ item }) => {
+                            if (item.isDivider) {
+                                return (
+                                    <View style={{marginVertical: 12, alignItems: "center"}}>
+                                        <Text style={{color: "black", marginBottom: 8}}>Waiting for approval</Text>
+                                        <View style={{height: 1, backgroundColor: "#c0c0c0", width: "100%"}} />
+                                    </View>
+                                );
+                            }
+                            return (
+                                <TaskCard
+                                    title={item.title}
+                                    price={item.price}
+                                    imageUrl={item.imageUrl}
+                                    description={item.description}
+                                    onPress={() => onTaskPress(item)}
+                                />
+                            );
+                        }}
+                        ListEmptyComponent={
+                            <View style={{alignItems: "center", marginTop: 20}}>
+                                <Text>You haven't been assigned to any tasks yet.</Text>
+                            </View>
+                        }
+                    />
+                )}
                 </View>
 
                 <FAB
