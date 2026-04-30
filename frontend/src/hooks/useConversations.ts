@@ -8,12 +8,12 @@ import {
   deleteMessage,
 } from "../api/conversations";
 
-export function useAllConversations() {
+export function useAllConversations(active = true) {
   return useQuery({
     queryKey: ["conversations"],
     queryFn: getAllConversations,
     refetchOnWindowFocus: true,
-    refetchInterval: 1000,
+    refetchInterval: active ? 1000 : false,
   });
 }
 
@@ -26,12 +26,12 @@ export function useConversation(convoId: number) {
   });
 }
 
-export function useConversationMessages(convoId: number) {
+export function useConversationMessages(convoId: number, active = true) {
   return useQuery({
     queryKey: ["conversations", convoId, "messages"],
     queryFn: () => getAllMessages(convoId),
     enabled: !!convoId,
-    refetchInterval: 1000,
+    refetchInterval: active ? 1000 : false,
   });
 }
 

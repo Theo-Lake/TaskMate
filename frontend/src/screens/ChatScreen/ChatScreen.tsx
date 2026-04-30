@@ -4,6 +4,7 @@ import {  Text, useTheme,Appbar, Avatar, IconButton, ActivityIndicator } from "r
 import {styles} from "../ChatsScreen/styles"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomHeader from "../../components/navBar/CustomHeader";
+import { useIsFocused } from "@react-navigation/native";
 
 import { useConversationMessages, useCreateMessage } from "../../hooks/useConversations";
 import { useCurrentUser } from "../../hooks/useUsers";
@@ -19,8 +20,9 @@ type DisplayMessage = {
 export default function ChatScreen({navigation, route}:any) {
     const { convoId, name } = route.params || {};
     const [message, setMessage] = useState("");
+    const isFocused = useIsFocused();
 
-    const { data, isLoading, isError } = useConversationMessages(Number(convoId));
+    const { data, isLoading, isError } = useConversationMessages(Number(convoId), isFocused);
     const { data: currentUserResponse } = useCurrentUser();
     const { mutate: createMessage, isPending } = useCreateMessage(Number(convoId));
 
