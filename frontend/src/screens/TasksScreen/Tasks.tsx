@@ -10,7 +10,7 @@ import { FAB } from 'react-native-paper';
 
 // Logic Imports
 // fetches all at once, can't fetch tasks one at a time for infinite scroll
-import { useAllTasks, useTaskAssignmentsByUser } from "../../hooks/useTasks"
+import { useAllTasks, useTaskAssignmentsByUser, useAllTaskAssignments } from "../../hooks/useTasks"
 import { useCurrentUser } from "../../hooks/useUsers";
 
 // used for memo
@@ -43,6 +43,17 @@ export default function TasksScreen({navigation}:any) {
         return new Set(rows.map((a: any) => Number(a.taskID)));
     }, [assignmentsResponse]);
 
+    const { data: allAssignmentsResponse } = useAllTaskAssignments();
+    const acceptedCountByTask = useMemo(() => {
+        const rows = Array.isArray(allAssignmentsResponse?.taskAssignment) ? allAssignmentsResponse.taskAssignment : Array.isArray(allAssignmentsResponse) ? allAssignmentsResponse : [];
+        const map = new Map<number, number>();
+        rows.filter((a: any) => a.status === "accepted").forEach((a: any) => {
+            const id = Number(a.taskID);
+            map.set(id, (map.get(id) ?? 0) + 1);
+        });
+        return map;
+    }, [allAssignmentsResponse]);
+
     // category filter toggle
     const handleCategoryPress = (category: string) => {
       setSelectedCategory((prev) => (prev === category ? "all" : category));
@@ -68,7 +79,9 @@ export default function TasksScreen({navigation}:any) {
       return fetchedTasks
         // filters out tasks the current user published from the list
         .filter((task: any) => Number(task.publisherID) !== Number(currentUser?.userID))
-        .filter((task: any) => !appliedTaskIds.has(Number(task.taskID)))  
+        .filter((task: any) => !appliedTaskIds.has(Number(task.taskID)))
+        .filter((task: any) => (acceptedCountByTask.get(Number(task.taskID)) ?? 0) < Number(task.peopleRequired))
+        .filter((task: any) => new Date(task.dueDate) > new Date(Date.now() - 24 * 60 * 60 * 1000))  
         .map((task: any) => ({
           id: String(task.taskID),
           title: task.name,

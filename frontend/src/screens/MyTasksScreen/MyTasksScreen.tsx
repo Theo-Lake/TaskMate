@@ -71,6 +71,8 @@ export default function MyTasksScreen({navigation}:any) {
     const publishedTasks = useMemo(() => mappedTasks(publishedTasksRaw), [publishedTasksRaw]);
     const assignedTasks = useMemo(() => mappedTasks(assignedTasksRaw), [assignedTasksRaw]);
 
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
     const visibleTasks = useMemo(() => {
         const baseTasks = selectedStatus === "published" ? publishedTasks : assignedTasks;
         if (selectedCategory === "all") return baseTasks;
@@ -224,18 +226,36 @@ export default function MyTasksScreen({navigation}:any) {
                 <View style={{flex:1}}>
                 {selectedStatus === "published" ? (
                     <FlatList
-                        data={visibleTasks}
+                        data={(() => {
+                            const active = visibleTasks.filter(t => new Date(t.rawTask.dueDate) > oneDayAgo);
+                            const pastDue = visibleTasks.filter(t => new Date(t.rawTask.dueDate) <= oneDayAgo);
+                            return [
+                                ...active,
+                                ...(pastDue.length > 0 ? [{ id: "__divider__", isDivider: true, label: "Past due date" } as any] : []),
+                                ...pastDue,
+                            ];
+                        })()}
                         keyExtractor={(item) => item.id}
                         showsVerticalScrollIndicator={false}
-                        renderItem={({ item }) => (
-                            <TaskCard
-                                title={item.title}
-                                price={item.price}
-                                imageUrl={item.imageUrl}
-                                description={item.description}
-                                onPress={() => onTaskPress(item)}
-                            />
-                        )}
+                        renderItem={({ item }) => {
+                            if (item.isDivider) {
+                                return (
+                                    <View style={{marginVertical: 12, alignItems: "center"}}>
+                                        <Text style={{color: "black", marginBottom: 8}}>{item.label}</Text>
+                                        <View style={{height: 1, backgroundColor: "#c0c0c0", width: "100%"}} />
+                                    </View>
+                                );
+                            }
+                            return (
+                                <TaskCard
+                                    title={item.title}
+                                    price={item.price}
+                                    imageUrl={item.imageUrl}
+                                    description={item.description}
+                                    onPress={() => onTaskPress(item)}
+                                />
+                            );
+                        }}
                         ListEmptyComponent={
                             <View style={{alignItems: "center", marginTop: 20}}>
                                 <Text>You haven't published any tasks yet.</Text>

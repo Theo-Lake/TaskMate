@@ -59,6 +59,11 @@ export async function cancelApplication(taskId: number) {
 	return res.data;
 }
 
+export async function getAllTaskAssignments() {
+	const res = await client.get(`/tasks/assignments`);
+	return res.data;
+}
+
 export async function getTaskAssignmentsByTaskId(taskId: number) {
   const res = await client.get(`/tasks/assignments/byTaskId/${taskId}`);
   return res.data;
