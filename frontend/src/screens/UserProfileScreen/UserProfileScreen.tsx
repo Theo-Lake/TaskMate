@@ -155,6 +155,14 @@ export default function UserProfileScreen({navigation}:any) {
                         }}
                         title='Card details and payments'
                       />
+                      <Menu.Item
+                        leadingIcon='human'
+                        onPress={() => {
+                          closeMenu();
+                          navigation.navigate('MyTasksTab', { screen: 'AccessibilityScreen' })
+                        }}
+                        title='Accessibility and help'
+                      />
                       </Menu>
 
                 </View>

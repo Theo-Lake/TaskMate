@@ -107,7 +107,7 @@ export default function ResetPasswordScreen({ navigation }: any) {
                                 <View style={{ height: 24, marginBottom: 10, alignItems: 'center' }}>
                                     {errorMsg && <Text style={{ color: '#d32f2f' }}>{errorMsg}</Text>}
                                 </View>
-                                <Button icon="email-outline" mode="contained" onPress={handleSendCode} loading={isRequesting} disabled={isRequesting} style={{borderRadius:40, backgroundColor:'#3D8252'}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}
+                                <Button icon="email-outline" mode="contained" onPress={handleSendCode} loading={isRequesting} disabled={isRequesting} style={{borderRadius:40, backgroundColor:'#3D8252', marginHorizontal: 20}} labelStyle={{fontSize:20, lineHeight:25}} contentStyle={{marginVertical:10}}
                                 >Send code</Button>
                             </>
 
