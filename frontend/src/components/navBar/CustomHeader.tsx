@@ -3,6 +3,7 @@ import {Appbar, Avatar} from 'react-native-paper';
 import CustomerAvatar from "../avatars/CustomerAvatars";
 import { TouchableOpacity } from "react-native";
 import { useCurrentUser } from "../../hooks/useUsers";
+import { useAccessibility } from "../../context/AccessibilityContext";
 interface CustomHeaderProps{
     title: string;
     navigation: any;
@@ -15,6 +16,8 @@ function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showPr
 
     const {data:userResp, isLoading} = useCurrentUser();
     const currentUSer = userResp?.users?.user
+
+    const {fontMultiplier} = useAccessibility();
     return(
         
         <Appbar.Header elevated={true}  style={{backgroundColor:'#3D8252'}}>
@@ -31,7 +34,7 @@ function CustomHeader({title,navigation,showBackArrow=false, onBackPress, showPr
                 />
             )}
 
-        <Appbar.Content title={title} color="white" style={{alignItems: 'center' }}/>
+        <Appbar.Content title={title} color="white" style={{alignItems: 'center' }} titleStyle={{fontSize:20*fontMultiplier}}/>
 
         {showProfilePicture && (
             <TouchableOpacity onPress={() => navigation.navigate('MyTasksTab', { screen: 'UserProfileScreen' })}>

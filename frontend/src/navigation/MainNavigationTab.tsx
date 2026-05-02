@@ -2,10 +2,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {CommonActions} from '@react-navigation/native'
-import { BottomNavigation } from 'react-native-paper';
+import { BottomNavigation, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import { useAccessibility } from "../context/AccessibilityContext";
 import TasksScreen from '../screens/TasksScreen/Tasks';
 import CreateTaskScreen from '../screens/CreateTaskScreen/CreateTaskScreen';
 import ViewTaskScreen from '../screens/ViewTaskScreen/ViewTaskScreen';
@@ -14,6 +14,7 @@ import UserProfileScreen from '../screens/UserProfileScreen/UserProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen/SettingsScreen';
 import ResetPasswordScreen from "../screens/ResetPasswordScreen/ResetPasswordScreen";
 import CardDetailsScreen from "../screens/CardDetailsScreen/CardDetailsScreen";
+import AccessibilityScreen from "../screens/AccessibilityScreen/AccessibilityScreen";
 
 import MyTasksScreen from '../screens/MyTasksScreen/MyTasksScreen';
 import ViewOwnTaskScreen from '../screens/ViewOwnTaskScreen/ViewOwnTaskScreen';
@@ -63,7 +64,8 @@ function MyTasksStackNavigator(){
             <MyTasksStack.Screen name="LeaveReviewScreen" component={LeaveReviewScreen}/>
             <MyTasksStack.Screen name="PublicProfileScreen" component={PublicProfileScreen}/>
             <MyTasksStack.Screen name="CardDetailsScreen" component={CardDetailsScreen}/>
-
+            <MyTasksStack.Screen name="AccessibilityScreen" component={AccessibilityScreen}/>
+            
         </MyTasksStack.Navigator>
     );
 }
@@ -94,7 +96,9 @@ function EventsStackNavigator(){
 
 
 export default function MainNavigationTabs(){
+    const {fontMultiplier} = useAccessibility();
     return(
+        
         <Tab.Navigator
             screenOptions={{headerShown: false}}
             tabBar={({navigation, state, descriptors, insets}) => (
@@ -131,6 +135,24 @@ export default function MainNavigationTabs(){
                     getLabelText={({route}) =>{
                         const { options} =descriptors[route.key];
                         return options.tabBarLabel as string ?? options.title ?? route.name;
+                    }}
+                    renderLabel={({route, focused, color})=>{
+                        const {options}= descriptors[route.key]
+                        const label = options.tabBarLabel as string ?? options.title ?? route.name;
+                        return(
+                            <Text
+                                style={{
+                                    color:color,
+                                    textAlign: 'center',
+                                    fontSize: 11 * fontMultiplier,
+                                    marginTop: 0,
+                                    marginBottom:3
+                                }}
+                                numberOfLines={1}
+                            >
+                                {label}
+                            </Text>
+                        )
                     }}
                 />
             )}

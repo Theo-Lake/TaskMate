@@ -15,6 +15,7 @@ import SignUpScreen from "./src/screens/SignUpScreen/SignUpScreen";
 import DevMenuScreen from "./src/screens/DevMenuScreen/DevMenuScreen";
 import EmailConfirmationScreen from "./src/screens/EmailConfirmationScreen/EmailConfirmation";
 import MainNavigationTabs from "./src/navigation/MainNavigationTab";
+import { AccessibilityProvider } from "./src/context/AccessibilityContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -65,10 +66,12 @@ export default function App() {
 		<QueryClientProvider client={queryClient}>
 			<PaperProvider theme={customTheme}>
 				<AuthProvider>
-					<NavigationContainer>
-						<StatusBar style="dark" />
-						<RootNavigator />
-					</NavigationContainer>
+					<AccessibilityProvider>
+						<NavigationContainer>
+							<StatusBar style="dark" />
+							<RootNavigator />
+						</NavigationContainer>
+					</AccessibilityProvider>
 				</AuthProvider>
 			</PaperProvider>
 		</QueryClientProvider>
