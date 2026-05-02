@@ -34,7 +34,7 @@ export default function CardDetailsScreen({navigation}:any) {
 
 
      const handleSaveChanges= async () => {
-        Alert.alert("Success. Profile updated!")
+        Alert.alert("Success. Card updated!")
      }
     return (
         <View style={{flex:1}}>
