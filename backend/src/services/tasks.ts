@@ -186,17 +186,26 @@ async function unAssignTask(taskID: Number, userID: Number) {
     if (task.publisherID === Number(userID))
         throw new Error("Publisher can't be unassigned from their own task.");
 
-    await db.$transaction([
-        db.taskAssignment.deleteMany({
+    if (conversation) {
+        await db.$transaction([
+            db.taskAssignment.deleteMany({
+                where: {
+                    taskID: Number(taskID),
+                    assigneeID: Number(userID),
+                },
+            }),
+            db.conversation.delete({
+                where: { conversationID: conversation.conversationID },
+            }),
+        ]);
+    } else {
+        await db.taskAssignment.deleteMany({
             where: {
                 taskID: Number(taskID),
                 assigneeID: Number(userID),
             },
-        }),
-        db.conversation.delete({
-            where: { conversationID: conversation.conversationID },
-        }),
-    ]);
+        });
+    }
 }
 
 async function updateTask(taskID: Number, body: JsonObject) {
