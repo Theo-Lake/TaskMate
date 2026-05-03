@@ -5,6 +5,7 @@ import {
     TaskTypes,
 } from "../generated/prisma/enums";
 import { JsonObject } from "../generated/prisma/internal/prismaNamespace";
+import { processTransaction, refundPayment, releasePayment } from "./transactions";
 
 async function getAllTasks() {
     return await db.task.findMany();
@@ -59,7 +60,9 @@ async function createTask(publisherID: Number, body: JsonObject) {
         hashtags,
     } = body;
 
-    return await db.task.create({
+    // TODO: Validate payment here
+
+    const task = await db.task.create({
         data: {
             publisherID: Number(publisherID),
             name: name as string,
@@ -80,6 +83,10 @@ async function createTask(publisherID: Number, body: JsonObject) {
                 : undefined,
         },
     });
+
+    await processTransaction(Number(publisherID), task.taskID);
+
+    return task;
 }
 
 async function applyForTask(taskID: Number, userID: Number) {
@@ -262,6 +269,12 @@ async function updateTaskStatus(taskID: Number, status: Status) {
     const task = await getTaskByID(taskID);
     if (!task) throw new Error(`Task ${taskID} not found`);
 
+    if (status === Status.complete) {
+        await releasePayment(Number(taskID));
+    } else if (status === Status.cancelled) {
+        await refundPayment(Number(taskID));
+    }
+
     return await db.task.update({
         where: { taskID: Number(taskID) },
         data: {
@@ -272,6 +285,7 @@ async function updateTaskStatus(taskID: Number, status: Status) {
 }
 
 async function deleteTask(taskID: Number) {
+    await refundPayment(Number(taskID));
     return await db.task.delete({
         where: {
             taskID: Number(taskID),
