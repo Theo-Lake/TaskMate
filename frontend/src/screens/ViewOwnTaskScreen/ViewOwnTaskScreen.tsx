@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { View, StyleSheet, Image, FlatList, ScrollView, SectionList } from 'react-native';
+import { View, StyleSheet, Image, FlatList, ScrollView, SectionList, Alert } from 'react-native';
 import {  Text, Button, IconButton, ActivityIndicator } from "react-native-paper";
 import {styles} from "./styles"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -95,7 +95,9 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
     const handleCompleteTask = () => {
         updateStatus("complete", {
             onSuccess: () => {
+                Alert.alert("Task completed!", "Money is being released in 24hrs")
                 refetch();
+
                 navigation.navigate("MyTasksTab", { screen: "MyTasks" });
             },
             onError: (error: any) => console.error("Complete error:", error),
@@ -180,14 +182,17 @@ export default function ViewOwnTaskScreen({navigation, route}:any) {
         );
     }
 
-    const imageSource = task.images ? { uri: Array.isArray(task.images) ? task.images[0] : task.images} : require("../../../assets/img/img.png");
-
+    const hasImage = task.images && (Array.isArray(task.images) ? task.images.length >0: true);
+    const imageSource = Array.isArray(task.images) ? task.images[0] : task.images
     return (
         <View style={{flex:1}}>
             <CustomHeader title="Your Task" navigation={navigation} showBackArrow={true} showProfilePicture={true} />
             <ScrollView>
                 <View style={styles.container}>
-                    <Image source={imageSource} style={styles.taskImage} resizeMode="cover"/>
+                    {hasImage && (
+                        <Image source={imageSource} style={styles.taskImage} resizeMode="cover"/>
+
+                    )}
                     {/*<TextInput mode="flat" underlineColor="tran" value="use" editable={false} style={styles.textBox}/>*/}
                     <Text variant="titleLarge" style={styles.title}>{task.name}</Text>
                     
