@@ -30,12 +30,12 @@ export default function LoginScreen({ navigation }: any) {
         setErrorMsg(null);
         setErrors({});
 
-        const formedData={
-            email:emailText.trim(),
-            password: passText
-        }
+        const identifier = emailText.trim();
+        const formedData = identifier.includes("@")
+            ? { email: identifier, password: passText }
+            : { username: identifier, password: passText };
 
-        const isValidated = validate(LoginSchema, formedData)
+        const isValidated = validate(LoginSchema, { email: identifier, password: passText });
         if (!isValidated.success){
             setErrors(isValidated.errors.fieldErrors);
             return
@@ -69,7 +69,7 @@ export default function LoginScreen({ navigation }: any) {
                         </View>
 
                         <View style={{padding:20}}>
-                            <TextInput mode='outlined' label="Email" value={emailText} onChangeText={text => setEmailText(text)} style={styles.textBox} error={!!errors.email}/>
+                            <TextInput mode='outlined' label="Email Or Username" value={emailText} onChangeText={text => setEmailText(text)} style={styles.textBox} error={!!errors.email}/>
                             <TextInput mode='outlined' label="Password" value={passText} onChangeText={text => setPassText(text)} secureTextEntry style={styles.textBox} error={!!errors.password}/>
                         </View>
                         <View style={{ height: 24, marginBottom: 10, alignItems: 'center' }}>
