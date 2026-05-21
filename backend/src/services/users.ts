@@ -69,7 +69,6 @@ export async function createUser(body: JsonObject) {
 }
 
 export async function updateUser(userID: Number, body: JsonObject) {
-    //TODO email not allwoed to change, if so, needs to be verified again.
     let {
         username,
         firstName,

@@ -286,6 +286,7 @@ async function updateTaskStatus(taskID: Number, status: Status) {
 
 async function deleteTask(taskID: Number) {
     await refundPayment(Number(taskID));
+    await db.transactions.deleteMany({ where: { taskID: Number(taskID) } });
     return await db.task.delete({
         where: {
             taskID: Number(taskID),

@@ -1,35 +1,54 @@
 Backend:
+- Node.js
+- Express.js (v5)
 - TypeScript
-- Prisma (ORM)
-- nodemon
-- stripe
-- postman
-- nodemailer
-- zod
-- JWT authentication
-- Express.js
-- bcrypt (password hashing)
+- Prisma (ORM) + @prisma/adapter-pg (native PostgreSQL driver)
+- Supabase (managed PostgreSQL host)
+- Zod (server-side validation & schema parsing)
+- JWT (dual-token: access token 15min + refresh token 30d)
+- bcrypt (password hashing, salt factor 10)
+- Nodemailer (transactional email via SMTP/STARTTLS)
+- express-rate-limit (DDoS protection, 500 req/15min)
 - cors
 - dotenv
-- tsx / ts-node
-- PostgreSQL (via @prisma/adapter-pg)
+- nodemon / tsx / ts-node (dev tooling)
+- Docker (multi-stage build containerisation)
+- Docker Compose (environment & port management)
+- Postman (API endpoint testing)
 
 Authentication:
-    Login — verifies credentials, issues access + refresh token 
-    Logout — revokes refresh token, clears cookie 
-    Refresh — rotates refresh token (marks old as used), issues new access token 
-    withAuth middleware — applied to all mutating routes 
-    Ownership checks — in place for all routes with a userId param 
-    req.user — attached in withAuth, typed via express.d.ts 
+    Login — verifies credentials, issues access + refresh token
+    Logout — revokes refresh token from database
+    Refresh — issues new access token using valid refresh token
+    withAuth middleware — applied to all protected endpoints
+    Ownership checks — in place for all routes with a userId param
+    req.user — attached in withAuth, typed via express.d.ts
+    Email verification — 6-digit token, expires 10 minutes, sent on sign-up
+    Password reset — 6-digit token flow, expires 10 minutes
 
 Frontend:
-- React Native
-- Expo
+- React Native (v0.81)
+- React (v19)
+- Expo (v54)
 - expo-router
 - React Navigation (native-stack, bottom-tabs, material-top-tabs)
+- TanStack React Query (server state & caching)
+- Axios (HTTP client)
+- Zod (client-side form validation)
+- AsyncStorage (token persistence)
 - react-native-paper (UI component library)
 - react-native-pager-view
+- expo-image-picker (image selection)
+- expo-file-system
 - @expo/vector-icons
 - TypeScript
 
-//TODO update
+Database:
+- PostgreSQL (hosted on Supabase)
+- Prisma schema (12 models: User, Task, Event, TaskAssignment, EventAssignment, Reviews, Transactions, Conversation, Message, Hashtags, EmailVerificationToken, RefreshToken)
+- Prisma enums: TaskTypes, EventTypes, Status, ApplicationStatus, Rating, TransactionType
+
+Infrastructure & Tooling:
+- Docker + Docker Compose (backend containerisation)
+- GitHub (version control, branching strategy: main / dev / feature branches)
+- Postman (API testing)

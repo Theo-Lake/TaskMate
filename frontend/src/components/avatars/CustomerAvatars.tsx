@@ -1,6 +1,5 @@
 import React from "react";
 import { Avatar, useTheme } from "react-native-paper";
-//TODO SOLVED: deal with user object
 export default function CustomerAvatar({user, size=40}: {
     user: {
         profilePicture: string;

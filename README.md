@@ -1,40 +1,125 @@
-# Software-Engineering-Project-2026
-Software Engineering Project for Lancaster University made by: 
-- Theo Scarton Lago : Group Leader + Backend Lead + Fullstack
-- Alex Onyshchuk: Frontend Leader
-- Aaron Skelhorn : Frontend
-- Joephill Thomas : Frontend
-- Toby Raisey : Backend 
+# TaskMate
+**University Task & Events Platform**
+Lancaster University — Software Engineering Project 2026
 
-TaskMate
+A mobile application for university students to publish, discover, and complete tasks and events within their university community.
 
-University Task Advertisement/Notice Board
+---
 
-This is a mobile app that can be downloaded on both Android and Apple devices.
-It will be exclusive to university students/staff so that we can be sure of the identity of all users.
-*  User will have to use their university email to sign-up
-*  They may also enter their student ID as another form of identification
-The idea of the application is that it is essentially a large digital noticeboard where users can publish tasks and advertisements.
+## Team
 
-Tasks will be small one-off jobs that another use could complete within a reasonable amount of time. Each task will have a name, description, price, estimated completion time, datetime, and location, as well as the publisher ID.
-* Other user's will then be able to accept the task, in which they will them be prompted to enter a 1-to-1 chat with the publisher where they can communicate.
-* To handle money, we will use a third-party service to complete transactions for security. This TPS will hold the money from the publisher when their task is published, and once both user's have confirmed the completion of the task, the assignee will receive their money. If the task is cancelled before being accepted, the money will be refunded to the publisher.
+| Name | Role |
+|---|---|
+| Theo Scarton Lago | Group Leader, Backend Lead, Full-stack |
+| Alex Onyshchuk | Frontend Lead |
+| Aaron Skelhorn | Frontend |
+| Joephill Thomas | Frontend |
+| Toby Raisey | Backend |
 
-Advertisements will be free publications that consist of a description of what is being advertised, and must include the identification of the publisher. Depending on the type of the advert, it may optionally include a location and datetime
-* Users can advertise a multitude of different things, including:
-	* Events
-	* Opportunities
+---
 
-For the safety of the users, there will also be an AI algorithm that will be used to censor explicit and dangerous content, such as:
-* Any task with a title or description that constitutes academic cheating (content must comply with university academic regulations)
-* Any tasks that may be deemed dangerous or unsafe
-* Any tasks that constitute a job with hourly pay or recruitment
-It will also ensure that tasks are clear and the description isn't deceptive
+## About
 
+TaskMate is a mobile-first platform exclusive to university students and staff. Users sign up with their university email and student ID to verify their identity. Once registered, they can publish tasks or events, apply to complete tasks posted by others, communicate via in-app messaging, and leave reviews for completed work.
 
-Running project:
-	frontend only: 
-		cd frontend
-		npx expo start
-	backend only:
-		npm run dev
+### Tasks
+Small one-off jobs that a user can publish for others to complete. Each task includes a name, description, category, price, due date, location, and optional images.
+- Other users can apply to complete a task
+- The publisher accepts or rejects applicants
+- Once matched, a 1-to-1 chat opens between publisher and assignee
+- Payment is held in escrow on task creation and released to the assignee on completion, or refunded if cancelled
+
+### Events
+Free publications for university events. Each event includes a name, description, category, location, due date, and optional images.
+- Users can apply to attend or participate
+- Publisher accepts or rejects applicants
+
+---
+
+## Features Implemented
+
+- User registration with university email verification (6-digit token)
+- Login with dual-token JWT authentication (access + refresh)
+- Password reset flow via email token
+- Task publishing, editing, and deletion
+- Event publishing, editing, and deletion
+- Task & event application system (apply, accept, reject)
+- Task completion and status tracking (not started, in progress, complete, cancelled)
+- Escrow-based payment system (hold, release, refund)
+- 1-to-1 messaging with real-time polling
+- User profiles with profile pictures
+- Reviews and star ratings between users
+- Hashtag tagging on tasks and events
+- Image uploads on tasks and events
+- Accessibility screen
+- Settings screen (update profile, change password)
+
+---
+
+## Tech Stack
+
+**Backend:** Node.js, Express.js, TypeScript, Prisma, Supabase (PostgreSQL), JWT, bcrypt, Zod, Nodemailer, express-rate-limit, Docker
+
+**Frontend:** React Native, Expo, TypeScript, React Navigation, TanStack React Query, Axios, Zod, AsyncStorage, React Native Paper
+
+---
+
+## Running the Project
+
+### Frontend
+```bash
+cd frontend
+npx expo start
+```
+
+### Backend
+```bash
+cd backend
+docker compose up
+```
+
+### Backend (without Docker)
+```bash
+cd backend
+npm run dev
+```
+
+### Environment Variables
+Create a `.env` file in `backend/` with the following:
+```
+DATABASE_URL=
+ACCESS_TOKEN_SECRET=
+REFRESH_TOKEN_SECRET=
+SMTP_USER=
+SMTP_PASS=
+FRONTEND_URL=
+PLATFORM_USER_ID=
+PORT=4000
+```
+
+---
+
+## Repository Structure
+
+```
+/
+├── backend/          # Node.js + Express API
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── services/
+│   │   ├── routes/
+│   │   ├── middleware/
+│   │   └── generated/prisma/
+│   ├── prisma/
+│   │   └── schema.prisma
+│   ├── Dockerfile
+│   └── docker-compose.yml
+├── frontend/         # Expo React Native app
+│   └── src/
+│       ├── screens/
+│       ├── hooks/
+│       ├── api/
+│       ├── auth/
+│       └── validation/
+└── CONTRIBUTORS.md
+```
