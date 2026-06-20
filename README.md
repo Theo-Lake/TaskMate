@@ -4,6 +4,8 @@ Lancaster University — Software Engineering Project 2026
 
 A mobile application for university students to publish, discover, and complete tasks and events within their university community.
 
+DEMO VIDEO: https://youtu.be/CI1SHRJ7zfo?si=GyIraDBGKYD6wG3e
+
 ---
 
 ## Team
